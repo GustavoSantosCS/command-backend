@@ -4,6 +4,7 @@ import {
   HttpRequest,
   HttpResponse
 } from '@/presentation/protocols';
+import { badRequest, ok, serverError } from '@/utils/http';
 import { Validator } from '@/validator/protocols';
 
 export class AddAccountController implements Controller {
@@ -17,49 +18,15 @@ export class AddAccountController implements Controller {
       const { body } = httpRequest;
       const validatorResult = this.validator.validate(body);
       if (validatorResult.isLeft()) {
-        return {
-          statusCode: 400,
-          body: {
-            errors: validatorResult.value.map(error => ({
-              message: error.message,
-              value: error.value
-            }))
-          }
-        };
+        return badRequest(validatorResult.value);
       }
-
       const resultAddAccount = await this.addAccountUseCase.add(body);
-
       if (resultAddAccount.isLeft()) {
-        const { value: error } = resultAddAccount;
-        return {
-          statusCode: 400,
-          body: {
-            errors: [
-              {
-                message: error.message,
-                value: error.email
-              }
-            ]
-          }
-        };
+        return badRequest([resultAddAccount.value]);
       }
-
-      return {
-        statusCode: 200,
-        body: resultAddAccount.value
-      };
+      return ok(resultAddAccount.value);
     } catch (error) {
-      return {
-        statusCode: 500,
-        body: {
-          errors: [
-            {
-              message: error.message
-            }
-          ]
-        }
-      };
+      return serverError([error]);
     }
   }
 }
