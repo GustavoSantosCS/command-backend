@@ -9,6 +9,7 @@ import { left } from '@/shared/either';
 import { ValidatorError } from '@/validator/errors';
 import faker from 'faker';
 import { AddressAlreadyUseError } from '@/domain/errors';
+import { throwsError } from '@tests/mock/throwsError';
 
 let sut: AddAccountController;
 let httpRequestMock: HttpRequest;
@@ -85,7 +86,3 @@ describe('Test Unit: AddAccountController', () => {
     expect(response.body).not.toBeUndefined();
   });
 });
-
-const throwsError = () => {
-  throw new Error('any_message');
-};
