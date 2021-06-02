@@ -1,3 +1,3 @@
-export * from './Controller';
-export * from './HttpRequest';
-export * from './HttpResponse';
+export * from './controller';
+export * from './http-request';
+export * from './http-response';
