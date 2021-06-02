@@ -27,7 +27,22 @@ export class AddAccountController implements Controller {
       };
     }
 
-    this.addAccountUseCase.add(body);
+    const resultAddAccount = await this.addAccountUseCase.add(body);
+
+    if (resultAddAccount.isLeft()) {
+      const { value: error } = resultAddAccount;
+      return {
+        statusCode: 400,
+        body: {
+          errors: [
+            {
+              message: error.message,
+              value: error.email
+            }
+          ]
+        }
+      };
+    }
     return null;
   }
 }
