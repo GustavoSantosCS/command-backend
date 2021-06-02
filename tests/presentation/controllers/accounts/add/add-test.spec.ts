@@ -42,4 +42,11 @@ describe('Test Unit: AddAccountController', () => {
     expect(response.body.errors[0]).toHaveProperty('message');
     expect(response.body.errors[0]).toHaveProperty('value');
   });
+
+  it('should call AddAcCountUseCase with the correct values', async () => {
+    const spy = jest.spyOn(addAccountUseCaseMock, 'add');
+    await sut.handle(httpRequestMock);
+    expect(spy).toBeCalledTimes(1);
+    expect(spy).toBeCalledWith(httpRequestMock.body);
+  });
 });
