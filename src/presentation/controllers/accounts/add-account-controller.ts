@@ -26,6 +26,8 @@ export class AddAccountController implements Controller {
         }
       };
     }
+
+    this.addAccountUseCase.add(body);
     return null;
   }
 }
