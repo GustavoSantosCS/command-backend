@@ -14,7 +14,18 @@ export class AddAccountController implements Controller {
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     const { body } = httpRequest;
-    this.validator.validate(body);
+    const validatorResult = this.validator.validate(body);
+    if (validatorResult.isLeft()) {
+      return {
+        statusCode: 400,
+        body: {
+          errors: validatorResult.value.map(error => ({
+            message: error.message,
+            value: error.value
+          }))
+        }
+      };
+    }
     return null;
   }
 }
