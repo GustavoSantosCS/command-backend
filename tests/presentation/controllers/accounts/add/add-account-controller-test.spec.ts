@@ -66,4 +66,26 @@ describe('Test Unit: AddAccountController', () => {
     expect(response.body.errors[0]).toHaveProperty('message');
     expect(response.body.errors[0]).toHaveProperty('value');
   });
+
+  it('should returns 500 if AddAccountUsecase throws', async () => {
+    jest
+      .spyOn(addAccountUseCaseMock, 'add')
+      .mockImplementationOnce(throwsError);
+
+    const response = await sut.handle(httpRequestMock);
+    expect(response.statusCode).toBe(500);
+    expect(response.body).toHaveProperty('errors');
+    expect(response.body.errors[0]).toHaveProperty('message');
+  });
+
+  it('should return 200 if AddAccountUseCase is success', async () => {
+    const response = await sut.handle(httpRequestMock);
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body).not.toBeUndefined();
+  });
 });
+
+const throwsError = () => {
+  throw new Error('any_message');
+};

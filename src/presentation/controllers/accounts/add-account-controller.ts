@@ -13,36 +13,53 @@ export class AddAccountController implements Controller {
   ) {}
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
-    const { body } = httpRequest;
-    const validatorResult = this.validator.validate(body);
-    if (validatorResult.isLeft()) {
+    try {
+      const { body } = httpRequest;
+      const validatorResult = this.validator.validate(body);
+      if (validatorResult.isLeft()) {
+        return {
+          statusCode: 400,
+          body: {
+            errors: validatorResult.value.map(error => ({
+              message: error.message,
+              value: error.value
+            }))
+          }
+        };
+      }
+
+      const resultAddAccount = await this.addAccountUseCase.add(body);
+
+      if (resultAddAccount.isLeft()) {
+        const { value: error } = resultAddAccount;
+        return {
+          statusCode: 400,
+          body: {
+            errors: [
+              {
+                message: error.message,
+                value: error.email
+              }
+            ]
+          }
+        };
+      }
+
       return {
-        statusCode: 400,
-        body: {
-          errors: validatorResult.value.map(error => ({
-            message: error.message,
-            value: error.value
-          }))
-        }
+        statusCode: 200,
+        body: resultAddAccount.value
       };
-    }
-
-    const resultAddAccount = await this.addAccountUseCase.add(body);
-
-    if (resultAddAccount.isLeft()) {
-      const { value: error } = resultAddAccount;
+    } catch (error) {
       return {
-        statusCode: 400,
+        statusCode: 500,
         body: {
           errors: [
             {
-              message: error.message,
-              value: error.email
+              message: error.message
             }
           ]
         }
       };
     }
-    return null;
   }
 }
