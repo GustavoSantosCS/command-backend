@@ -29,17 +29,8 @@
         "ObjectPattern": { "multiline": true }
       }
     ],
-    "comma-dangle": [
-      "error",
-      {
-        "arrays": "never",
-        "objects": "never",
-        "imports": "never",
-        "exports": "never",
-        "functions": "never"
-      }
-    ],
-    "no-empty-function": "off",
+    "comma-dangle": "off",
+    "radix": "off",
     "no-useless-constructor": "off"
   }
 }
