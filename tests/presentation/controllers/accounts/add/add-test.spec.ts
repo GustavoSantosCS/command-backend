@@ -7,6 +7,8 @@ import { makeMockValidator } from '@tests/validator/mock';
 import { makeMockHttpRequest } from '@tests/presentation/controllers/accounts/add/mock';
 import { left } from '@/shared/either';
 import { ValidatorError } from '@/validator/errors';
+import faker from 'faker';
+import { AddressAlreadyUseError } from '@/domain/errors';
 
 let sut: AddAccountController;
 let httpRequestMock: HttpRequest;
@@ -48,5 +50,20 @@ describe('Test Unit: AddAccountController', () => {
     await sut.handle(httpRequestMock);
     expect(spy).toBeCalledTimes(1);
     expect(spy).toBeCalledWith(httpRequestMock.body);
+  });
+
+  it('should return 400 if AddAccountUseCase returns error', async () => {
+    const email = faker.internet.email();
+    jest
+      .spyOn(addAccountUseCaseMock, 'add')
+      .mockImplementationOnce(async () =>
+        left(new AddressAlreadyUseError(email))
+      );
+    const response = await sut.handle(httpRequestMock);
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toHaveProperty('errors');
+    expect(response.body.errors[0]).toHaveProperty('message');
+    expect(response.body.errors[0]).toHaveProperty('value');
   });
 });
