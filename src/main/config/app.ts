@@ -7,6 +7,6 @@ const app = express();
 middleware(app);
 routes(app);
 
-app.get('/', (request, response) => response.send('Hello World'));
+app.get('/', (_, response) => response.send('Hello World'));
 
 export default app;
