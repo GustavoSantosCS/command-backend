@@ -5,7 +5,7 @@ import { IsNotEmailError } from '@/validation/errors';
 let fieldLabel: string;
 let sut: EmailValidator;
 
-describe('EmailValidator', () => {
+describe('Test Unit EmailValidator', () => {
   beforeEach(() => {
     fieldLabel = faker.database.column();
     sut = new EmailValidator(fieldLabel);

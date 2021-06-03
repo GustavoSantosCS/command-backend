@@ -14,7 +14,7 @@ export class AddUserController implements Controller {
       const { body } = httpRequest;
       const validatorResult = this.validator.validate(body);
       if (validatorResult.isLeft()) {
-        return badRequest(validatorResult.value);
+        return badRequest([validatorResult.value]);
       }
       const resultAddUser = await this.addUserUseCase.add(body);
       if (resultAddUser.isLeft()) {

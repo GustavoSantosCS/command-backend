@@ -4,14 +4,14 @@ import { ValidatorError } from '@/validation/errors';
 import { AppError } from '@/shared/app-error';
 
 type Returns = {
-  right: Either<ValidatorError[], true>;
-  left: Either<ValidatorError[], true>;
+  right: Either<ValidatorError, true>;
+  left: Either<ValidatorError, true>;
 };
 
 export class ValidatorSpy implements Validator {
   returns: Returns = {
     right: right(true),
-    left: left([new ValidatorError('any_message', 'any_value')])
+    left: left(new ValidatorError('any_message', 'any_value'))
   };
   return = this.returns.right;
   parameters: any;
@@ -21,7 +21,7 @@ export class ValidatorSpy implements Validator {
     this.error = new AppError('any_message', 'any_value');
   }
 
-  validate(value: any): Either<ValidatorError[], true> {
+  validate(value: any): Either<ValidatorError, true> {
     this.parameters = value;
     if (this.error) throw this.error;
     return this.return;
