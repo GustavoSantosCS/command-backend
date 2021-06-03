@@ -1,34 +1,34 @@
 import faker from 'faker';
 
-import { Account } from '@/domain/models';
-import { AddAccountUseCase } from '@/domain/usecases/account';
-import { AddAccountController } from '@/presentation/controllers/accounts';
+import { User } from '@/domain/models';
+import { AddUserUseCase } from '@/domain/usecases/user';
+import { AddUserController } from '@/presentation/controllers/user';
 import { HttpRequest } from '@/presentation/protocols';
 import { Validator } from '@/validator/protocols';
 
-import { AddAccountUseCaseSpy } from '@tests/domain/mock/usecases';
-import { makeMockAddAccount } from '@tests/domain/mock/models';
+import { AddUserUseCaseSpy } from '@tests/domain/mock/usecases';
+import { makeMockAddUser } from '@tests/domain/mock/models';
 import { ValidatorSpy } from '@tests/validator/mock';
 
 faker.locale = 'pt_BR';
 
-export const makeMockHttpRequest = (): HttpRequest => ({
-  body: { ...addAccount }
+export const makeMockHttpRequest = (): AddUserController.DTO => ({
+  body: { ...addUser }
 });
 
-let addAccount: Omit<Account, 'id'>;
-let sut: AddAccountController;
-let httpRequestMock: HttpRequest;
+let addUser: Omit<User, 'id'> & { confirmPassword: string };
+let sut: AddUserController;
+let httpRequestMock: AddUserController.DTO;
 let validatorSpy: Validator;
-let addAccountUseCaseSpy: AddAccountUseCase;
+let addUserUseCaseSpy: AddUserUseCase;
 
-describe('Test Unit: AddAccountController', () => {
+describe('Test Unit: AddUserController', () => {
   beforeEach(() => {
-    addAccount = makeMockAddAccount();
+    addUser = makeMockAddUser();
     httpRequestMock = makeMockHttpRequest();
     validatorSpy = new ValidatorSpy();
-    addAccountUseCaseSpy = new AddAccountUseCaseSpy();
-    sut = new AddAccountController(validatorSpy, addAccountUseCaseSpy);
+    addUserUseCaseSpy = new AddUserUseCaseSpy();
+    sut = new AddUserController(validatorSpy, addUserUseCaseSpy);
   });
 
   it('should call the validator with the correct values', async () => {
@@ -50,16 +50,16 @@ describe('Test Unit: AddAccountController', () => {
     expect(response.body.errors[0]).toHaveProperty('value');
   });
 
-  it('should call AddAccountUseCase with the correct values', async () => {
-    const spy = addAccountUseCaseSpy as AddAccountUseCaseSpy;
+  it('should call AddUserUseCase with the correct values', async () => {
+    const spy = addUserUseCaseSpy as AddUserUseCaseSpy;
 
     await sut.handle(httpRequestMock);
 
     expect(spy.parameters).toEqual(httpRequestMock.body);
   });
 
-  it('should return 400 if AddAccountUseCase returns error', async () => {
-    const spy = addAccountUseCaseSpy as AddAccountUseCaseSpy;
+  it('should return 400 if AddUserUseCase returns error', async () => {
+    const spy = addUserUseCaseSpy as AddUserUseCaseSpy;
     spy.return = spy.returns.left;
 
     const response = await sut.handle(httpRequestMock);
@@ -70,8 +70,8 @@ describe('Test Unit: AddAccountController', () => {
     expect(response.body.errors[0]).toHaveProperty('value');
   });
 
-  it('should returns 500 if AddAccountUsecase throws', async () => {
-    const spy = addAccountUseCaseSpy as AddAccountUseCaseSpy;
+  it('should returns 500 if AddUserUsecase throws', async () => {
+    const spy = addUserUseCaseSpy as AddUserUseCaseSpy;
     spy.throwError();
 
     const response = await sut.handle(httpRequestMock);
@@ -81,7 +81,7 @@ describe('Test Unit: AddAccountController', () => {
     expect(response.body.errors[0]).toHaveProperty('message');
   });
 
-  it('should return 200 if AddAccountUseCase is success', async () => {
+  it('should return 200 if AddUserUseCase is success', async () => {
     const response = await sut.handle(httpRequestMock);
 
     expect(response.statusCode).toBe(200);

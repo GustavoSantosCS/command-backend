@@ -5,7 +5,7 @@ export enum AccountType {
   ClientManager = 3
 }
 
-export type Account = {
+export type User = {
   id: string;
   nome: string;
   email: string;
