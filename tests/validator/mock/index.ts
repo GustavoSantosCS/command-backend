@@ -1,1 +1,1 @@
-export * from './validator-mock';
+export * from './validator-spy';

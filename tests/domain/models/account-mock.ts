@@ -14,3 +14,15 @@ export const makeMockAccount = (): Account => ({
     AccountType.Manager
   ])
 });
+
+export const makeMockAddAccount = (): Account => ({
+  id: faker.datatype.uuid(),
+  nome: faker.name.findName(),
+  email: faker.internet.email(),
+  password: faker.internet.password(),
+  accountType: faker.random.arrayElement<AccountType>([
+    AccountType.Client,
+    AccountType.ClientManager,
+    AccountType.Manager
+  ])
+});
