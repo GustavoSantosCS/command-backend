@@ -1,8 +1,8 @@
 import { ValidatorError } from './validator-erros';
 
 export class MissingParamError extends ValidatorError {
-  constructor(paramName: string, value: string) {
-    super(`Parâmetro não informado: ${paramName}`, value);
+  constructor(paramName: string) {
+    super(`Parâmetro não informado: ${paramName}`);
     this.name = 'MissingParamError';
   }
 }

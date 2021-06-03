@@ -1,6 +1,6 @@
 import { Validator } from '@/validation/protocols';
 import { RequiredFieldValidator } from '@/validation/validators';
-import { ValidatorError } from '@/validation/errors';
+import { MissingParamError, ValidatorError } from '@/validation/errors';
 
 const nameField = 'any_name';
 let sut: Validator;
@@ -26,8 +26,6 @@ describe('Test Unit RequiredFieldValidator', () => {
     const result = sut.validate(bodyTest);
 
     expect(result.isLeft()).toBeTruthy();
-    expect(result.value).toEqual(
-      new ValidatorError('Valor não Informado', nameField)
-    );
+    expect(result.value).toEqual(new MissingParamError(nameField));
   });
 });
