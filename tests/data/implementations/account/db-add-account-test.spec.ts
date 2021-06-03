@@ -8,13 +8,13 @@ import { Hasher } from '@/data/protocols/cryptography';
 import { EmailAlreadyUseError } from '@/domain/errors';
 import { Account } from '@/domain/models';
 import { InternalServerError } from '@/presentation/errors';
-import { makeMockAddAccount } from '@tests/domain/models';
-import { IdGeneratorSpy } from '@tests/infra/adapter';
-import { HasherSpy } from '@tests/infra/cryptography';
+import { makeMockAddAccount } from '@tests/domain/mock/models';
+import { IdGeneratorSpy } from '@tests/infra/mock';
+import { HasherSpy } from '@tests/infra/mock/cryptography';
 import {
   AddAccountRepositorySpy,
   SearchAccountByEmailRepositorySpy
-} from '@tests/infra/db/account';
+} from '@tests/infra/mock/db/account';
 
 let sut: DBAddAccount;
 let idGeneratorSpy: IDGenerator;

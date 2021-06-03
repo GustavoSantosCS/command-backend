@@ -2,7 +2,7 @@ import { AddAccountRepository } from '@/data/protocols';
 import { Account } from '@/domain/models';
 import { AppError } from '@/shared/app-error';
 import { Either, left, right } from '@/shared/either';
-import { makeMockAccount } from '@tests/domain/models';
+import { makeMockAccount } from '@tests/domain/mock/models';
 
 type Returns = {
   right: Either<AppError, Account>;

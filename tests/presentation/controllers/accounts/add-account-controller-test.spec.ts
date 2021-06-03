@@ -1,17 +1,14 @@
 import faker from 'faker';
 
 import { Account } from '@/domain/models';
-import { EmailAlreadyUseError } from '@/domain/errors';
 import { AddAccountUseCase } from '@/domain/usecases/account';
 import { AddAccountController } from '@/presentation/controllers/accounts';
 import { HttpRequest } from '@/presentation/protocols';
 import { Validator } from '@/validator/protocols';
-import { ValidatorError } from '@/validator/errors';
 
-import { AddAccountUseCaseSpy } from '@tests/domain/usecases';
-import { makeMockAddAccount } from '@tests/domain/models';
+import { AddAccountUseCaseSpy } from '@tests/domain/mock/usecases';
+import { makeMockAddAccount } from '@tests/domain/mock/models';
 import { ValidatorSpy } from '@tests/validator/mock';
-import { throwsError } from '@tests/shared';
 
 faker.locale = 'pt_BR';
 

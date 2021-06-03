@@ -1,7 +1,7 @@
 import { Either, left, right } from '@/shared/either';
 import { EmailAlreadyUseError } from '@/domain/errors';
 import { Account } from '@/domain/models';
-import { makeMockAccount } from '@tests/domain/models';
+import { makeMockAccount } from '@tests/domain/mock/models';
 import { AddAccountUseCase } from '@/domain/usecases/account';
 import { AppError } from '@/shared/app-error';
 

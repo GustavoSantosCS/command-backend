@@ -1,7 +1,7 @@
 import { SearchAccountByEmailRepository } from '@/data/protocols';
 import { Account } from '@/domain/models';
 import { Either, left, right } from '@/shared/either';
-import { makeMockAccount } from '@tests/domain/models';
+import { makeMockAccount } from '@tests/domain/mock/models';
 
 type Returns = {
   right: Either<null, Account>;
