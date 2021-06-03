@@ -16,7 +16,7 @@ export class SearchAccountByEmailRepositorySpy
     right: right(makeMockAccount()),
     left: left(null)
   };
-  return: Either<null, Account> = this.returns.right;
+  return: Either<null, Account> = this.returns.left;
 
   throwsError() {
     this.error = new Error('any_message');
