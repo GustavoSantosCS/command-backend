@@ -1,31 +1,27 @@
+import faker from 'faker';
 import { Validator } from '@/validation/protocols';
 import { RequiredFieldValidator } from '@/validation/validators';
-import { MissingParamError, ValidatorError } from '@/validation/errors';
+import { MissingParamError } from '@/validation/errors';
 
-const nameField = 'any_name';
+let fieldLabel: string;
 let sut: Validator;
 
 describe('Test Unit RequiredFieldValidator', () => {
   beforeEach(() => {
-    sut = new RequiredFieldValidator(nameField);
+    fieldLabel = faker.database.column();
+    sut = new RequiredFieldValidator(fieldLabel);
   });
 
   it('should return true if value is provider', () => {
-    const bodyTest = {
-      [`${nameField}`]: 'any_value'
-    };
-
-    const result = sut.validate(bodyTest);
+    const result = sut.validate({ [fieldLabel]: faker.random.word() });
 
     expect(result.isRight()).toBeTruthy();
   });
 
-  it('should return ValidatorError if value is not provider', () => {
-    const bodyTest = {};
-
-    const result = sut.validate(bodyTest);
+  it('should return MissingParamError if value is not provider', () => {
+    const result = sut.validate({ [fieldLabel]: null });
 
     expect(result.isLeft()).toBeTruthy();
-    expect(result.value).toEqual(new MissingParamError(nameField));
+    expect(result.value).toEqual(new MissingParamError(fieldLabel));
   });
 });

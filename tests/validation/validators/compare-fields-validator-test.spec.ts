@@ -1,20 +1,25 @@
+import faker from 'faker';
 import { Validator } from '@/validation/protocols';
 import { CompareFieldsValidator } from '@/validation/validators';
-import { MissingParamError, NotEqualFieldsError } from '@/validation/errors';
+import { NotEqualFieldsError } from '@/validation/errors';
 
-const nameField1 = 'any1_name';
-const nameField2 = 'any2_name';
+let fieldLabel1: string;
+let fieldLabel2: string;
+
 let sut: Validator;
 
 describe('Test Unit CompareFieldsValidator', () => {
   beforeEach(() => {
-    sut = new CompareFieldsValidator(nameField1, nameField2);
+    fieldLabel1 = faker.database.column();
+    fieldLabel2 = faker.database.column();
+    sut = new CompareFieldsValidator(fieldLabel1, fieldLabel2);
   });
 
   it('should return true if the two fields are equal', () => {
+    const equalValue = faker.random.word();
     const bodyTest = {
-      [`${nameField1}`]: 'any_value',
-      [`${nameField2}`]: 'any_value'
+      [fieldLabel1]: equalValue,
+      [fieldLabel2]: equalValue
     };
 
     const result = sut.validate(bodyTest);
@@ -24,37 +29,41 @@ describe('Test Unit CompareFieldsValidator', () => {
 
   it('should return NotEqualFieldsError if the two fields are not equal', () => {
     const bodyTest = {
-      [`${nameField1}`]: 'any_value',
-      [`${nameField2}`]: 'other_value'
+      [fieldLabel1]: faker.random.word(),
+      [fieldLabel2]: faker.random.word()
     };
 
     const result = sut.validate(bodyTest);
 
     expect(result.isLeft()).toBeTruthy();
     expect(result.value).toEqual(
-      new NotEqualFieldsError(nameField1, nameField2)
+      new NotEqualFieldsError(fieldLabel1, fieldLabel2)
     );
   });
 
-  it('should return MissingParamError if the first is not provider', () => {
+  it('should return NotEqualFieldsError if the first is not provider', () => {
     const bodyTest = {
-      [`${nameField2}`]: 'any_value'
+      [fieldLabel2]: faker.random.word()
     };
 
     const result = sut.validate(bodyTest);
 
     expect(result.isLeft()).toBeTruthy();
-    expect(result.value).toEqual(new MissingParamError(nameField1));
+    expect(result.value).toEqual(
+      new NotEqualFieldsError(fieldLabel1, fieldLabel2)
+    );
   });
 
-  it('should return MissingParamError if the secund is not provider', () => {
+  it('should return NotEqualFieldsError if the secund is not provider', () => {
     const bodyTest = {
-      [`${nameField1}`]: 'any_value'
+      [fieldLabel1]: faker.random.word()
     };
 
     const result = sut.validate(bodyTest);
 
     expect(result.isLeft()).toBeTruthy();
-    expect(result.value).toEqual(new MissingParamError(nameField2));
+    expect(result.value).toEqual(
+      new NotEqualFieldsError(fieldLabel1, fieldLabel2)
+    );
   });
 });

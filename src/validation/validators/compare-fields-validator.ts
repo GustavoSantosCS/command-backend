@@ -1,7 +1,6 @@
 import { Either, left, right } from '@/shared/either';
 import { Validator } from '@/validation/protocols';
-import { MissingParamError, ValidatorError } from '../errors';
-import { NotEqualFieldsError } from '../errors/not-equal-fields-error';
+import { NotEqualFieldsError } from '@/validation/errors';
 
 export class CompareFieldsValidator implements Validator {
   constructor(
@@ -9,13 +8,7 @@ export class CompareFieldsValidator implements Validator {
     private readonly otherFieldName: string
   ) {}
 
-  validate(value: any): Either<ValidatorError, true> {
-    if (!value[this.fieldName])
-      return left(new MissingParamError(this.fieldName));
-
-    if (!value[this.otherFieldName])
-      return left(new MissingParamError(this.otherFieldName));
-
+  validate(value: any): Either<NotEqualFieldsError, true> {
     return value[this.fieldName] === value[this.otherFieldName]
       ? right(true)
       : left(new NotEqualFieldsError(this.fieldName, this.otherFieldName));

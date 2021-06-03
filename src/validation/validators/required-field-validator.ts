@@ -1,6 +1,6 @@
 import { Either, left, right } from '@/shared/either';
 import { Validator } from '@/validation/protocols';
-import { MissingParamError } from '../errors';
+import { MissingParamError } from '@/validation/errors';
 
 export class RequiredFieldValidator implements Validator {
   constructor(private readonly fieldName: string) {}

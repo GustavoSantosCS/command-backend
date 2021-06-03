@@ -1,6 +1,6 @@
 import faker from 'faker';
 import { EmailValidator } from '@/validation/validators';
-import { IsNotEmailError, MissingParamError } from '@/validation/errors';
+import { IsNotEmailError } from '@/validation/errors';
 
 let fieldLabel: string;
 let sut: EmailValidator;
@@ -29,9 +29,9 @@ describe('EmailValidator', () => {
   });
 
   test('Should return falsy if email is empty', () => {
-    const error = sut.validate({ [fieldLabel]: null });
+    const result = sut.validate({ [fieldLabel]: null });
 
-    expect(error.isLeft()).toBeTruthy();
-    expect(error.value).toEqual(new MissingParamError(fieldLabel));
+    expect(result.isLeft()).toBeTruthy();
+    expect(result.value).toEqual(new IsNotEmailError(fieldLabel, null));
   });
 });
