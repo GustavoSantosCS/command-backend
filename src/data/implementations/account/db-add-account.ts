@@ -32,17 +32,16 @@ export class DBAddAccount implements AddAccountUseCase {
       }
 
       const hasherPassword = await this.hasher.hash(newAccount.password);
-
       const account = {
         ...newAccount,
         id: this.idGenerator.generate(),
         password: hasherPassword
       };
+
       const resultAddAccount = await this.addAccountRepository.save(account);
       if (resultAddAccount.isLeft()) {
         return left(new InternalServerError(resultAddAccount.value.stack));
       }
-
       return right(resultAddAccount.value);
     } catch (error) {
       return left(new InternalServerError(error.message));
