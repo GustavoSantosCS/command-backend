@@ -80,7 +80,7 @@ describe('Test Unit: DBAddAccount', () => {
     expect(spy.callQuantity).toBe(1);
   });
 
-  it('should return IDGeneratorFallError if idGenerator throws', async () => {
+  it('should return InternalServerError if IdGenerator throws', async () => {
     const spy = idGeneratorSpy as IdGeneratorSpy;
     spy.throwsError();
 
@@ -96,5 +96,15 @@ describe('Test Unit: DBAddAccount', () => {
     await sut.add(newAccount);
 
     expect(spy.parameters).toEqual(newAccount.password);
+  });
+
+  it('should return InternalServerError if Hasher throws', async () => {
+    const spy = hasherSpy as HasherSpy;
+    spy.throwsError();
+
+    const response = await sut.add(newAccount);
+
+    expect(response.isLeft()).toBeTruthy();
+    expect(response.value).toEqual(new InternalServerError('any_message'));
   });
 });
