@@ -31,7 +31,7 @@ export class DBAddAccount implements AddAccountUseCase {
         return left(new EmailAlreadyUseError(email));
       }
 
-      const hasherPassword = this.hasher.hash(newAccount.password);
+      const hasherPassword = await this.hasher.hash(newAccount.password);
 
       const account = {
         ...newAccount,
