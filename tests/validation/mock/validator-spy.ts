@@ -1,6 +1,6 @@
 import { Either, left, right } from '@/shared/either';
-import { Validator } from '@/validator/protocols';
-import { ValidatorError } from '@/validator/errors';
+import { Validator } from '@/validation/protocols';
+import { ValidatorError } from '@/validation/errors';
 import { AppError } from '@/shared/app-error';
 
 type Returns = {

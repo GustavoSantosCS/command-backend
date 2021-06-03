@@ -1,7 +1,7 @@
 import { AddUserUseCase } from '@/domain/usecases/user';
 import { Controller, HttpResponse } from '@/presentation/protocols';
 import { badRequest, ok, serverError } from '@/utils/http';
-import { Validator } from '@/validator/protocols';
+import { Validator } from '@/validation/protocols';
 
 export class AddUserController implements Controller {
   constructor(

@@ -3,11 +3,11 @@ import faker from 'faker';
 import { UserModel } from '@/domain/models';
 import { AddUserUseCase } from '@/domain/usecases/user';
 import { AddUserController } from '@/presentation/controllers/user';
-import { Validator } from '@/validator/protocols';
+import { Validator } from '@/validation/protocols';
 
 import { AddUserUseCaseSpy } from '@tests/domain/mock/usecases';
 import { makeMockAddUserModel } from '@tests/domain/mock/models';
-import { ValidatorSpy } from '@tests/validator/mock';
+import { ValidatorSpy } from '@tests/validation/mock';
 
 faker.locale = 'pt_BR';
 
