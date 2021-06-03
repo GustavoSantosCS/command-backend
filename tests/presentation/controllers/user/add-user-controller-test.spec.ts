@@ -1,13 +1,12 @@
 import faker from 'faker';
 
-import { User } from '@/domain/models';
+import { UserModel } from '@/domain/models';
 import { AddUserUseCase } from '@/domain/usecases/user';
 import { AddUserController } from '@/presentation/controllers/user';
-import { HttpRequest } from '@/presentation/protocols';
 import { Validator } from '@/validator/protocols';
 
 import { AddUserUseCaseSpy } from '@tests/domain/mock/usecases';
-import { makeMockAddUser } from '@tests/domain/mock/models';
+import { makeMockAddUserModel } from '@tests/domain/mock/models';
 import { ValidatorSpy } from '@tests/validator/mock';
 
 faker.locale = 'pt_BR';
@@ -16,7 +15,7 @@ export const makeMockHttpRequest = (): AddUserController.DTO => ({
   body: { ...addUser }
 });
 
-let addUser: Omit<User, 'id'> & { confirmPassword: string };
+let addUser: Omit<UserModel, 'id'> & { confirmPassword: string };
 let sut: AddUserController;
 let httpRequestMock: AddUserController.DTO;
 let validatorSpy: Validator;
@@ -24,7 +23,7 @@ let addUserUseCaseSpy: AddUserUseCase;
 
 describe('Test Unit: AddUserController', () => {
   beforeEach(() => {
-    addUser = makeMockAddUser();
+    addUser = makeMockAddUserModel();
     httpRequestMock = makeMockHttpRequest();
     validatorSpy = new ValidatorSpy();
     addUserUseCaseSpy = new AddUserUseCaseSpy();

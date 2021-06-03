@@ -1,4 +1,9 @@
-import { createConnection, Connection, Repository, ObjectType } from 'typeorm';
+import {
+  createConnection,
+  Connection,
+  Repository,
+  EntityTarget
+} from 'typeorm';
 
 export class TypeORMHelpers {
   private static connection: Connection = null;
@@ -17,12 +22,10 @@ export class TypeORMHelpers {
       TypeORMHelpers.connection = await createConnection('default');
     }
   }
-  static async getRepository<Entity>(
-    entity: ObjectType<Entity>
-  ): Promise<Repository<Entity>> {
-    if (!TypeORMHelpers.connection?.isConnected) {
-      await TypeORMHelpers.connect();
-    }
+
+  static getRepository<Entity>(
+    entity: EntityTarget<Entity>
+  ): Repository<Entity> {
     return TypeORMHelpers.connection.getRepository(entity);
   }
 

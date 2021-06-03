@@ -1,18 +1,18 @@
 import { Either, left, right } from '@/shared/either';
 import { EmailAlreadyUseError } from '@/domain/errors';
-import { User } from '@/domain/models';
-import { makeMockUser } from '@tests/domain/mock/models';
+import { UserModel } from '@/domain/models';
+import { makeMockUserModel } from '@tests/domain/mock/models';
 import { AddUserUseCase } from '@/domain/usecases/user';
 import { AppError } from '@/shared/app-error';
 
 type Returns = {
-  right: Either<EmailAlreadyUseError, User>;
-  left: Either<EmailAlreadyUseError, User>;
+  right: Either<EmailAlreadyUseError, UserModel>;
+  left: Either<EmailAlreadyUseError, UserModel>;
 };
 
 export class AddUserUseCaseSpy implements AddUserUseCase {
   returns: Returns = {
-    right: right(makeMockUser()),
+    right: right(makeMockUserModel()),
     left: left(new EmailAlreadyUseError(''))
   };
   return = this.returns.right;
@@ -25,7 +25,7 @@ export class AddUserUseCaseSpy implements AddUserUseCase {
 
   async add(
     newUser: AddUserUseCase.DTO
-  ): Promise<Either<EmailAlreadyUseError, User>> {
+  ): Promise<Either<EmailAlreadyUseError, UserModel>> {
     if (this.error) throw this.error;
     this.parameters = newUser;
 

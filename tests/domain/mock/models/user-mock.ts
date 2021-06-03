@@ -1,9 +1,9 @@
 import faker from 'faker';
-import { User, AccountType } from '@/domain/models';
+import { AccountType, UserModel } from '@/domain/models';
 
 faker.locale = 'pt_BR';
 
-export const makeMockUser = (): User => ({
+export const makeMockUserModel = (): UserModel => ({
   id: faker.datatype.uuid(),
   nome: faker.name.findName(),
   email: faker.internet.email(),
@@ -15,7 +15,7 @@ export const makeMockUser = (): User => ({
   ])
 });
 
-export const makeMockAddUser = (): Omit<User, 'id'> & {
+export const makeMockAddUserModel = (): Omit<UserModel, 'id'> & {
   confirmPassword: string;
 } => {
   const password = faker.internet.password();

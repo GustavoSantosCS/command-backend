@@ -9,7 +9,7 @@
     "database": "docker",
     "synchronize": true,
     "logging": false,
-    "entities": ["./src/domain/models/user.ts"],
+    "entities": ["./src/data/entities/user-entity.ts"],
     "migrations": ["./src/infra/db/typeorm/migrations/**.ts"],
     "cli": {
       "migrationsDir": "./src/infra/db/typeorm/migrations"
@@ -22,7 +22,7 @@
     "synchronize": true,
     "dropSchema": true,
     "logging": false,
-    "entities": ["./src/domain/models/user.ts"],
+    "entities": ["./src/data/entities/user-entity.ts"],
     "migrations": ["./src/infra/db/typeorm/migrations/**.ts"],
     "cli": {
       "migrationsDir": "./src/infra/db/typeorm/migrations"

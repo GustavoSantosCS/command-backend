@@ -1,28 +1,29 @@
+import { UserEntity } from '@/data/entities';
 import { AddUserRepository } from '@/data/protocols';
-import { User } from '@/domain/models';
+import { UserModel } from '@/domain/models';
 import { AppError } from '@/shared/app-error';
 import { Either, left, right } from '@/shared/either';
-import { makeMockUser } from '@tests/domain/mock/models';
+import { makeMockUserEntity } from '@tests/data/mock/entities';
 
 type Returns = {
-  right: Either<AppError, User>;
-  left: Either<AppError, User>;
+  right: Either<AppError, UserEntity>;
+  left: Either<AppError, UserEntity>;
 };
 
 export class AddUserRepositorySpy implements AddUserRepository {
-  parameters: User;
+  parameters: UserModel;
   error: Error;
   returns: Returns = {
-    right: right(makeMockUser()),
+    right: right(makeMockUserEntity()),
     left: left(new AppError('any_message'))
   };
-  return: Either<AppError, User> = this.returns.right;
+  return: Either<AppError, UserEntity> = this.returns.right;
 
   throwsError() {
     this.error = new Error('any_message');
   }
 
-  async save(user: User): Promise<Either<AppError, User>> {
+  async save(user: UserModel): Promise<Either<AppError, UserEntity>> {
     this.parameters = user;
     if (this.error) throw this.error;
     return this.return;

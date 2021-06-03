@@ -8,10 +8,10 @@ import {
 } from '@/data/protocols';
 import { Hasher } from '@/data/protocols/cryptography';
 import { EmailAlreadyUseError } from '@/domain/errors';
-import { User } from '@/domain/models';
+import { UserModel } from '@/domain/models';
 import { InternalServerError } from '@/presentation/errors';
 
-import { makeMockAddUser } from '@tests/domain/mock/models';
+import { makeMockUserEntity } from '@tests/data/mock/entities';
 import { IdGeneratorSpy } from '@tests/infra/mock';
 import { HasherSpy } from '@tests/infra/mock/cryptography';
 import {
@@ -19,12 +19,16 @@ import {
   SearchUserByEmailRepositorySpy
 } from '@tests/infra/mock/db/user';
 import { right } from '@/shared/either';
+import { UserEntity } from '@/data/entities';
 
-const configNewUser = () => {
-  const addUser = {
+const configNewUser = (): UserEntity => {
+  const addUser: UserEntity = {
     ...newUser,
     id: faker.datatype.uuid(),
-    password: `${newUser.password}-hash`
+    password: `${newUser.password}-hash`,
+    createdAt: null,
+    updateAt: null,
+    deleteAt: null
   };
   const hasher = hasherSpy as HasherSpy;
   hasher.return = addUser.password;
@@ -38,11 +42,11 @@ let idGeneratorSpy: IDGenerator;
 let hasherSpy: Hasher;
 let searchByEmailRepositorySpy: SearchUserByEmailRepository;
 let addUserRepositorySpy: AddUserRepository;
-let newUser: Omit<User, 'id'>;
+let newUser: Omit<UserModel, 'id'>;
 
 describe('Test Unit: DBAddUser', () => {
   beforeEach(() => {
-    newUser = makeMockAddUser();
+    newUser = makeMockUserEntity();
     idGeneratorSpy = new IdGeneratorSpy();
     searchByEmailRepositorySpy = new SearchUserByEmailRepositorySpy();
     addUserRepositorySpy = new AddUserRepositorySpy();
@@ -112,9 +116,10 @@ describe('Test Unit: DBAddUser', () => {
 
   it('should call AddUserRepository with the correct values', async () => {
     const addUser = configNewUser();
+
     const spy = addUserRepositorySpy as AddUserRepositorySpy;
 
-    await sut.add(newUser);
+    await sut.add(addUser);
 
     expect(spy.parameters).toEqual(addUser);
   });

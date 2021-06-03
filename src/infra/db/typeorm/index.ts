@@ -1,2 +1,2 @@
-export * from './user-repository';
+export * from './user-typeorm-repository';
 export * from './typeorm-helper';

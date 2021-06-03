@@ -1,7 +1,8 @@
 import { AppError } from '@/shared/app-error';
 import { Either } from '@/shared/either';
-import { User } from '@/domain/models';
+import { UserModel } from '@/domain/models';
+import { UserEntity } from '@/data/entities';
 
 export interface AddUserRepository {
-  save(user: User): Promise<Either<AppError, User>>;
+  save(user: UserModel): Promise<Either<AppError, UserEntity>>;
 }

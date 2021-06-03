@@ -1,5 +1,5 @@
 import { EmailAlreadyUseError } from '@/domain/errors';
-import { User, AccountType } from '@/domain/models';
+import { UserModel, AccountType } from '@/domain/models';
 import { Either } from '@/shared/either';
 
 export interface AddUserUseCase {
@@ -15,5 +15,5 @@ export namespace AddUserUseCase {
     accountType: AccountType;
   };
 
-  export type Response = Either<EmailAlreadyUseError, User>;
+  export type Response = Either<EmailAlreadyUseError, UserModel>;
 }
