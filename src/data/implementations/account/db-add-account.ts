@@ -3,7 +3,7 @@ import {
   AddAccountRepository,
   SearchAccountByEmailRepository
 } from '@/data/protocols/';
-import { EmailAlreadyUseError, IDGeneratorFallError } from '@/domain/errors';
+import { EmailAlreadyUseError } from '@/domain/errors';
 import { Account } from '@/domain/models';
 import { AddAccountUseCase } from '@/domain/usecases/account';
 import { InternalServerError } from '@/presentation/errors';
@@ -18,7 +18,7 @@ export class DBAddAccount implements AddAccountUseCase {
 
   async add(
     newAccount: AddAccountUseCase.DTO
-  ): Promise<Either<EmailAlreadyUseError | IDGeneratorFallError, Account>> {
+  ): Promise<Either<EmailAlreadyUseError, Account>> {
     try {
       const account = { ...newAccount, id: this.idGenerator.generate() };
 

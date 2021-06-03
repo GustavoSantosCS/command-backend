@@ -1,4 +1,4 @@
-import { EmailAlreadyUseError, IDGeneratorFallError } from '@/domain/errors';
+import { EmailAlreadyUseError } from '@/domain/errors';
 import { Account, AccountType } from '@/domain/models';
 import { Either } from '@/shared/either';
 
@@ -15,8 +15,5 @@ export namespace AddAccountUseCase {
     accountType: AccountType;
   };
 
-  export type Response = Either<
-    EmailAlreadyUseError | IDGeneratorFallError,
-    Account
-  >;
+  export type Response = Either<EmailAlreadyUseError, Account>;
 }
