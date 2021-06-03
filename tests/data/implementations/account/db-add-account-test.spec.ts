@@ -10,26 +10,11 @@ import { Account } from '@/domain/models';
 import { InternalServerError } from '@/presentation/errors';
 import { makeMockAddAccount } from '@tests/domain/models';
 import { IdGeneratorSpy } from '@tests/infra/adapter';
+import { HasherSpy } from '@tests/infra/cryptography';
 import {
   AddAccountRepositorySpy,
   SearchAccountByEmailRepositorySpy
 } from '@tests/infra/db/account';
-
-class HasherSpy implements Hasher {
-  parameters: string;
-  error: Error;
-  return: string = 'hash';
-
-  throwsError() {
-    this.error = new Error('any_message');
-  }
-
-  async hash(plaintext: string): Promise<string> {
-    this.parameters = plaintext;
-    if (this.error) throw this.error;
-    return this.return;
-  }
-}
 
 let sut: DBAddAccount;
 let idGeneratorSpy: IDGenerator;
