@@ -37,7 +37,7 @@ describe('Test Unit CompareFieldsValidator', () => {
 
     expect(result.isLeft()).toBeTruthy();
     expect(result.value).toEqual(
-      new NotEqualFieldsError(fieldLabel1, fieldLabel2)
+      new NotEqualFieldsError(bodyTest[fieldLabel1], bodyTest[fieldLabel2])
     );
   });
 
@@ -50,7 +50,7 @@ describe('Test Unit CompareFieldsValidator', () => {
 
     expect(result.isLeft()).toBeTruthy();
     expect(result.value).toEqual(
-      new NotEqualFieldsError(fieldLabel1, fieldLabel2)
+      new NotEqualFieldsError(null, bodyTest[fieldLabel2])
     );
   });
 
@@ -63,7 +63,7 @@ describe('Test Unit CompareFieldsValidator', () => {
 
     expect(result.isLeft()).toBeTruthy();
     expect(result.value).toEqual(
-      new NotEqualFieldsError(fieldLabel1, fieldLabel2)
+      new NotEqualFieldsError(bodyTest[fieldLabel1], null)
     );
   });
 });

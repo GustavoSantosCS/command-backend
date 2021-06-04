@@ -11,6 +11,11 @@ export class CompareFieldsValidator implements Validator {
   validate(value: any): Either<NotEqualFieldsError, true> {
     return value[this.fieldName] === value[this.otherFieldName]
       ? right(true)
-      : left(new NotEqualFieldsError(this.fieldName, this.otherFieldName));
+      : left(
+          new NotEqualFieldsError(
+            value[this.fieldName] || null,
+            value[this.otherFieldName] || null
+          )
+        );
   }
 }

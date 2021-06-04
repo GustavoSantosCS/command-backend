@@ -15,11 +15,8 @@ export class UserTypeOrmRepository
 {
   private repository: Repository<UserEntity>;
 
-  constructor() {
-    this.repository = TypeORMHelpers.getRepository(UserEntity);
-  }
-
   async searchByEmail(email: string): Promise<Either<null, UserEntity>> {
+    this.repository = await TypeORMHelpers.getRepository(UserEntity);
     const findUser = await this.repository.findOne({
       where: [{ email }],
       withDeleted: false
@@ -29,14 +26,16 @@ export class UserTypeOrmRepository
   }
 
   async save(user: UserModel): Promise<Either<AppError, UserEntity>> {
+    this.repository = await TypeORMHelpers.getRepository(UserEntity);
     const userEntity = new UserEntity(user);
     try {
       const result = await this.repository.save(userEntity);
-
       return !result
         ? left(new AppError('Erro ao Persistir No Banco de Dados', user))
         : right(result);
     } catch (error) {
+      console.log('UserTypeOrmRepository catch');
+      console.log(error);
       return left(
         new InternalServerError('Erro ao Persistir No Banco de Dados', user)
       );

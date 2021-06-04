@@ -2,15 +2,15 @@
   {
     "name": "default",
     "type": "postgres",
-    "host": "localhost",
+    "host": "postgres",
     "port": 5432,
     "username": "docker",
     "password": "docker",
     "database": "docker",
     "synchronize": true,
     "logging": false,
-    "entities": ["./src/data/entities/user-entity.ts"],
-    "migrations": ["./src/infra/db/typeorm/migrations/**.ts"],
+    "entities": ["./src/data/entities/**.*"],
+    "migrations": ["./src/infra/db/typeorm/migrations/**.*"],
     "cli": {
       "migrationsDir": "./src/infra/db/typeorm/migrations"
     }

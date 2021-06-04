@@ -40,10 +40,13 @@ export class DBAddUser implements AddUserUseCase {
 
       const resultAddUser = await this.addUserRepository.save(user);
       if (resultAddUser.isLeft()) {
+        console.log('DBAddUser resultAddUser');
         return left(new InternalServerError(resultAddUser.value.stack));
       }
       return right(resultAddUser.value as UserModel);
     } catch (error) {
+      console.log('DBAddUser catch');
+      console.log(error);
       return left(new InternalServerError(error.message));
     }
   }

@@ -5,11 +5,10 @@
   "license": "MIT",
   "scripts": {
     "start": "node dist/server.js",
-    "debug": "nodemon -L --watch ./dist --inspect=0.0.0.0:9222 --nolazy ./dist/server.js",
+    "debug": "nodemon -L --watch ./dist --inspect=0.0.0.0:9222 --nolazy ./src/server.js",
     "prebuild": "rimraf dist",
     "build": "tsc -p tsconfig-build.json",
-    "build:watch": "tsc -w",
-    "dev": "tsnd -r tsconfig-paths/register --clear --respawn --transpile-only --ignore-watch node_modules --no-notify src/server",
+    "build:watch": "tsc -p tsconfig-build.json -w",
     "pretest": "jest --clearCache",
     "test": "jest --passWithNoTests --runInBand --no-cache",
     "test:unit": "npm test -- --watch -c jest-unit.config.js",
@@ -19,11 +18,22 @@
     "check": "npm-check -s -u",
     "typeorm": "tsnd ./node_modules/typeorm/cli.js"
   },
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "express": "^4.17.1",
+    "module-alias": "^2.2.2",
+    "pg": "^8.6.0",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.33",
+    "uuid": "^8.3.2"
+  },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/express": "^4.17.12",
     "@types/faker": "^5.5.6",
     "@types/jest": "^26.0.23",
     "@types/node": "^15.0.2",
+    "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.23.0",
     "@typescript-eslint/parser": "^4.23.0",
     "coveralls": "^3.1.0",
@@ -44,19 +54,13 @@
     "supertest": "^6.1.3",
     "ts-jest": "^26.5.6",
     "ts-node-dev": "^1.1.6",
-    "typescript": "^4.2.4"
+    "typescript": "^4.2.4",
+    "sqlite3": "^5.0.2"
   },
   "engines": {
     "node": "14.x"
   },
   "_moduleAliases": {
-    "@": "dist"
-  },
-  "dependencies": {
-    "express": "^4.17.1",
-    "pg": "^8.6.0",
-    "reflect-metadata": "^0.1.13",
-    "sqlite3": "^5.0.2",
-    "typeorm": "^0.2.33"
+    "@": "src"
   }
 }

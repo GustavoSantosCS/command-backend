@@ -15,17 +15,19 @@ export class TypeORMHelpers {
     return TypeORMHelpers.connection;
   }
 
-  static async connect(): Promise<void> {
-    if (String(process.env.NODE_ENV) === 'test') {
-      TypeORMHelpers.connection = await createConnection('dev');
-    } else {
-      TypeORMHelpers.connection = await createConnection('default');
-    }
+  static async connect(): Promise<Connection> {
+    const nameConnected =
+      String(process.env.NODE_ENV) === 'test' ? 'dev' : 'default';
+    TypeORMHelpers.connection = await createConnection(nameConnected);
+    return TypeORMHelpers.connection;
   }
 
-  static getRepository<Entity>(
+  static async getRepository<Entity>(
     entity: EntityTarget<Entity>
-  ): Repository<Entity> {
+  ): Promise<Repository<Entity>> {
+    if (!TypeORMHelpers.connection) {
+      await TypeORMHelpers.connect();
+    }
     return TypeORMHelpers.connection.getRepository(entity);
   }
 
