@@ -5,6 +5,7 @@ import {
   CompareFieldsValidator,
   MinimumSizeValidator
 } from '@/validation/validators';
+import { NumberValidator } from './number-validator';
 
 export class ValidatorBuilder {
   private constructor(
@@ -39,6 +40,11 @@ export class ValidatorBuilder {
     this.validators.push(
       new CompareFieldsValidator(this.fieldName, otherFieldName, customMessage)
     );
+    return this;
+  }
+
+  isNumber(customMessage?: string): ValidatorBuilder {
+    this.validators.push(new NumberValidator(this.fieldName, customMessage));
     return this;
   }
 
