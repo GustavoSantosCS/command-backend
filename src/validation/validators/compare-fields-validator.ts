@@ -5,7 +5,8 @@ import { NotEqualFieldsError } from '@/validation/errors';
 export class CompareFieldsValidator implements Validator {
   constructor(
     private readonly fieldName: string,
-    private readonly otherFieldName: string
+    private readonly otherFieldName: string,
+    private readonly customMessage = null
   ) {}
 
   validate(value: any): Either<NotEqualFieldsError, true> {
@@ -14,7 +15,8 @@ export class CompareFieldsValidator implements Validator {
       : left(
           new NotEqualFieldsError(
             value[this.fieldName] || null,
-            value[this.otherFieldName] || null
+            value[this.otherFieldName] || null,
+            this.customMessage
           )
         );
   }

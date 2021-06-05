@@ -15,19 +15,22 @@ export class ValidatorBuilder {
     return new ValidatorBuilder(fieldName, []);
   }
 
-  required(): ValidatorBuilder {
-    this.validators.push(new RequiredFieldValidator(this.fieldName));
-    return this;
-  }
-
-  email(): ValidatorBuilder {
-    this.validators.push(new EmailValidator(this.fieldName));
-    return this;
-  }
-
-  toEqual(otherFieldName: string): ValidatorBuilder {
+  required(customMessage?: string): ValidatorBuilder {
     this.validators.push(
-      new CompareFieldsValidator(this.fieldName, otherFieldName)
+      new RequiredFieldValidator(this.fieldName, customMessage)
+    );
+    return this;
+  }
+
+  email(customMessage?: string): ValidatorBuilder {
+    this.validators.push(new EmailValidator(this.fieldName, customMessage));
+    return this;
+  }
+
+  toEqual(otherFieldName: string, customMessage?: string): ValidatorBuilder {
+    console.log(customMessage);
+    this.validators.push(
+      new CompareFieldsValidator(this.fieldName, otherFieldName, customMessage)
     );
     return this;
   }

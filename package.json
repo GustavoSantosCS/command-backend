@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node dist/server.js",
-    "debug": "nodemon -L --watch ./dist --inspect=0.0.0.0:9222 --nolazy ./src/server.js",
+    "debug": "nodemon -L --watch ./src --inspect=0.0.0.0:9222 --nolazy ./src/server.js",
     "prebuild": "rimraf dist",
     "build": "tsc -p tsconfig-build.json",
     "build:watch": "tsc -p tsconfig-build.json -w",

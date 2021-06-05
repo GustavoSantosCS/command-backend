@@ -21,26 +21,29 @@ const idGenerator: IDGenerator = new UUIDAdapter();
 const hasher: Hasher = new BcryptAdapter(salt);
 
 const makeValidationAddUser = (): Validator => {
-  const nameValidator = ValidatorBuilder.field('nome').required().build();
+  const nameValidator = ValidatorBuilder.field('nome')
+    .required('Nome não informada')
+    .build();
 
   const emailValidator = ValidatorBuilder.field('email')
-    .required()
-    .email()
+    .required('E-mail não informado')
+    .email('Valor informado não é um email')
     .build();
 
   const passwordValidator = ValidatorBuilder.field('password')
-    .required()
+    .required('Senha não informada')
     .build();
 
   const confirmPasswordValidator = ValidatorBuilder.field('confirmPassword')
-    .required()
-    .toEqual('password')
+    .required('Confirmação de Senha não informada')
+    .toEqual('password', 'Senhas não batem')
     .build();
 
   // TODO: criar validator para pertencer a um array
   const accountValidator = ValidatorBuilder.field('accountType')
-    .required()
+    .required('Tipo de Conta não Informado')
     .build();
+
   return new ValidationComposite([
     ...nameValidator,
     ...emailValidator,
