@@ -5,9 +5,7 @@ import { IsNotEmailError } from '@/validation/errors';
 let fieldLabel: string;
 let message: string;
 const makeSut = (messageValidator = null): { sut: EmailValidator } => ({
-  sut: messageValidator
-    ? new EmailValidator(fieldLabel, messageValidator)
-    : new EmailValidator(fieldLabel)
+  sut: new EmailValidator(fieldLabel, messageValidator)
 });
 
 describe('Test Unit EmailValidator', () => {
