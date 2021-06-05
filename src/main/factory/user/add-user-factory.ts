@@ -22,7 +22,7 @@ const hasher: Hasher = new BcryptAdapter(salt);
 
 const makeValidationAddUser = (): Validator => {
   const nameValidator = ValidatorBuilder.field('nome')
-    .required('Nome não informada')
+    .required('Nome não informado')
     .min(3, 'Nome deve conter ao menos 3 letras')
     .build();
 
@@ -41,7 +41,6 @@ const makeValidationAddUser = (): Validator => {
     .toEqual('password', 'Senhas não batem')
     .build();
 
-  // TODO: criar validator para pertencer a um array
   const accountValidator = ValidatorBuilder.field('accountType')
     .required('Tipo de Conta não Informado')
     .isNumber('Parâmetro Invalido')

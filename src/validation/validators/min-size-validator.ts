@@ -11,7 +11,6 @@ export class MinimumSizeValidator implements Validator {
 
   validate(value: any): Either<MinimumSizeError, true> {
     const fieldValue: string = value[this.fieldName];
-
     return fieldValue?.length >= this.minimumSize
       ? right(true)
       : left(

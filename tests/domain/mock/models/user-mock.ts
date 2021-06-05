@@ -27,7 +27,6 @@ export const makeMockAddUserModel = (): Omit<UserModel, 'id'> & {
     confirmPassword,
     accountType: faker.random.arrayElement<AccountType>([
       AccountType.Client,
-      AccountType.ClientManager,
       AccountType.Manager
     ])
   };

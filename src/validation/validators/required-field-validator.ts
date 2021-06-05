@@ -11,6 +11,6 @@ export class RequiredFieldValidator implements Validator {
   validate(value: any): Either<MissingParamError, true> {
     return value[this.fieldName]
       ? right(true)
-      : left(new MissingParamError(this.fieldName, this.customMessage));
+      : left(new MissingParamError(this.fieldName,this.customMessage));
   }
 }
