@@ -9,7 +9,6 @@ import {
 import { Hasher } from '@/data/protocols/cryptography';
 import { EmailAlreadyUseError } from '@/domain/errors';
 import { UserModel } from '@/domain/models';
-import { InternalServerError } from '@/presentation/errors';
 
 import { makeMockUserEntity } from '@tests/data/mock/entities';
 import { IdGeneratorSpy } from '@tests/infra/mock';
@@ -20,6 +19,7 @@ import {
 } from '@tests/infra/mock/db/user';
 import { right } from '@/shared/either';
 import { UserEntity } from '@/data/entities';
+import { PersistencyError } from '@/infra/errors';
 
 const configNewUser = (): UserEntity => {
   const addUser: UserEntity = {
@@ -86,14 +86,13 @@ describe('Test Unit: DBAddUser', () => {
     expect(spy.callQuantity).toBe(1);
   });
 
-  it('should return InternalServerError if IDGenerator throws', async () => {
+  it('should throws if IDGenerator throws', async () => {
     const spy = idGeneratorSpy as IdGeneratorSpy;
     spy.throwsError();
 
-    const response = await sut.add(newUser);
+    const promise = sut.add(newUser);
 
-    expect(response.isLeft()).toBeTruthy();
-    expect(response.value).toEqual(new InternalServerError('any_message'));
+    await expect(promise).rejects.toThrow();
   });
 
   it('should call Hasher with the correct values', async () => {
@@ -104,14 +103,13 @@ describe('Test Unit: DBAddUser', () => {
     expect(spy.parameters).toEqual(newUser.password);
   });
 
-  it('should return InternalServerError if Hasher throws', async () => {
+  it('should throws if Hasher throws', async () => {
     const spy = hasherSpy as HasherSpy;
     spy.throwsError();
 
-    const response = await sut.add(newUser);
+    const promise = sut.add(newUser);
 
-    expect(response.isLeft()).toBeTruthy();
-    expect(response.value).toEqual(new InternalServerError('any_message'));
+    await expect(promise).rejects.toThrow();
   });
 
   it('should call AddUserRepository with the correct values', async () => {
@@ -124,14 +122,13 @@ describe('Test Unit: DBAddUser', () => {
     expect(spy.parameters).toEqual(addUser);
   });
 
-  it('should return InternalServerError if AddUserRepository throws', async () => {
+  it('should throws if AddUserRepository throws', async () => {
     const spy = addUserRepositorySpy as AddUserRepositorySpy;
     spy.throwsError();
 
-    const response = await sut.add(newUser);
+    const promise = sut.add(newUser);
 
-    expect(response.isLeft()).toBeTruthy();
-    expect(response.value).toEqual(new InternalServerError('any_message'));
+    await expect(promise).rejects.toThrow();
   });
 
   it('should return a new User if success to persistent', async () => {
@@ -146,13 +143,15 @@ describe('Test Unit: DBAddUser', () => {
     expect(response.value).toEqual(addUser);
   });
 
-  it('should return a InternalServerError if fall to persistent', async () => {
+  it('should return PersistencyError if fall to persistent', async () => {
     const spy = addUserRepositorySpy as AddUserRepositorySpy;
     spy.return = spy.returns.left;
 
-    const response = await sut.add(newUser);
+    const result = await sut.add(newUser);
 
-    expect(response.isLeft()).toBeTruthy();
-    expect(response.value).toEqual(new InternalServerError('any_message'));
+    expect(result.isLeft()).toBeTruthy();
+    expect(result.value).toEqual(
+      new PersistencyError('any_message', {}, 'any_value')
+    );
   });
 });

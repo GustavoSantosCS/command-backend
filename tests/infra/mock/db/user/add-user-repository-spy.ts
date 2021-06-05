@@ -1,6 +1,7 @@
 import { UserEntity } from '@/data/entities';
 import { AddUserRepository } from '@/data/protocols';
 import { UserModel } from '@/domain/models';
+import { PersistencyError } from '@/infra/errors';
 import { AppError } from '@/shared/app-error';
 import { Either, left, right } from '@/shared/either';
 import { makeMockUserEntity } from '@tests/data/mock/entities';
@@ -15,7 +16,7 @@ export class AddUserRepositorySpy implements AddUserRepository {
   error: Error;
   returns: Returns = {
     right: right(makeMockUserEntity()),
-    left: left(new AppError('any_message'))
+    left: left(new PersistencyError('any_message', {}, 'any_value'))
   };
   return: Either<AppError, UserEntity> = this.returns.right;
 
@@ -23,7 +24,7 @@ export class AddUserRepositorySpy implements AddUserRepository {
     this.error = new Error('any_message');
   }
 
-  async save(user: UserModel): Promise<Either<AppError, UserEntity>> {
+  async save(user: UserModel): Promise<Either<PersistencyError, UserEntity>> {
     this.parameters = user;
     if (this.error) throw this.error;
     return this.return;

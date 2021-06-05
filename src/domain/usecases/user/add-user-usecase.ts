@@ -1,3 +1,4 @@
+import { PersistencyError } from '@/infra/errors';
 import { EmailAlreadyUseError } from '@/domain/errors';
 import { UserModel, AccountType } from '@/domain/models';
 import { Either } from '@/shared/either';
@@ -15,5 +16,8 @@ export namespace AddUserUseCase {
     accountType: AccountType;
   };
 
-  export type Response = Either<EmailAlreadyUseError, UserModel>;
+  export type Response = Either<
+    EmailAlreadyUseError | PersistencyError,
+    UserModel
+  >;
 }

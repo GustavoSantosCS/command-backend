@@ -6,9 +6,8 @@ import {
   SearchUserByEmailRepository
 } from '@/data/protocols';
 import { UserModel } from '@/domain/models';
-import { AppError } from '@/shared/app-error';
 import { Either, left, right } from '@/shared/either';
-import { InternalServerError } from '@/presentation/errors';
+import { PersistencyError } from '@/infra/errors';
 
 export class UserTypeOrmRepository
   implements AddUserRepository, SearchUserByEmailRepository
@@ -25,20 +24,18 @@ export class UserTypeOrmRepository
     return findUser ? right(findUser) : left(null);
   }
 
-  async save(user: UserModel): Promise<Either<AppError, UserEntity>> {
+  async save(user: UserModel): Promise<Either<PersistencyError, UserEntity>> {
     this.repository = await TypeORMHelpers.getRepository(UserEntity);
     const userEntity = new UserEntity(user);
-    try {
-      const result = await this.repository.save(userEntity);
-      return !result
-        ? left(new AppError('Erro ao Persistir No Banco de Dados', user))
-        : right(result);
-    } catch (error) {
-      console.log('UserTypeOrmRepository catch');
-      console.log(error);
-      return left(
-        new InternalServerError('Erro ao Persistir No Banco de Dados', user)
-      );
-    }
+    const result = await this.repository.save(userEntity);
+    return !result
+      ? left(
+          new PersistencyError(
+            'Erro ao Persistir No Banco de Dados',
+            user,
+            'UserTypeOrmRepository'
+          )
+        )
+      : right(result);
   }
 }

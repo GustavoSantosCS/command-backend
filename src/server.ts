@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import 'reflect-metadata';
 import 'module-alias/register';
 import { TypeORMHelpers } from '@/infra/db/typeorm';
@@ -14,6 +15,6 @@ TypeORMHelpers.connect()
     })
   )
   .catch(error => {
-    console.log('Can not connect into database');
-    console.log(error);
+    console.error('Can not connect into database');
+    console.error(error);
   });

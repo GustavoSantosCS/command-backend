@@ -1,4 +1,5 @@
 import { AddUserUseCase } from '@/domain/usecases/user';
+import { InternalServerError } from '@/presentation/errors';
 import { Controller, HttpResponse } from '@/presentation/protocols';
 import { badRequest, ok, serverError } from '@/utils/http';
 import { Validator } from '@/validation/protocols';
@@ -12,17 +13,27 @@ export class AddUserController implements Controller {
   async handle(httpRequest: AddUserController.DTO): Promise<HttpResponse> {
     try {
       const { body } = httpRequest;
+
       const validatorResult = this.validator.validate(body);
       if (validatorResult.isLeft()) {
-        return badRequest([validatorResult.value]);
+        return badRequest(validatorResult.value);
       }
+
       const resultAddUser = await this.addUserUseCase.add(body);
       if (resultAddUser.isLeft()) {
-        return badRequest([resultAddUser.value]);
+        if (resultAddUser.value.name === 'PersistencyError') {
+          // eslint-disable-next-line no-console
+          console.error(resultAddUser.value);
+          return serverError(new InternalServerError());
+        }
+        return badRequest(resultAddUser.value);
       }
+
       return ok(resultAddUser.value);
     } catch (error) {
-      return serverError([error]);
+      // eslint-disable-next-line no-console
+      console.error(error);
+      return serverError(error);
     }
   }
 }
