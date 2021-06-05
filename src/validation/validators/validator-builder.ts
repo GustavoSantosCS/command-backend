@@ -2,7 +2,8 @@ import { Validator } from '@/validation/protocols';
 import {
   RequiredFieldValidator,
   EmailValidator,
-  CompareFieldsValidator
+  CompareFieldsValidator,
+  MinimumSizeValidator
 } from '@/validation/validators';
 
 export class ValidatorBuilder {
@@ -27,8 +28,14 @@ export class ValidatorBuilder {
     return this;
   }
 
+  min(minimumSize: number, customMessage?: string): ValidatorBuilder {
+    this.validators.push(
+      new MinimumSizeValidator(this.fieldName, minimumSize, customMessage)
+    );
+    return this;
+  }
+
   toEqual(otherFieldName: string, customMessage?: string): ValidatorBuilder {
-    console.log(customMessage);
     this.validators.push(
       new CompareFieldsValidator(this.fieldName, otherFieldName, customMessage)
     );
