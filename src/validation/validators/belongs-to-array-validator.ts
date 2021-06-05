@@ -15,7 +15,7 @@ export class BelongsToArrayValidator implements Validator {
     return this.array.includes(fieldValue)
       ? right(true)
       : left(
-          new InvalidParamError(this.fieldName, this.array, this.customMessage)
+          new InvalidParamError(this.fieldName, fieldValue, this.customMessage)
         );
   }
 }
