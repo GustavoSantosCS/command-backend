@@ -89,7 +89,9 @@ Este projeto foi desenvolvido com as seguintes tecnologias
 - [Docker-Compose](https://docs.docker.com/compose/gettingstarted/)
 
 <p>Esse script é para rodar com o docker, caso não queira usar o docker compile o código com typescript</p>
+
 ```bash
+
 # Clone este repositório.
 $ git clone https://github.com/GustavoSantosCS/commad-backend commad-backend
 
