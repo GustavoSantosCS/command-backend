@@ -8,6 +8,8 @@ import { Validator } from '@/validation/protocols';
 import { AddUserUseCaseSpy } from '@tests/domain/mock/usecases';
 import { makeMockAddUserModel } from '@tests/domain/mock/models';
 import { ValidatorSpy } from '@tests/validation/mock';
+import { left } from '@/shared/either';
+import { PersistencyError } from '@/infra/errors';
 
 faker.locale = 'pt_BR';
 
@@ -64,6 +66,17 @@ describe('Test Unit: AddUserController', () => {
     const response = await sut.handle(httpRequestMock);
 
     expect(response.statusCode).toBe(400);
+    expect(response.body).toHaveProperty('errors');
+    expect(response.body.errors[0]).toHaveProperty('message');
+    expect(response.body.errors[0]).toHaveProperty('value');
+  });
+
+  it('should return 500 if the return of AddUserUseCase is PersistencyError', async () => {
+    const spy = addUserUseCaseSpy as AddUserUseCaseSpy;
+    spy.return = left(new PersistencyError('any_message', {}, 'any_value'));
+
+    const response = await sut.handle(httpRequestMock);
+    expect(response.statusCode).toBe(500);
     expect(response.body).toHaveProperty('errors');
     expect(response.body.errors[0]).toHaveProperty('message');
     expect(response.body.errors[0]).toHaveProperty('value');
