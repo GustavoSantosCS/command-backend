@@ -22,9 +22,6 @@ export class UserEntity {
   @Column()
   password: string;
 
-  @Column({ name: 'account_type' })
-  accountType: number;
-
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 

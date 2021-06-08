@@ -1,5 +1,5 @@
 import { UserEntity } from '@/data/entities';
-import { AccountType, UserModel } from '@/domain/models';
+import { UserModel } from '@/domain/models';
 import faker from 'faker';
 
 export const makeMockUserEntity = (): UserEntity => {
@@ -7,12 +7,7 @@ export const makeMockUserEntity = (): UserEntity => {
     id: faker.datatype.uuid(),
     nome: faker.name.findName(),
     email: faker.internet.email(),
-    password: faker.internet.password(),
-    accountType: faker.random.arrayElement<AccountType>([
-      AccountType.Client,
-      AccountType.ClientManager,
-      AccountType.Manager
-    ])
+    password: faker.internet.password()
   };
   const userEntity = new UserEntity(userModel);
   return userEntity;

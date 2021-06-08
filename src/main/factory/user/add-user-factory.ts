@@ -41,18 +41,11 @@ const makeValidationAddUser = (): Validator => {
     .toEqual('password', 'Senhas não batem')
     .build();
 
-  const accountValidator = ValidatorBuilder.field('accountType')
-    .required('Tipo de Conta não Informado')
-    .isNumber('Parâmetro Invalido')
-    .belongsTo([1, 2], 'Parâmetro Invalido')
-    .build();
-
   return new ValidationComposite([
     ...nameValidator,
     ...emailValidator,
     ...passwordValidator,
-    ...confirmPasswordValidator,
-    ...accountValidator
+    ...confirmPasswordValidator
   ]);
 };
 

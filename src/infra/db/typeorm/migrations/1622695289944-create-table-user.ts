@@ -11,7 +11,6 @@ export class createTableUser1622695289944 implements MigrationInterface {
           { name: 'name', type: 'varchar' },
           { name: 'email', type: 'varchar', isUnique: true },
           { name: 'password', type: 'varchar' },
-          { name: 'account_type', type: 'smallint' },
           { name: 'created_at', type: 'timestamp', default: 'now()' },
           { name: 'updated_at', type: 'timestamp', default: 'now()' },
           { name: 'delete_at', type: 'timestamp', isNullable: true }

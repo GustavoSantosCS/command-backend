@@ -1,6 +1,6 @@
 import { PersistencyError } from '@/infra/errors';
 import { EmailAlreadyUseError } from '@/domain/errors';
-import { UserModel, AccountType } from '@/domain/models';
+import { UserModel } from '@/domain/models';
 import { Either } from '@/shared/either';
 
 export interface AddUserUseCase {
@@ -13,7 +13,6 @@ export namespace AddUserUseCase {
     nome: string;
     email: string;
     password: string;
-    accountType: AccountType;
   };
 
   export type Response = Either<
