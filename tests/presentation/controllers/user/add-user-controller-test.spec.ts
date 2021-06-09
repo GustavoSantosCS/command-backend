@@ -10,16 +10,17 @@ import { makeMockAddUserModel } from '@tests/domain/mock/models';
 import { ValidatorSpy } from '@tests/validation/mock';
 import { left } from '@/shared/either';
 import { PersistencyError } from '@/infra/errors';
+import { HttpRequest } from '@/presentation/protocols';
 
 faker.locale = 'pt_BR';
 
-export const makeMockHttpRequest = (): AddUserController.DTO => ({
+export const makeMockHttpRequest = (): HttpRequest<AddUserController.DTO> => ({
   body: { ...addUser }
 });
 
 let addUser: Omit<UserModel, 'id'> & { confirmPassword: string };
 let sut: AddUserController;
-let httpRequestMock: AddUserController.DTO;
+let httpRequestMock: HttpRequest<AddUserController.DTO>;
 let validatorSpy: Validator;
 let addUserUseCaseSpy: AddUserUseCase;
 

@@ -1,6 +1,11 @@
+import { UserModel } from '@/domain/models';
 import { AddUserUseCase } from '@/domain/usecases/user';
 import { InternalServerError } from '@/presentation/errors';
-import { Controller, HttpResponse } from '@/presentation/protocols';
+import {
+  Controller,
+  HttpRequest,
+  HttpResponse
+} from '@/presentation/protocols';
 import { badRequest, ok, serverError } from '@/utils/http';
 import { Validator } from '@/validation/protocols';
 
@@ -10,7 +15,9 @@ export class AddUserController implements Controller {
     private readonly addUserUseCase: AddUserUseCase
   ) {}
 
-  async handle(httpRequest: AddUserController.DTO): Promise<HttpResponse> {
+  async handle(
+    httpRequest: HttpRequest<AddUserController.DTO>
+  ): Promise<HttpResponse<AddUserController.Response>> {
     try {
       const { body } = httpRequest;
 
@@ -41,8 +48,13 @@ export class AddUserController implements Controller {
 // eslint-disable-next-line no-redeclare
 export namespace AddUserController {
   export type DTO = {
-    body: {
-      confirmPassword: string;
-    } & AddUserUseCase.DTO;
+    nome: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+  };
+
+  export type Response = {
+    user?: UserModel;
   };
 }

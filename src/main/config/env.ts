@@ -1,3 +1,5 @@
+import path from 'path';
+
 export const app = {
   name: 'Command',
   env: process.env.NODE_ENV || 'development',
@@ -14,4 +16,10 @@ export const db = {
   host: process.env.DB_HOST || 'docker',
   port: parseInt(process.env.DB_PORT) || 5433,
   password: process.env.DB_PASSWORD || 'docker'
+};
+
+export const multer = {
+  destinationRoot: {
+    disc: path.resolve(__dirname, '..', '..', '..', 'tmp', 'storage')
+  }
 };

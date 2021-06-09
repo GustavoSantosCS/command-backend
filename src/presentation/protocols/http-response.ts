@@ -1,4 +1,6 @@
-export interface HttpResponse {
+export interface HttpResponse<T = any> {
   statusCode: number;
-  body?: any;
+  body?: {
+    errors?: { message: string; value: string }[];
+  } & T;
 }

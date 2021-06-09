@@ -9,6 +9,7 @@ TypeORMHelpers.connect()
   .then(() =>
     app.listen(env.app.port, () => {
       console.log('Backend Online');
+      console.log(env.multer.destinationRoot.disc);
       console.log(
         `Click para acessar: ${env.app.protocol}://${env.app.host}:${env.app.port}`
       );

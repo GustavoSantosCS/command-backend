@@ -1,7 +1,11 @@
 import { UserTypeOrmRepository } from '@/infra/db/typeorm';
 import { BcryptAdapter } from '@/infra/cryptography';
 import { AddUserController } from '@/presentation/controllers/user';
-import { Controller } from '@/presentation/protocols';
+import {
+  Controller,
+  HttpRequest,
+  HttpResponse
+} from '@/presentation/protocols';
 import { Validator } from '@/validation/protocols';
 import { ValidatorBuilder, ValidationComposite } from '@/validation/validators';
 import { DBAddUser } from '@/data/implementations/user';
@@ -51,6 +55,19 @@ const makeValidationAddUser = (): Validator => {
 
 export const makeAddUserController = (): Controller => {
   const addUseCase = new DBAddUser(idGenerator, hasher, repository, repository);
-
   return new AddUserController(makeValidationAddUser(), addUseCase);
 };
+
+const makeValidationAddAvatarUser = (): Validator => {
+  const avatarValidator = ValidatorBuilder.field('avatar')
+    .required('Avatar não informado')
+    .build();
+  return new ValidationComposite([...avatarValidator]);
+};
+
+export const makerAddAvatarController = (): Controller => ({
+  handle: async (httpRequest: HttpRequest): Promise<HttpResponse> => ({
+    body: httpRequest.body,
+    statusCode: 200
+  })
+});

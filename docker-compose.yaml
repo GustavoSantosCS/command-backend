@@ -24,6 +24,7 @@ services:
       - ./package.json:/usr/command/package.json
       - ./ormconfig.json:/usr/command/ormconfig.json
       - ./tmp/node_modules/:/usr/command/node_modules
+      - ./tmp/storage/:/usr/command/tmp/storage
     ports:
       - '3333:3333'
     depends_on:
