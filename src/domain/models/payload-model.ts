@@ -1,5 +1,5 @@
-export type PayloadModel<T = any> = {
-  body: T;
+export type PayloadModel = {
+  body: { id: string | number };
   iat: number;
   exp: number;
 };

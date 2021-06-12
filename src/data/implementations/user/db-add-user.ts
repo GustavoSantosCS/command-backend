@@ -18,19 +18,17 @@ export class DBAddUser implements AddUserUseCase {
     private readonly addUserRepository: AddUserRepository
   ) {}
 
-  async add(
-    newUser: AddUserUseCase.DTO
-  ): Promise<Either<EmailAlreadyUseError | PersistencyError, UserModel>> {
-    const { email } = newUser;
+  async add(newUser: AddUserUseCase.Params): Promise<AddUserUseCase.Response> {
+    const { nome, email, password } = newUser;
     const searchResult = await this.searchByEmailRepository.searchByEmail(
       email
     );
-    const emailIsUsing = searchResult.isRight();
-    if (emailIsUsing) {
+
+    if (searchResult) {
       return left(new EmailAlreadyUseError(email));
     }
 
-    const hasherPassword = await this.hasher.hash(newUser.password);
+    const hasherPassword = await this.hasher.hash(password);
     const user = {
       ...newUser,
       id: this.idGenerator.generate(),
@@ -38,9 +36,8 @@ export class DBAddUser implements AddUserUseCase {
     };
 
     const resultAddUser = await this.addUserRepository.save(user);
-    if (resultAddUser.isLeft()) {
-      return left(resultAddUser.value);
-    }
-    return right(resultAddUser.value);
+    return resultAddUser.isRight()
+      ? right(resultAddUser.value)
+      : left(resultAddUser.value);
   }
 }

@@ -9,7 +9,7 @@ import { UserAvatarRepositorySpy } from '@tests/infra/mock/db/user';
 import { PersistencyError } from '@/infra/errors';
 import { right } from '@/shared/either';
 
-export const makeMockUserAvatarUserCase = (): UserAvatarUseCase.DTO => {
+export const makeMockUserAvatarUserCase = (): UserAvatarUseCase.Params => {
   const user = {
     id: faker.datatype.uuid()
   };
@@ -42,7 +42,7 @@ export const makeMockUserAvatarUserCase = (): UserAvatarUseCase.DTO => {
 let sut: DBUserAvatar;
 let repository: UserAvatarRepository;
 let unlinkAvatar: UnlinkAvatar;
-let data: UserAvatarUseCase.DTO;
+let data: UserAvatarUseCase.Params;
 
 describe('Test Unit DBUserAvatar', () => {
   beforeEach(() => {

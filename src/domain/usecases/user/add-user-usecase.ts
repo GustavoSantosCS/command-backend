@@ -4,12 +4,12 @@ import { UserModel } from '@/domain/models';
 import { Either } from '@/shared/either';
 
 export interface AddUserUseCase {
-  add(newUser: AddUserUseCase.DTO): Promise<AddUserUseCase.Response>;
+  add(newUser: AddUserUseCase.Params): Promise<AddUserUseCase.Response>;
 }
 
 // eslint-disable-next-line no-redeclare
 export namespace AddUserUseCase {
-  export type DTO = {
+  export type Params = {
     nome: string;
     email: string;
     password: string;

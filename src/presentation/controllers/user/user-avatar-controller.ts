@@ -11,10 +11,9 @@ export class UserAvatarController implements Controller {
   constructor(private readonly userAvatarUseCase: UserAvatarUseCase) {}
 
   async handle(
-    httpRequest: HttpRequest<UserAvatarController.DTO>
+    httpRequest: HttpRequest<UserAvatarController.Params>
   ): Promise<HttpResponse<UserAvatarController.Response>> {
     const { body } = httpRequest;
-    console.log(body);
     try {
       const response = await this.userAvatarUseCase.save({
         avatar: {
@@ -41,7 +40,7 @@ export class UserAvatarController implements Controller {
 
 // eslint-disable-next-line no-redeclare
 export namespace UserAvatarController {
-  export type DTO = {
+  export type Params = {
     avatar: {
       new: AvatarModel;
       old: AvatarModel;

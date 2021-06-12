@@ -70,7 +70,8 @@ describe('Test Unit: DBAddUser', () => {
 
   it('should return EmailAlreadyUseError if email already use', async () => {
     const spy = searchByEmailRepositorySpy as SearchUserByEmailRepositorySpy;
-    spy.return = spy.returns.right;
+
+    spy.return = makeMockUserEntity();
 
     const response = await sut.add(newUser);
 

@@ -4,14 +4,16 @@ import { PersistencyError } from '@/infra/errors';
 
 export interface UserAvatarRepository {
   saveInfoAvatar(
-    data: UserAvatarRepository.DTO
-  ): Promise<Either<PersistencyError, AvatarModel>>;
+    data: UserAvatarRepository.Params
+  ): Promise<UserAvatarRepository.Result>;
 }
 
 // eslint-disable-next-line no-redeclare
 export namespace UserAvatarRepository {
-  export type DTO = {
+  export type Params = {
     user: { id: string };
     avatar: AvatarModel;
   };
+
+  export type Result = Either<PersistencyError, AvatarModel>;
 }

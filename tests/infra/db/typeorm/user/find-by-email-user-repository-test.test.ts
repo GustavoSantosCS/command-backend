@@ -25,13 +25,27 @@ describe('Test Integration', () => {
     addRepository = sut as UserTypeOrmRepository;
   });
 
-  it('should return an entity is add successfully', async () => {
+  it('should return an entity', async () => {
     let entityToSave = makeMockUserEntity();
     entityToSave = (await addRepository.save(entityToSave)).value as UserEntity;
 
     const foundEntity = await sut.searchByEmail(entityToSave.email);
 
-    expect(foundEntity.isRight()).toBeTruthy();
-    expect(foundEntity.value as UserEntity).toEqual(entityToSave);
+    expect(foundEntity).toBeTruthy();
+    expect(foundEntity).toEqual(foundEntity);
+  });
+
+  it('should not return an entity is the database is empty', async () => {
+    const foundEntity = await sut.searchByEmail('entityToSave.email');
+
+    expect(foundEntity).toBeUndefined();
+  });
+
+  it('should not return an entity is the database not found the email', async () => {
+    await addRepository.save(makeMockUserEntity());
+
+    const foundEntity = await sut.searchByEmail('entityToSave.email');
+
+    expect(foundEntity).toBeUndefined();
   });
 });

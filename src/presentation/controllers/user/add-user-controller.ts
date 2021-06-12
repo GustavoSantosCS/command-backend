@@ -16,7 +16,7 @@ export class AddUserController implements Controller {
   ) {}
 
   async handle(
-    httpRequest: HttpRequest<AddUserController.DTO>
+    httpRequest: HttpRequest<AddUserController.Params>
   ): Promise<HttpResponse<AddUserController.Response>> {
     try {
       const { body } = httpRequest;
@@ -36,7 +36,14 @@ export class AddUserController implements Controller {
         return badRequest(resultAddUser.value);
       }
 
-      return ok(resultAddUser.value);
+      const user: any = resultAddUser.value;
+      delete user.password;
+      delete user.confirmPassword;
+      delete user.deleteAt;
+      delete user.updateAt;
+      delete user.createdAt;
+
+      return ok(user);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
@@ -47,7 +54,7 @@ export class AddUserController implements Controller {
 
 // eslint-disable-next-line no-redeclare
 export namespace AddUserController {
-  export type DTO = {
+  export type Params = {
     nome: string;
     email: string;
     password: string;
@@ -55,6 +62,6 @@ export namespace AddUserController {
   };
 
   export type Response = {
-    user?: UserModel;
+    user?: Omit<UserModel, 'password'>;
   };
 }

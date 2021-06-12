@@ -17,14 +17,14 @@ export class UserTypeOrmRepository
     UserAvatarRepository,
     GetUserByIdRepository
 {
-  async searchByEmail(email: string): Promise<Either<null, UserEntity>> {
+  async searchByEmail(email: string): Promise<UserEntity> {
     const repository = await TypeORMHelpers.getRepository(UserEntity);
     const findUser = await repository.findOne({
       where: [{ email }],
       withDeleted: false
     });
 
-    return findUser ? right(findUser) : left(null);
+    return findUser;
   }
 
   async save(user: UserModel): Promise<Either<PersistencyError, UserEntity>> {
@@ -68,11 +68,11 @@ export class UserTypeOrmRepository
       : right(avatar);
   }
 
-  async getUserById(id: string): Promise<Either<null, UserEntity>> {
+  async getUserById(id: string): Promise<UserEntity> {
     const repository = await TypeORMHelpers.getRepository(UserEntity);
     const userEntity = await repository.findOne(id);
 
-    return !userEntity ? left(null) : right(userEntity);
+    return userEntity;
   }
 
   private buildPersistentError(entity: any) {

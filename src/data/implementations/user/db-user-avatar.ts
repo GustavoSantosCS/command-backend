@@ -8,7 +8,9 @@ export class DBUserAvatar implements UserAvatarUseCase {
     private readonly repository: UserAvatarRepository
   ) {}
 
-  async save(data: UserAvatarUseCase.DTO): Promise<UserAvatarUseCase.Response> {
+  async save(
+    data: UserAvatarUseCase.Params
+  ): Promise<UserAvatarUseCase.Response> {
     const { user, avatar } = data;
     if (data.avatar.old) {
       await this.unlinkAvatar.removeAvatar(data.avatar.old);

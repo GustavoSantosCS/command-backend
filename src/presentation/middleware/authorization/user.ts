@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { env } from '@/shared/config';
-import { Request, Response, NextFunction } from 'express';
+import { Request } from 'express';
 import { notAuthorizedErro, ok } from '@/utils/http';
 import { promisify } from 'util';
 import { PayloadModel } from '@/domain/models/payload-model';
@@ -35,7 +35,7 @@ export class UserAuthorizationMiddleware implements Middleware {
 
         const user = await this.repository.getUserById(payload.body.id);
 
-        if (!user.isLeft()) {
+        if (!user) {
           return notAuthorizedErro();
         }
 

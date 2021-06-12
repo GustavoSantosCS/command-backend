@@ -14,13 +14,14 @@ import { HttpRequest } from '@/presentation/protocols';
 
 faker.locale = 'pt_BR';
 
-export const makeMockHttpRequest = (): HttpRequest<AddUserController.DTO> => ({
-  body: { ...addUser }
-});
+export const makeMockHttpRequest =
+  (): HttpRequest<AddUserController.Params> => ({
+    body: { ...addUser }
+  });
 
 let addUser: Omit<UserModel, 'id'> & { confirmPassword: string };
 let sut: AddUserController;
-let httpRequestMock: HttpRequest<AddUserController.DTO>;
+let httpRequestMock: HttpRequest<AddUserController.Params>;
 let validatorSpy: Validator;
 let addUserUseCaseSpy: AddUserUseCase;
 

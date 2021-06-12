@@ -24,7 +24,7 @@ export class AddUserUseCaseSpy implements AddUserUseCase {
   }
 
   async add(
-    newUser: AddUserUseCase.DTO
+    newUser: AddUserUseCase.Params
   ): Promise<Either<EmailAlreadyUseError, UserModel>> {
     if (this.error) throw this.error;
     this.parameters = newUser;

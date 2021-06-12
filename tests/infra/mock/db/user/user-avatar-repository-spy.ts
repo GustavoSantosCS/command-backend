@@ -24,7 +24,7 @@ export class UserAvatarRepositorySpy implements UserAvatarRepository {
   }
 
   async saveInfoAvatar(
-    data: UserAvatarRepository.DTO
+    data: UserAvatarRepository.Params
   ): Promise<Either<PersistencyError, AvatarModel>> {
     this.calls += 1;
     this.parameters = data;

@@ -10,7 +10,7 @@ import { PersistencyError } from '@/infra/errors';
 let sut: UserAvatarController;
 let userAvatarUseCaseSpy: UserAvatarUseCase;
 
-const makerHttpRequest = (): HttpRequest<UserAvatarController.DTO> => ({
+const makerHttpRequest = (): HttpRequest<UserAvatarController.Params> => ({
   body: {
     user: {
       id: faker.datatype.uuid()
