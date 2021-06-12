@@ -22,7 +22,7 @@
     "synchronize": true,
     "dropSchema": true,
     "logging": false,
-    "entities": ["./src/data/entities/user-entity.ts"],
+    "entities": ["./src/data/entities/**.*"],
     "migrations": ["./src/infra/db/typeorm/migrations/**.ts"],
     "cli": {
       "migrationsDir": "./src/infra/db/typeorm/migrations"

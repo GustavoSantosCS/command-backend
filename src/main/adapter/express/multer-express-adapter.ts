@@ -1,10 +1,10 @@
 import { v4 as uuid } from 'uuid';
 import multer, { Options } from 'multer';
 import { Request, Response, NextFunction } from 'express';
-import * as env from '@/main/config/env';
+import { env } from '@/main/config/env';
 
 export const adapterMulter =
-  (fieldLabel: string) =>
+  (fieldLabel: string, target: string) =>
   async (req: Request, res: Response, next: NextFunction) => {
     const config = {
       storage: multer.diskStorage({
@@ -14,7 +14,7 @@ export const adapterMulter =
           req.body.avatar = {
             ...file,
             persistentName: fileName,
-            target: `${env.app.protocol}://${env.app.host}:${env.app.port}/files/${fileName}`
+            target: `${target}/${fileName}`
           };
           callback(null, fileName);
         }

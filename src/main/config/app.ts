@@ -1,5 +1,5 @@
 import express from 'express';
-import * as env from '@/main/config/env';
+import { env } from '@/main/config/env';
 import routes from '@/main/config/routes';
 import middleware from '@/main/config/middlewares';
 

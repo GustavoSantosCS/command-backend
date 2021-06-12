@@ -3,12 +3,15 @@ import {
   makeAddUserController,
   makerAddAvatarController
 } from '@/main/factory/user';
-import { adapterMulter, adapterRoute } from '../adapter/express';
+import { avatarMulter } from '@/presentation/middleware';
+import { adapterRoute } from '../adapter/express';
+import { authorization } from '../factory/user/middleware-authorization';
 
 export default (router: Router): void => {
   router.post(
     '/user/avatar',
-    adapterMulter('avatar'),
+    authorization,
+    avatarMulter,
     adapterRoute(makerAddAvatarController())
   );
   router.post('/user', adapterRoute(makeAddUserController()));

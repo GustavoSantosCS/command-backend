@@ -4,9 +4,12 @@ import {
   PrimaryColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  DeleteDateColumn
+  DeleteDateColumn,
+  OneToOne,
+  JoinColumn
 } from 'typeorm';
 import { UserModel } from '@/domain/models';
+import { AvatarEntity } from './avatar-entity';
 
 @Entity('users')
 export class UserEntity {
@@ -21,6 +24,10 @@ export class UserEntity {
 
   @Column()
   password: string;
+
+  @OneToOne(type => AvatarEntity)
+  @JoinColumn()
+  avatar?: AvatarEntity;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

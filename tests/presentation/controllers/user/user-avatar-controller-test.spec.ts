@@ -1,16 +1,16 @@
 import faker from 'faker';
-import { UpdateAvatarUseCase } from '@/domain/usecases/user';
-import { UpdateUserAvatarController } from '@/presentation/controllers/user';
+import { UserAvatarUseCase } from '@/domain/usecases/user';
+import { UserAvatarController } from '@/presentation/controllers/user';
 import { HttpRequest } from '@/presentation/protocols';
 import { makeMockAvatarUserModel } from '@tests/domain/mock/models';
-import { UpdateAvatarUseCaseSpy } from '@tests/domain/mock/usecases';
+import { UserAvatarUseCaseSpy } from '@tests/domain/mock/usecases';
 import { left } from '@/shared/either';
 import { PersistencyError } from '@/infra/errors';
 
-let sut: UpdateUserAvatarController;
-let updateAvatarUseCaseSpy: UpdateAvatarUseCase;
+let sut: UserAvatarController;
+let userAvatarUseCaseSpy: UserAvatarUseCase;
 
-const makerHttpRequest = (): HttpRequest<UpdateUserAvatarController.DTO> => ({
+const makerHttpRequest = (): HttpRequest<UserAvatarController.DTO> => ({
   body: {
     user: {
       id: faker.datatype.uuid()
@@ -22,24 +22,24 @@ const makerHttpRequest = (): HttpRequest<UpdateUserAvatarController.DTO> => ({
   }
 });
 
-describe('Test Unit: UpdateUserAvatarController', () => {
+describe('Test Unit: UserAvatarController', () => {
   beforeEach(() => {
-    updateAvatarUseCaseSpy = new UpdateAvatarUseCaseSpy();
-    sut = new UpdateUserAvatarController(updateAvatarUseCaseSpy);
+    userAvatarUseCaseSpy = new UserAvatarUseCaseSpy();
+    sut = new UserAvatarController(userAvatarUseCaseSpy);
   });
 
-  it('should call UpdateAvatarUseCase', async () => {
+  it('should call UserAvatarUseCase', async () => {
     const httpRequest = makerHttpRequest();
-    const spy = updateAvatarUseCaseSpy as UpdateAvatarUseCaseSpy;
+    const spy = userAvatarUseCaseSpy as UserAvatarUseCaseSpy;
 
     await sut.handle(httpRequest);
 
     expect(spy.parameters).toEqual(httpRequest.body);
   });
 
-  it('should return 500 if UpdateAvatarUseCase throws', async () => {
+  it('should return 500 if UserAvatarUseCase throws', async () => {
     const httpRequest = makerHttpRequest();
-    const spy = updateAvatarUseCaseSpy as UpdateAvatarUseCaseSpy;
+    const spy = userAvatarUseCaseSpy as UserAvatarUseCaseSpy;
     spy.throwError();
 
     const response = await sut.handle(httpRequest);
@@ -51,7 +51,7 @@ describe('Test Unit: UpdateUserAvatarController', () => {
 
   it('should return 500 if the return of AddUserUseCase is PersistencyError', async () => {
     const httpRequest = makerHttpRequest();
-    const spy = updateAvatarUseCaseSpy as UpdateAvatarUseCaseSpy;
+    const spy = userAvatarUseCaseSpy as UserAvatarUseCaseSpy;
     spy.return = left(new PersistencyError('any_message', {}, 'any_value'));
 
     const response = await sut.handle(httpRequest);
@@ -62,7 +62,7 @@ describe('Test Unit: UpdateUserAvatarController', () => {
     expect(response.body.errors[0]).toHaveProperty('value');
   });
 
-  it('should return 200 if UpdateAvatarUseCase is success', async () => {
+  it('should return 200 if UserAvatarUseCase is success', async () => {
     const httpRequest = makerHttpRequest();
 
     const response = await sut.handle(httpRequest);

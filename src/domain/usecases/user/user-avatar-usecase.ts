@@ -2,14 +2,12 @@ import { PersistencyError } from '@/infra/errors';
 import { AvatarModel } from '@/domain/models';
 import { Either } from '@/shared/either';
 
-export interface UpdateAvatarUseCase {
-  updateAvatar(
-    data: UpdateAvatarUseCase.DTO
-  ): Promise<UpdateAvatarUseCase.Response>;
+export interface UserAvatarUseCase {
+  save(data: UserAvatarUseCase.DTO): Promise<UserAvatarUseCase.Response>;
 }
 
 // eslint-disable-next-line no-redeclare
-export namespace UpdateAvatarUseCase {
+export namespace UserAvatarUseCase {
   export type DTO = {
     user: {
       id: string;

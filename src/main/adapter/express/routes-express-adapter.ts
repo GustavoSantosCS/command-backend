@@ -6,7 +6,8 @@ export const adapterRoute =
     const httpRequest: HttpRequest = {
       body: req.body,
       params: req.params,
-      query: req.query
+      query: req.query,
+      headers: req.headers
     };
 
     const httpResponse = await controller.handle(httpRequest);

@@ -33,3 +33,14 @@ export const ok = (data: any): HttpResponse => ({
   statusCode: 200,
   body: data
 });
+
+export const notAuthorizedErro = (): HttpResponse => ({
+  statusCode: 401,
+  body: {
+    errors: [
+      {
+        message: 'Not Authorized'
+      }
+    ]
+  }
+});

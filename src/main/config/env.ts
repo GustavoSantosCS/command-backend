@@ -1,6 +1,6 @@
 import path from 'path';
 
-export const app = {
+const app = {
   name: 'Command',
   env: process.env.NODE_ENV || 'development',
   key: process.env.APP_KEY || 'key app',
@@ -9,7 +9,7 @@ export const app = {
   port: process.env.APP_PORT || 3333
 };
 
-export const db = {
+const db = {
   connection: process.env.DB_CONNECTION || 'postgres',
   database: process.env.DB_DATABASE || 'docker',
   username: process.env.DB_USERNAME || 'docker',
@@ -18,8 +18,10 @@ export const db = {
   password: process.env.DB_PASSWORD || 'docker'
 };
 
-export const multer = {
+const multer = {
   destinationRoot: {
     disc: path.resolve(__dirname, '..', '..', '..', 'tmp', 'storage')
   }
 };
+
+export const env = { app, db, multer };

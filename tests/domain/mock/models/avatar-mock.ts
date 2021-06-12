@@ -1,6 +1,6 @@
 import faker from 'faker';
 import { AvatarModel } from '@/domain/models';
-import * as env from '@/shared/config';
+import { env } from '@/shared/config';
 
 faker.locale = 'pt_BR';
 

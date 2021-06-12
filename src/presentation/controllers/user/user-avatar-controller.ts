@@ -1,5 +1,5 @@
 import { AvatarModel } from '@/domain/models';
-import { UpdateAvatarUseCase } from '@/domain/usecases/user';
+import { UserAvatarUseCase } from '@/domain/usecases/user';
 import {
   Controller,
   HttpRequest,
@@ -7,15 +7,16 @@ import {
 } from '@/presentation/protocols';
 import { ok, serverError } from '@/utils/http';
 
-export class UpdateUserAvatarController implements Controller {
-  constructor(private readonly updateAvatarUseCase: UpdateAvatarUseCase) {}
+export class UserAvatarController implements Controller {
+  constructor(private readonly userAvatarUseCase: UserAvatarUseCase) {}
 
   async handle(
-    httpRequest: HttpRequest<UpdateUserAvatarController.DTO>
-  ): Promise<HttpResponse<UpdateUserAvatarController.Response>> {
+    httpRequest: HttpRequest<UserAvatarController.DTO>
+  ): Promise<HttpResponse<UserAvatarController.Response>> {
     const { body } = httpRequest;
+    console.log(body);
     try {
-      const response = await this.updateAvatarUseCase.updateAvatar({
+      const response = await this.userAvatarUseCase.save({
         avatar: {
           new: body.avatar.new,
           old: body.avatar.old
@@ -39,7 +40,7 @@ export class UpdateUserAvatarController implements Controller {
 }
 
 // eslint-disable-next-line no-redeclare
-export namespace UpdateUserAvatarController {
+export namespace UserAvatarController {
   export type DTO = {
     avatar: {
       new: AvatarModel;
