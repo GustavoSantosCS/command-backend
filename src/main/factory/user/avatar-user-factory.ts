@@ -16,7 +16,7 @@ export const makeValidationAddAvatarUser = (): Validator => {
 export const makerAddAvatarController = (): Controller => {
   const unlinkAvatar = new UnlinkAvatarDisc();
   const repository = new UserTypeOrmRepository();
-  const usecase = new DBUserAvatar(unlinkAvatar, repository);
+  const usecase = new DBUserAvatar(repository, unlinkAvatar, repository);
   const controller = new UserAvatarController(usecase);
 
   return controller;

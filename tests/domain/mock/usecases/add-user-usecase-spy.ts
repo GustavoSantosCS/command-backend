@@ -12,7 +12,7 @@ type Returns = {
 
 export class AddUserUseCaseSpy implements AddUserUseCase {
   returns: Returns = {
-    right: right(makeMockUserModel()),
+    right: right(makeMockUserModel({ id: true, avatar: false })),
     left: left(new EmailAlreadyUseError(''))
   };
   return = this.returns.right;

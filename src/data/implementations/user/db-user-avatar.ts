@@ -1,26 +1,34 @@
-import { UnlinkAvatar, UserAvatarRepository } from '@/data/protocols';
+import {
+  GetUserByIdRepository,
+  UnlinkAvatar,
+  UserAvatarRepository
+} from '@/data/protocols';
 import { UserAvatarUseCase } from '@/domain/usecases/user';
+import { PersistencyError } from '@/infra/errors';
 import { left, right } from '@/shared/either';
 
 export class DBUserAvatar implements UserAvatarUseCase {
   constructor(
+    private readonly getUserByIdRepository: GetUserByIdRepository,
     private readonly unlinkAvatar: UnlinkAvatar,
-    private readonly repository: UserAvatarRepository
+    private readonly avatarRepository: UserAvatarRepository
   ) {}
 
-  async save(
-    data: UserAvatarUseCase.Params
-  ): Promise<UserAvatarUseCase.Response> {
-    const { user, avatar } = data;
-    if (data.avatar.old) {
-      await this.unlinkAvatar.removeAvatar(data.avatar.old);
+  async saveAvatar({
+    user,
+    avatar
+  }: UserAvatarUseCase.Params): Promise<UserAvatarUseCase.Response> {
+    const userEntity = await this.getUserByIdRepository.getUserById(user.id);
+
+    if (userEntity.avatar) {
+      await this.unlinkAvatar.removeAvatar(userEntity.avatar);
     }
 
-    const result = await this.repository.saveInfoAvatar({
-      user,
-      avatar: avatar.new
+    const result = await this.avatarRepository.saveInfoAvatar({
+      user: { id: user.id },
+      avatar
     });
 
-    return result.isRight() ? right(result.value) : left(result.value);
+    return result;
   }
 }

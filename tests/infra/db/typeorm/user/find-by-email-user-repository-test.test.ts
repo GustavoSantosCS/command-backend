@@ -8,6 +8,7 @@ import { makeMockUserEntity } from '@tests/data/mock/entities';
 
 let addRepository: AddUserRepository;
 let sut: SearchUserByEmailRepository;
+let userEntity: UserEntity;
 
 describe('Test Integration', () => {
   beforeAll(async () => {
@@ -20,16 +21,19 @@ describe('Test Integration', () => {
   });
 
   beforeEach(async () => {
-    await TypeORMHelpers.clearDataBase();
+    userEntity = makeMockUserEntity();
+    delete userEntity.avatar;
+
     sut = new UserTypeOrmRepository();
     addRepository = sut as UserTypeOrmRepository;
+
+    await TypeORMHelpers.clearDataBase();
   });
 
   it('should return an entity', async () => {
-    let entityToSave = makeMockUserEntity();
-    entityToSave = (await addRepository.save(entityToSave)).value as UserEntity;
+    await addRepository.save(userEntity);
 
-    const foundEntity = await sut.searchByEmail(entityToSave.email);
+    const foundEntity = await sut.searchByEmail(userEntity.email);
 
     expect(foundEntity).toBeTruthy();
     expect(foundEntity).toEqual(foundEntity);
@@ -42,7 +46,7 @@ describe('Test Integration', () => {
   });
 
   it('should not return an entity is the database not found the email', async () => {
-    await addRepository.save(makeMockUserEntity());
+    await addRepository.save(userEntity);
 
     const foundEntity = await sut.searchByEmail('entityToSave.email');
 

@@ -30,8 +30,9 @@ export class DBAddUser implements AddUserUseCase {
 
     const hasherPassword = await this.hasher.hash(password);
     const user = {
-      ...newUser,
       id: this.idGenerator.generate(),
+      nome,
+      email,
       password: hasherPassword
     };
 

@@ -1,16 +1,19 @@
+/* eslint-disable no-console */
 import jwt from 'jsonwebtoken';
 import { env } from '@/shared/config';
-import { Request } from 'express';
 import { notAuthorizedErro, ok } from '@/utils/http';
-import { promisify } from 'util';
 import { PayloadModel } from '@/domain/models/payload-model';
 import { GetUserByIdRepository } from '@/data/protocols';
-import { Middleware, MiddlewareReturn } from '@/presentation/protocols';
+import {
+  HttpRequest,
+  HttpResponse,
+  Middleware
+} from '@/presentation/protocols';
 
 export class UserAuthorizationMiddleware implements Middleware {
   constructor(private readonly repository: GetUserByIdRepository) {}
 
-  async handle(req: Request): Promise<MiddlewareReturn> {
+  async handle(req: HttpRequest): Promise<HttpResponse> {
     const authHeader = req.headers.authorization;
     try {
       const [bearer, token] = authHeader.split(' ');
@@ -20,36 +23,30 @@ export class UserAuthorizationMiddleware implements Middleware {
       }
 
       try {
-        // @ts-ignore
-        const payload: PayloadModel<{ id: string }> = await promisify(
-          jwt.verify
-        )(
+        const payload: PayloadModel = jwt.verify(
           token,
-          // @ts-ignore
           env.app.key
-        );
+        ) as PayloadModel;
 
         if (new Date(payload.exp * 1000) < new Date()) {
           return notAuthorizedErro();
         }
 
-        const user = await this.repository.getUserById(payload.body.id);
+        const user = await this.repository.getUserById(
+          payload.body.id as string
+        );
 
         if (!user) {
           return notAuthorizedErro();
         }
 
-        req.body.user = { id: payload.body.id };
-        return ok({ user: { id: payload.body.id } });
+        return ok({ authenticated: { id: user.id } });
       } catch (e) {
-        // eslint-disable-next-line no-console
         console.error(e);
       }
       return notAuthorizedErro();
     } catch (error) {
-      // eslint-disable-next-line no-console
-      // console.error(error);
-      console.log('sdhjaosdojoisjda');
+      console.error(error);
       return notAuthorizedErro();
     }
   }

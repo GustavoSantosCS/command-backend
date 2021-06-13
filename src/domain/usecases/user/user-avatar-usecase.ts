@@ -3,7 +3,9 @@ import { AvatarModel } from '@/domain/models';
 import { Either } from '@/shared/either';
 
 export interface UserAvatarUseCase {
-  save(data: UserAvatarUseCase.Params): Promise<UserAvatarUseCase.Response>;
+  saveAvatar(
+    data: UserAvatarUseCase.Params
+  ): Promise<UserAvatarUseCase.Response>;
 }
 
 // eslint-disable-next-line no-redeclare
@@ -12,10 +14,7 @@ export namespace UserAvatarUseCase {
     user: {
       id: string;
     };
-    avatar: {
-      new: AvatarModel;
-      old: AvatarModel;
-    };
+    avatar: AvatarModel;
   };
 
   export type Response = Either<PersistencyError, AvatarModel>;

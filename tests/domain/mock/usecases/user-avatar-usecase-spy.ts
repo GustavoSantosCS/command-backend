@@ -23,7 +23,7 @@ export class UserAvatarUseCaseSpy implements UserAvatarUseCase {
     this.error = new AppError('any_message', 'any_value');
   }
 
-  async save(
+  async saveAvatar(
     data: UserAvatarUseCase.Params
   ): Promise<UserAvatarUseCase.Response> {
     if (this.error) throw this.error;

@@ -13,15 +13,12 @@ export class UserAvatarController implements Controller {
   async handle(
     httpRequest: HttpRequest<UserAvatarController.Params>
   ): Promise<HttpResponse<UserAvatarController.Response>> {
-    const { body } = httpRequest;
+    const { avatar, authenticated } = httpRequest.body;
     try {
-      const response = await this.userAvatarUseCase.save({
-        avatar: {
-          new: body.avatar.new,
-          old: body.avatar.old
-        },
+      const response = await this.userAvatarUseCase.saveAvatar({
+        avatar,
         user: {
-          id: body.user.id
+          id: authenticated.id
         }
       });
 
@@ -41,11 +38,8 @@ export class UserAvatarController implements Controller {
 // eslint-disable-next-line no-redeclare
 export namespace UserAvatarController {
   export type Params = {
-    avatar: {
-      new: AvatarModel;
-      old: AvatarModel;
-    };
-    user: {
+    avatar: AvatarModel;
+    authenticated: {
       id: string;
     };
   };

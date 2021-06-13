@@ -1,8 +1,6 @@
-export interface Middleware<T = any> {
-  handle: (httpRequest: T) => Promise<MiddlewareReturn>;
-}
+import { HttpRequest } from './http-request';
+import { HttpResponse } from './http-response';
 
-export type MiddlewareReturn = {
-  body?: any;
-  statusCode: number;
-};
+export interface Middleware {
+  handle: (httpRequest: HttpRequest) => Promise<HttpResponse>;
+}
