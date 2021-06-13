@@ -4,7 +4,8 @@ import {
   AddUserRepository,
   SearchUserByEmailRepository,
   UserAvatarRepository,
-  GetUserByIdRepository
+  GetUserByIdRepository,
+  UpdateUserRepository
 } from '@/data/protocols';
 import { AvatarModel, UserModel } from '@/domain/models';
 import { Either, left, right } from '@/shared/either';
@@ -15,13 +16,15 @@ export class UserTypeOrmRepository
     AddUserRepository,
     SearchUserByEmailRepository,
     UserAvatarRepository,
-    GetUserByIdRepository
+    GetUserByIdRepository,
+    UpdateUserRepository
 {
   async searchByEmail(email: string): Promise<UserEntity> {
     const repository = await TypeORMHelpers.getRepository(UserEntity);
     const findUser = await repository.findOne({
       where: [{ email }],
-      withDeleted: false
+      withDeleted: false,
+      relations: ['avatar']
     });
 
     return findUser;
@@ -75,6 +78,21 @@ export class UserTypeOrmRepository
     });
 
     return userEntity;
+  }
+
+  async update(
+    newUserData: Omit<UserModel, 'email'>
+  ): Promise<UpdateUserRepository.Result> {
+    const repository = await TypeORMHelpers.getRepository(UserEntity);
+
+    const userEntity = await repository.findOne(newUserData.id, {
+      relations: ['avatar']
+    });
+
+    const newUser: UserEntity = Object.assign(userEntity, newUserData);
+    await repository.save(newUser);
+
+    return right(newUser);
   }
 
   private buildPersistentError(entity: any) {

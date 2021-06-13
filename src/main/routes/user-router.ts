@@ -1,11 +1,12 @@
 import { Router } from 'express';
 import {
   makeAddUserController,
-  makerAddAvatarController
+  makerAddAvatarController,
+  makeUpdateUserController
 } from '@/main/factory/user';
 import { avatarMulter } from '@/presentation/middleware';
-import { adapterRoute } from '../adapter/express';
-import { authorization } from '../factory/user/middleware-authorization';
+import { adapterRoute } from '@/main/adapter/express';
+import { authorization } from '@/main/middleware';
 
 export default (router: Router): void => {
   router.post(
@@ -14,5 +15,7 @@ export default (router: Router): void => {
     avatarMulter,
     adapterRoute(makerAddAvatarController())
   );
+
+  router.put('/user', authorization, adapterRoute(makeUpdateUserController()));
   router.post('/user', adapterRoute(makeAddUserController()));
 };

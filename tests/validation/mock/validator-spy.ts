@@ -15,6 +15,7 @@ export class ValidatorSpy implements Validator {
   };
   return = this.returns.right;
   parameters: any;
+  calls = 0;
   error: AppError;
 
   throwsError() {
@@ -23,6 +24,7 @@ export class ValidatorSpy implements Validator {
 
   validate(value: any): Either<ValidatorError, true> {
     this.parameters = value;
+    this.calls += 1;
     if (this.error) throw this.error;
     return this.return;
   }
