@@ -34,7 +34,7 @@ export class UpdateUserController implements Controller {
       const response = await this.updateUserUsecase.update({
         id: body.authenticated.id,
         name: body.name,
-        email: body.email,
+        email: body.email.toLowerCase(),
         password: body.password
       });
 

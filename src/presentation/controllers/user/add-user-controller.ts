@@ -26,7 +26,12 @@ export class AddUserController implements Controller {
         return badRequest(validatorResult.value);
       }
 
-      const resultAddUser = await this.addUserUseCase.add(body);
+      const resultAddUser = await this.addUserUseCase.add({
+        name: body.name,
+        email: body.email.toLowerCase(),
+        password: body.password
+      });
+
       if (resultAddUser.isLeft()) {
         if (resultAddUser.value.name === 'PersistencyError') {
           // eslint-disable-next-line no-console

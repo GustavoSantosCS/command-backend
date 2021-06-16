@@ -26,7 +26,7 @@ export class CreateSessionController implements Controller {
       }
 
       const session = await this.createSession.createSession({
-        email: body.email,
+        email: body.email.toLowerCase(),
         password: body.password
       });
       if (session.isRight()) delete (session.value as any).user.password;
