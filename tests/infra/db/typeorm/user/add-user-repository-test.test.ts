@@ -29,7 +29,7 @@ describe('Test Integration', () => {
     const value: UserEntity = result.value as UserEntity;
     expect(result.isRight()).toBeTruthy();
     expect(value.id).toBe(userEntity.id);
-    expect(value.nome).toBe(userEntity.nome);
+    expect(value.name).toBe(userEntity.name);
     expect(value.email).toBe(userEntity.email);
     expect(value.password).toBe(userEntity.password);
   });

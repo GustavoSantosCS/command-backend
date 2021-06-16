@@ -38,7 +38,7 @@ export class DBCreateSession implements CreateSessionUseCase {
       token,
       user: {
         id: user.id,
-        nome: user.nome,
+        name: user.name,
         password: user.password,
         email: user.email,
         avatar: user.avatar

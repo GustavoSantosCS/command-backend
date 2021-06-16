@@ -15,7 +15,7 @@ export const makeMockUserModel = ({
 }: ConfigMock): UserModel => {
   const user: UserModel = {
     id: id ? faker.datatype.uuid() : null,
-    nome: faker.name.findName(),
+    name: faker.name.findName(),
     email: faker.internet.email(),
     password: faker.internet.password()
   };
@@ -31,7 +31,7 @@ export const makeMockAddUserModel = (): Omit<UserModel, 'id'> & {
   const password = faker.internet.password();
   const confirmPassword = password;
   return {
-    nome: faker.name.findName(),
+    name: faker.name.findName(),
     email: faker.internet.email(),
     password,
     confirmPassword

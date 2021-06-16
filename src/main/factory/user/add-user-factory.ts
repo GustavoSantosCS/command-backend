@@ -21,7 +21,7 @@ const idGenerator: IDGenerator = new UUIDAdapter();
 const hasher: Hasher = new BcryptAdapter(salt);
 
 const makeValidationAddUser = (): Validator => {
-  const nameValidator = ValidatorBuilder.field('nome')
+  const nameValidator = ValidatorBuilder.field('name')
     .required('Nome não informado')
     .min(3, 'Nome deve conter ao menos 3 letras')
     .build();

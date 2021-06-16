@@ -1,11 +1,11 @@
-import { AvatarModel, UserModel } from '@/domain/models';
+import { AvatarModel } from '@/domain/models';
 import { UpdateUserUseCase } from '@/domain/usecases/user';
 import {
   Controller,
   HttpRequest,
   HttpResponse
 } from '@/presentation/protocols';
-import { badRequest, notAuthorizedErro, ok, serverError } from '@/utils/http';
+import { badRequest, ok, serverError } from '@/utils/http';
 import { Validator } from '@/validation/protocols';
 
 export class UpdateUserController implements Controller {
@@ -20,7 +20,7 @@ export class UpdateUserController implements Controller {
     const { body } = httpRequest;
 
     const validatorResult = this.validator.validate({
-      nome: body.nome,
+      name: body.name,
       email: body.email,
       password: body.password,
       confirmPassword: body.confirmPassword
@@ -33,7 +33,7 @@ export class UpdateUserController implements Controller {
     try {
       const response = await this.updateUserUsecase.update({
         id: body.authenticated.id,
-        nome: body.nome,
+        name: body.name,
         email: body.email,
         password: body.password
       });
@@ -61,7 +61,7 @@ export class UpdateUserController implements Controller {
 // eslint-disable-next-line no-redeclare
 export namespace UpdateUserController {
   export type Params = {
-    nome: string;
+    name: string;
     password: string;
     email: string;
     confirmPassword: string;
@@ -72,9 +72,8 @@ export namespace UpdateUserController {
 
   export type Response = {
     id: string;
-    nome: string;
+    name: string;
     email: string;
-    password: string;
     avatar?: AvatarModel;
   };
 }

@@ -7,7 +7,7 @@ import { UserModel } from '@/domain/models';
 
 export const makeMockUserSession = (): Omit<UserModel, 'password'> => ({
   id: faker.datatype.uuid(),
-  nome: faker.name.findName(),
+  name: faker.name.findName(),
   email: faker.internet.email()
 });
 

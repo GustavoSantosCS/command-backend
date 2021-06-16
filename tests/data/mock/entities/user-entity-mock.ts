@@ -8,7 +8,7 @@ export const makeMockUserEntity = (userModel?: UserModel): UserEntity => {
   if (!model) {
     model = {
       id: faker.datatype.uuid(),
-      nome: faker.name.findName(),
+      name: faker.name.findName(),
       email: faker.internet.email(),
       password: faker.internet.password(),
       avatar: makeMockAvatarUserModel()

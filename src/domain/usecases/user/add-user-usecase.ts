@@ -10,7 +10,7 @@ export interface AddUserUseCase {
 // eslint-disable-next-line no-redeclare
 export namespace AddUserUseCase {
   export type Params = {
-    nome: string;
+    name: string;
     email: string;
     password: string;
   };

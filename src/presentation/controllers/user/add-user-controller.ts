@@ -55,7 +55,7 @@ export class AddUserController implements Controller {
 // eslint-disable-next-line no-redeclare
 export namespace AddUserController {
   export type Params = {
-    nome: string;
+    name: string;
     email: string;
     password: string;
     confirmPassword: string;

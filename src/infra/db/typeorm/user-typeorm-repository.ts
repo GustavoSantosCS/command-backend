@@ -54,12 +54,11 @@ export class UserTypeOrmRepository
   }): Promise<Either<PersistencyError, AvatarModel>> {
     const repository = await TypeORMHelpers.getRepository(UserEntity);
     const avatarEntity = new AvatarEntity(avatar);
-    const userEntity = await repository.findOne(user.id);
 
+    const userEntity = await repository.findOne(user.id);
     userEntity.avatar = avatarEntity;
 
     const repositoryAvatar = await TypeORMHelpers.getRepository(AvatarEntity);
-
     const resultAvatar = await repositoryAvatar.save(avatarEntity);
 
     if (!resultAvatar) return left(this.buildPersistentError(avatarEntity));

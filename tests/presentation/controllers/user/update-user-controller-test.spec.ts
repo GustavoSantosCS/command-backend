@@ -17,14 +17,14 @@ describe('Test Unit: UpdateUserController', () => {
   beforeEach(() => {
     authenticated = { id: faker.datatype.uuid() };
     newUserData = {
-      nome: faker.random.word(),
+      name: faker.random.word(),
       email: faker.internet.email(),
       password: faker.internet.password()
     };
 
     httpRequest = {
       body: {
-        nome: newUserData.nome,
+        name: newUserData.name,
         email: newUserData.email,
         password: newUserData.password,
         confirmPassword: newUserData.password,
@@ -44,7 +44,7 @@ describe('Test Unit: UpdateUserController', () => {
 
     expect(spy.calls).toBe(1);
     expect(spy.parameters).toEqual({
-      nome: newUserData.nome,
+      name: newUserData.name,
       email: newUserData.email,
       password: newUserData.password,
       confirmPassword: newUserData.password
@@ -69,7 +69,7 @@ describe('Test Unit: UpdateUserController', () => {
     expect(spy.calls).toBe(1);
     expect(spy.parameters).toEqual({
       id: authenticated.id,
-      nome: newUserData.nome,
+      name: newUserData.name,
       email: newUserData.email,
       password: newUserData.password
     });

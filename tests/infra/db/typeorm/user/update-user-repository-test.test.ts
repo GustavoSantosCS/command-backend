@@ -33,7 +33,7 @@ describe('Test Integration: UpdateUserRepository', () => {
     const value: UserEntity = result.value as UserEntity;
     expect(result.isRight()).toBeTruthy();
     expect(value.id).toBe(newUserDateModel.id);
-    expect(value.nome).toBe(newUserDateModel.nome);
+    expect(value.name).toBe(newUserDateModel.name);
     expect(value.email).toBe(newUserDateModel.email);
     expect(value.password).toBe(newUserDateModel.password);
   });

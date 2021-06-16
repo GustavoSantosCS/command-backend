@@ -19,7 +19,7 @@ export class DBAddUser implements AddUserUseCase {
   ) {}
 
   async add(newUser: AddUserUseCase.Params): Promise<AddUserUseCase.Response> {
-    const { nome, email, password } = newUser;
+    const { name, email, password } = newUser;
     const searchResult = await this.searchByEmailRepository.searchByEmail(
       email
     );
@@ -31,7 +31,7 @@ export class DBAddUser implements AddUserUseCase {
     const hasherPassword = await this.hasher.hash(password);
     const user = {
       id: this.idGenerator.generate(),
-      nome,
+      name,
       email,
       password: hasherPassword
     };

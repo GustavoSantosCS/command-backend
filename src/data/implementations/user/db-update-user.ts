@@ -32,7 +32,7 @@ export class DBUpdateUser implements UpdateUserUseCase {
     const user: UserModel = {
       id: newUserData.id,
       email: newUserData.email,
-      nome: newUserData.nome,
+      name: newUserData.name,
       password: await this.hasher.hash(newUserData.password),
       avatar: newUserData.avatar
     };
