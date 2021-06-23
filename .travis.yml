@@ -4,7 +4,7 @@ node_js:
   - 14
 script:
   - yarn eslint 'src/**'
-  - yarn test:coveralls
+  - yarn test
 notifications:
   email:
     on_success: never # default: change
