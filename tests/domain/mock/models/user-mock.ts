@@ -16,7 +16,7 @@ export const makeMockUserModel = ({
   const user: UserModel = {
     id: id ? faker.datatype.uuid() : null,
     name: faker.name.findName(),
-    email: faker.internet.email(),
+    email: faker.internet.email().toLowerCase(),
     password: faker.internet.password()
   };
 
@@ -32,7 +32,7 @@ export const makeMockAddUserModel = (): Omit<UserModel, 'id'> & {
   const confirmPassword = password;
   return {
     name: faker.name.findName(),
-    email: faker.internet.email(),
+    email: faker.internet.email().toLowerCase(),
     password,
     confirmPassword
   };

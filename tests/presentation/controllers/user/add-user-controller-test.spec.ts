@@ -58,7 +58,11 @@ describe('Test Unit: AddUserController', () => {
 
     await sut.handle(httpRequestMock);
 
-    expect(spy.parameters).toEqual(httpRequestMock.body);
+    expect(spy.parameters).toEqual({
+      name: addUser.name,
+      email: addUser.email,
+      password: addUser.password
+    });
   });
 
   it('should return 400 if AddUserUseCase returns error', async () => {

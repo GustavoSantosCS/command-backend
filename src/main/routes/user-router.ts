@@ -10,7 +10,7 @@ import { authorization } from '@/main/middleware';
 
 export default (router: Router): void => {
   router.post(
-    '/user/avatar',
+    '/avatar',
     authorization,
     avatarMulter,
     adapterRoute(makerAddAvatarController())

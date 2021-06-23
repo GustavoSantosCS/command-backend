@@ -1,4 +1,5 @@
 import { AvatarModel } from '@/domain/models';
+import { CreateSessionUseCase } from '@/domain/usecases/session';
 import { UpdateUserUseCase } from '@/domain/usecases/user';
 import {
   Controller,
@@ -11,7 +12,8 @@ import { Validator } from '@/validation/protocols';
 export class UpdateUserController implements Controller {
   constructor(
     private readonly validator: Validator,
-    private readonly updateUserUsecase: UpdateUserUseCase
+    private readonly updateUserUsecase: UpdateUserUseCase,
+    private readonly createSession: CreateSessionUseCase
   ) {}
 
   async handle(
@@ -42,14 +44,14 @@ export class UpdateUserController implements Controller {
         return badRequest(response.value);
       }
 
-      const user: any = response.value;
-      delete user.password;
-      delete user.confirmPassword;
-      delete user.deleteAt;
-      delete user.updateAt;
-      delete user.createdAt;
+      const session = await this.createSession.createSession({
+        email: body.email.toLowerCase(),
+        password: body.password
+      });
 
-      return ok(user);
+      if (session.isRight()) delete (session.value as any).user.password;
+
+      return session.isRight() ? ok(session.value) : badRequest(session.value);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);

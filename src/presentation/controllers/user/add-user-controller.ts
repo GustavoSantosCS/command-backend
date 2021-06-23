@@ -45,8 +45,6 @@ export class AddUserController implements Controller {
       delete user.password;
       delete user.confirmPassword;
       delete user.deleteAt;
-      delete user.updateAt;
-      delete user.createdAt;
 
       return ok(user);
     } catch (error) {

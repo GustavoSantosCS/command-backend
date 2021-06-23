@@ -2,7 +2,10 @@ import faker from 'faker';
 import { UserModel } from '@/domain/models';
 import { HttpRequest } from '@/presentation/protocols';
 import { ValidatorSpy } from '@tests/validation/mock';
-import { UpdateUserUseCaseSpy } from '@tests/domain/mock/usecases';
+import {
+  CreateSessionUseCaseSpy,
+  UpdateUserUseCaseSpy
+} from '@tests/domain/mock/usecases';
 import { UpdateUserController } from '@/presentation/controllers/user';
 
 let httpRequest: HttpRequest<UpdateUserController.Params>;
@@ -11,14 +14,15 @@ let newUserData: Omit<UserModel, 'id'>;
 
 let sut: UpdateUserController;
 let validate: ValidatorSpy;
-let usecase: UpdateUserUseCaseSpy;
+let usecaseUpdate: UpdateUserUseCaseSpy;
+let usecaseCreateSession: CreateSessionUseCaseSpy;
 
 describe('Test Unit: UpdateUserController', () => {
   beforeEach(() => {
     authenticated = { id: faker.datatype.uuid() };
     newUserData = {
       name: faker.random.word(),
-      email: faker.internet.email(),
+      email: faker.internet.email().toLowerCase(),
       password: faker.internet.password()
     };
 
@@ -33,8 +37,14 @@ describe('Test Unit: UpdateUserController', () => {
     };
 
     validate = new ValidatorSpy();
-    usecase = new UpdateUserUseCaseSpy();
-    sut = new UpdateUserController(validate, usecase);
+    usecaseUpdate = new UpdateUserUseCaseSpy();
+    usecaseUpdate = new UpdateUserUseCaseSpy();
+    usecaseCreateSession = new CreateSessionUseCaseSpy();
+    sut = new UpdateUserController(
+      validate,
+      usecaseUpdate,
+      usecaseCreateSession
+    );
   });
 
   it('should call validate with the correct values', async () => {
@@ -62,7 +72,7 @@ describe('Test Unit: UpdateUserController', () => {
   });
 
   it('should call UpdateUserUseCase with the correct values', async () => {
-    const spy = usecase;
+    const spy = usecaseUpdate;
 
     await sut.handle(httpRequest);
 
@@ -76,7 +86,7 @@ describe('Test Unit: UpdateUserController', () => {
   });
 
   it('should return 500 if UpdateUserUseCase throws', async () => {
-    const spy = usecase;
+    const spy = usecaseUpdate;
     spy.throwError();
 
     const response = await sut.handle(httpRequest);
@@ -88,7 +98,7 @@ describe('Test Unit: UpdateUserController', () => {
   });
 
   it('should return 400 if UpdateUserUseCase return unsuccess', async () => {
-    const spy = usecase;
+    const spy = usecaseUpdate;
     spy.return = spy.returns.left;
 
     const response = await sut.handle(httpRequest);

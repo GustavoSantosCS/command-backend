@@ -41,7 +41,9 @@ export class DBCreateSession implements CreateSessionUseCase {
         name: user.name,
         password: user.password,
         email: user.email,
-        avatar: user.avatar
+        avatar: user.avatar,
+        createdAt: user.createdAt,
+        updateAt: user.updateAt
       }
     });
   }

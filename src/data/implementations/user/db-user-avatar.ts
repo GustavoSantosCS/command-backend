@@ -4,8 +4,6 @@ import {
   UserAvatarRepository
 } from '@/data/protocols';
 import { UserAvatarUseCase } from '@/domain/usecases/user';
-import { PersistencyError } from '@/infra/errors';
-import { left, right } from '@/shared/either';
 
 export class DBUserAvatar implements UserAvatarUseCase {
   constructor(

@@ -29,6 +29,7 @@ export class CreateSessionController implements Controller {
         email: body.email.toLowerCase(),
         password: body.password
       });
+
       if (session.isRight()) delete (session.value as any).user.password;
 
       return session.isRight() ? ok(session.value) : badRequest(session.value);

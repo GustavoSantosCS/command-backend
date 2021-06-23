@@ -18,7 +18,6 @@ export const adaptMiddleware =
       Object.assign(req.body, middlewareReturn.body);
       next();
     } else {
-      const { errors } = middlewareReturn.body;
-      res.status(middlewareReturn.statusCode).json(errors);
+      res.status(middlewareReturn.statusCode).json(middlewareReturn.body);
     }
   };

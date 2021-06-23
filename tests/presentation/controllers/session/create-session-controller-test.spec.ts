@@ -16,7 +16,10 @@ let usecase: CreateSessionUseCase;
 
 describe('Test Unit: CreateSessionController', () => {
   beforeEach(() => {
-    data = { email: faker.random.word(), password: faker.random.word() };
+    data = {
+      email: faker.internet.email().toLowerCase(),
+      password: faker.random.word()
+    };
     httpRequest = { body: data };
     validatorSpy = new ValidatorSpy();
     usecase = new CreateSessionUseCaseSpy();

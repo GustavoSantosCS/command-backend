@@ -6,6 +6,10 @@ import { ValidatorBuilder, ValidationComposite } from '@/validation/validators';
 import { DBUpdateUser } from '@/data/implementations/user';
 import { UpdateUserController } from '@/presentation/controllers/user/update-user-controller';
 import { BcryptAdapter } from '@/infra/cryptography';
+import { HashComparer } from '@/data/protocols';
+import { JwtAdapter } from '@/infra/cryptography/jwt-adapter';
+import { env } from '@/shared/config';
+import { DBCreateSession } from '@/data/implementations/session';
 
 const repository = new UserTypeOrmRepository();
 
@@ -44,5 +48,17 @@ export const makeUpdateUserController = (): Controller => {
     repository,
     repository
   );
-  return new UpdateUserController(makeValidationAddUser(), updateUseCase);
+  const comparatorHasher: HashComparer = new BcryptAdapter(salt);
+  const encrypter = new JwtAdapter(env.app.key);
+
+  const createSession = new DBCreateSession(
+    repository,
+    comparatorHasher,
+    encrypter
+  );
+  return new UpdateUserController(
+    makeValidationAddUser(),
+    updateUseCase,
+    createSession
+  );
 };

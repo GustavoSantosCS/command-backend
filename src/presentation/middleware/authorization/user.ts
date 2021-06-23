@@ -43,8 +43,8 @@ export class UserAuthorizationMiddleware implements Middleware {
         return ok({ authenticated: { id: user.id } });
       } catch (e) {
         console.error(e);
+        return notAuthorizedErro();
       }
-      return notAuthorizedErro();
     } catch (error) {
       console.error(error);
       return notAuthorizedErro();
