@@ -1,4 +1,4 @@
-import { AvatarModel } from '@/domain/models';
+import { AvatarModel, UserModel } from '@/domain/models';
 import { CreateSessionUseCase } from '@/domain/usecases/session';
 import { UpdateUserUseCase } from '@/domain/usecases/user';
 import {
@@ -73,9 +73,7 @@ export namespace UpdateUserController {
   };
 
   export type Response = {
-    id: string;
-    name: string;
-    email: string;
-    avatar?: AvatarModel;
+    token: string;
+    user: Omit<UserModel, 'id' | 'password'>;
   };
 }

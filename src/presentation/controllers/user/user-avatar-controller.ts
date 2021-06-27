@@ -1,4 +1,4 @@
-import { AvatarModel } from '@/domain/models';
+import { AvatarModel, UserModel } from '@/domain/models';
 import { UserAvatarUseCase } from '@/domain/usecases/user';
 import {
   Controller,
@@ -45,11 +45,6 @@ export namespace UserAvatarController {
   };
 
   export type Response = {
-    avatar: {
-      fieldName: string;
-      originalName: string;
-      persistentName: string;
-      target: string;
-    };
+    user?: Omit<UserModel, 'password' | 'id'>;
   };
 }
