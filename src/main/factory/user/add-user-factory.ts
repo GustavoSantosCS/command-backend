@@ -33,7 +33,7 @@ const makeValidationAddUser = (): Validator => {
 
   const passwordValidator = ValidatorBuilder.field('password')
     .required('Senha não informada')
-    .min(5, 'Senha deve ter pelo menos 5 caracteres')
+    .min(6, 'Senha deve ter pelo menos 6 caracteres')
     .build();
 
   const confirmPasswordValidator = ValidatorBuilder.field('confirmPassword')

@@ -6,8 +6,10 @@ import {
   TableForeignKey
 } from 'typeorm';
 
-export class CreateAvatarTable1623267125585 implements MigrationInterface {
-  tableName = 'avatars';
+export class CreateEstablishmentImage1624885207494
+  implements MigrationInterface
+{
+  tableName = 'establishment_image';
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
@@ -32,29 +34,29 @@ export class CreateAvatarTable1623267125585 implements MigrationInterface {
     );
 
     await queryRunner.addColumn(
-      'users',
-      new TableColumn({ name: 'avatar', type: 'varchar', isNullable: true })
+      'establishments',
+      new TableColumn({ name: 'image', type: 'varchar' })
     );
 
     await queryRunner.createForeignKey(
-      'users',
+      'establishments', // Tabela pai
       new TableForeignKey({
-        columnNames: ['avatar'],
-        referencedColumnNames: ['persistentName'],
-        referencedTableName: 'avatars',
-        onDelete: 'CASCADE',
-        name: 'user_avatar_fk'
+        columnNames: ['image'], // Coluna pai da Tabela pai
+        referencedTableName: this.tableName, // Tabela referenciada
+        referencedColumnNames: ['persistentName'], // Coluna referenciada
+        name: 'establishment_image_fk', // Nome da ForeignKey
+        onDelete: 'CASCADE'
       })
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    const table = await queryRunner.getTable('users');
+    const table = await queryRunner.getTable('establishments');
     const foreignKey = table.foreignKeys.find(
-      fk => fk.columnNames.indexOf('avatar') !== -1
+      fk => fk.columnNames.indexOf('image') !== -1
     );
-    await queryRunner.dropForeignKey('users', foreignKey);
-    await queryRunner.dropColumn('users', 'avatar');
-    await queryRunner.dropTable('avatars');
+    await queryRunner.dropForeignKey('establishments', foreignKey);
+    await queryRunner.dropColumn('establishments', 'image');
+    await queryRunner.dropTable('establishment_image');
   }
 }

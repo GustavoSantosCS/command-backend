@@ -1,5 +1,5 @@
 import { UserModel } from '@/domain/models';
-import { LoginError } from '@/presentation/errors/login-error';
+import { LoginError } from '@/presentation/errors';
 import { Either } from '@/shared/either';
 
 export interface CreateSessionUseCase {

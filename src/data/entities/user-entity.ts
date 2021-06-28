@@ -6,10 +6,12 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   OneToOne,
-  JoinColumn
+  JoinColumn,
+  OneToMany
 } from 'typeorm';
 import { UserModel } from '@/domain/models';
 import { AvatarEntity } from './avatar-entity';
+import { EstablishmentEntity } from './establishment-entity';
 
 @Entity('users')
 export class UserEntity {
@@ -25,9 +27,12 @@ export class UserEntity {
   @Column()
   password: string;
 
-  @OneToOne(type => AvatarEntity)
+  @OneToOne(() => AvatarEntity, { onDelete: 'CASCADE' })
   @JoinColumn()
   avatar?: AvatarEntity;
+
+  @OneToMany(() => EstablishmentEntity, establishment => establishment.manager)
+  establishments?: EstablishmentEntity[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

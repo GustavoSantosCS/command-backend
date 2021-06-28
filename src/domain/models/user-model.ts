@@ -1,4 +1,4 @@
-import { AvatarModel } from './avatar-model';
+import { AvatarModel } from '.';
 
 export type UserModel = {
   id: string;

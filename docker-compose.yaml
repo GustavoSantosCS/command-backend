@@ -15,7 +15,7 @@ services:
     image: node:14
     working_dir: /usr/command
     restart: always
-    command: bash -c "npm install && npm run debug"
+    command: bash -c "npm install && yarn typeorm migration:run && npm run debug"
     environment:
       - APP_PORT=3333
       - DB_HOST=postgres

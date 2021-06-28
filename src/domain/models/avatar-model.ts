@@ -1,5 +1,3 @@
-export type AvatarModel = {
-  originalName: string;
-  persistentName: string;
-  target: string;
-};
+import { ImagePersistenceData } from '.';
+
+export type AvatarModel = ImagePersistenceData;

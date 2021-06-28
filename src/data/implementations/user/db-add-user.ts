@@ -1,4 +1,3 @@
-import { PersistencyError } from '@/infra/errors';
 import {
   IDGenerator,
   AddUserRepository,
@@ -7,8 +6,9 @@ import {
 import { Hasher } from '@/data/protocols/cryptography';
 import { EmailAlreadyUseError } from '@/domain/errors';
 import { UserModel } from '@/domain/models';
+
 import { AddUserUseCase } from '@/domain/usecases/user';
-import { Either, left, right } from '@/shared/either';
+import { left, right } from '@/shared/either';
 
 export class DBAddUser implements AddUserUseCase {
   constructor(
@@ -29,7 +29,7 @@ export class DBAddUser implements AddUserUseCase {
     }
 
     const hasherPassword = await this.hasher.hash(password);
-    const user = {
+    const user: UserModel = {
       id: this.idGenerator.generate(),
       name,
       email,

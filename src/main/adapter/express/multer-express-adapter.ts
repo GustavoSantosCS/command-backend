@@ -5,7 +5,12 @@ import { env } from '@/main/config/env';
 import { HttpRequest } from '@/presentation/protocols';
 
 export const adapterMulter =
-  (fieldLabel: string, target: string) =>
+  (
+    fieldLabel: string,
+    target: string,
+    resultObjectName: string,
+    errorMessage: string
+  ) =>
   async (req: Request, res: Response, next: NextFunction) => {
     const httpRequest: HttpRequest = {
       body: req.body,
@@ -17,31 +22,32 @@ export const adapterMulter =
       storage: multer.diskStorage({
         destination: env.multer.destinationRoot.disc,
         filename(_, file, callback) {
-          const fileName = `${uuid()}-${file.originalname}`;
-          const avatar = {
+          const fileName = `${uuid()}-${file.originalname}`
+            .split(' ')
+            .join('_');
+          console.log(fileName);
+          httpRequest.body[resultObjectName] = {
             originalName: file.originalname,
             persistentName: fileName,
             target: `${target}${fileName}`
           };
-          httpRequest.body.avatar = avatar;
           callback(null, fileName);
         }
       })
     } as Options;
-    const multerHandler = multer(config).single(fieldLabel);
+    const update = multer(config).single(fieldLabel);
 
-    // eslint-disable-next-line consistent-return
-    return multerHandler(req, res, error => {
+    return update(req, res, error => {
       if (error) {
         return res.status(500).json({
           errors: [
             {
-              message: 'Não foi possível salvar seu avatar'
+              message: errorMessage
             }
           ]
         });
       }
       Object.assign(req.body, httpRequest.body);
-      next();
+      return next();
     });
   };
