@@ -15,7 +15,20 @@ export const badRequest = (errors: AppError[] | AppError): HttpResponse => {
   };
 };
 
-export const serverError = (errors: AppError[] | AppError): HttpResponse => {
+export const serverError = (errors?: AppError[] | AppError): HttpResponse => {
+  if (!errors) {
+    return {
+      statusCode: 500,
+      body: {
+        errors: [
+          {
+            message: 'Error no Servidor'
+          }
+        ]
+      }
+    };
+  }
+
   // eslint-disable-next-line no-param-reassign
   if (!Array.isArray(errors)) errors = [errors];
   return {

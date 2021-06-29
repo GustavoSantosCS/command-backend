@@ -2,13 +2,15 @@ import {
   DBAddEstablishment,
   DBGetAllEstablishmentsUser
 } from '@/data/implementations/establishment';
+import { DBGetUserEstablishmentById } from '@/data/implementations/establishment/db-get-user-establishment-by-id';
 import { IDGenerator } from '@/data/protocols';
 import { CATEGORY } from '@/domain/models';
 import { EstablishmentTypeOrmRepository } from '@/infra/db/typeorm';
 import { UUIDAdapter } from '@/infra/uuid-adapter';
 import {
   AddEstablishmentController,
-  GetAllUserEstablishmentsController
+  GetAllUserEstablishmentsController,
+  GetUserEstablishedByIdController
 } from '@/presentation/controllers/establishment';
 import { Controller } from '@/presentation/protocols';
 import { Validator } from '@/validation/protocols';
@@ -47,4 +49,9 @@ export const makeAddEstablishmentController = (): Controller => {
 export const makeGetAllUserEstablishmentController = (): Controller => {
   const usecase = new DBGetAllEstablishmentsUser(repository);
   return new GetAllUserEstablishmentsController(usecase);
+};
+
+export const makeGetUserEstablishmentByIdController = (): Controller => {
+  const usecase = new DBGetUserEstablishmentById(repository);
+  return new GetUserEstablishedByIdController(usecase);
 };

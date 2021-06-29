@@ -25,7 +25,7 @@ export const adapterMulter =
           const fileName = `${uuid()}-${file.originalname}`
             .split(' ')
             .join('_');
-          console.log(fileName);
+
           httpRequest.body[resultObjectName] = {
             originalName: file.originalname,
             persistentName: fileName,

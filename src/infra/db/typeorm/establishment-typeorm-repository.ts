@@ -5,13 +5,17 @@ import {
 } from '@/data/entities';
 import {
   AddEstablishmentRepository,
-  GetAllEstablishmentsUserRepository
+  GetAllEstablishmentsUserRepository,
+  GetEstablishedByIdRepository
 } from '@/data/protocols';
 import { EstablishmentModel } from '@/domain/models';
 import { TypeORMHelpers } from './typeorm-helper';
 
 export class EstablishmentTypeOrmRepository
-  implements AddEstablishmentRepository, GetAllEstablishmentsUserRepository
+  implements
+    AddEstablishmentRepository,
+    GetAllEstablishmentsUserRepository,
+    GetEstablishedByIdRepository
 {
   async save(
     userId: string,
@@ -64,6 +68,24 @@ export class EstablishmentTypeOrmRepository
     // console.log(query.getSql());
 
     const establishmentsUser = await query.getMany();
+
+    return establishmentsUser;
+  }
+
+  async getById(id: string): Promise<EstablishmentEntity> {
+    const establishmentRepository = await TypeORMHelpers.getRepository(
+      EstablishmentEntity
+    );
+
+    const query = establishmentRepository
+      .createQueryBuilder('establishments')
+      .innerJoinAndSelect('establishments.manager', 'users')
+      .innerJoinAndSelect('establishments.image', 'establishment_image')
+      .where('establishments.id = :id', { id });
+
+    // console.log(query.getSql());
+
+    const establishmentsUser = await query.getOne();
 
     return establishmentsUser;
   }
