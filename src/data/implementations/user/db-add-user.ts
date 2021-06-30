@@ -38,7 +38,7 @@ export class DBAddUser implements AddUserUseCase {
 
     const resultAddUser = await this.addUserRepository.save(user);
     return resultAddUser.isRight()
-      ? right(resultAddUser.value)
-      : left(resultAddUser.value);
+      ? right(resultAddUser.value as any)
+      : left(resultAddUser.value as any);
   }
 }

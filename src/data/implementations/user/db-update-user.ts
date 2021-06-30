@@ -38,6 +38,6 @@ export class DBUpdateUser implements UpdateUserUseCase {
     };
 
     const result = await this.updateUserRepository.update(user);
-    return result;
+    return result as any;
   }
 }

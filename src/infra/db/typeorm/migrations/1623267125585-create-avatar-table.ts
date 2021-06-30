@@ -13,19 +13,9 @@ export class CreateAvatarTable1623267125585 implements MigrationInterface {
       new Table({
         name: this.tableName,
         columns: [
-          {
-            name: 'persistentName',
-            type: 'varchar',
-            isPrimary: true
-          },
-          {
-            name: 'originalName',
-            type: 'varchar'
-          },
-          {
-            name: 'target',
-            type: 'varchar'
-          }
+          { name: 'persistentName', type: 'varchar', isPrimary: true },
+          { name: 'originalName', type: 'varchar' },
+          { name: 'target', type: 'varchar' }
         ]
       }),
       true

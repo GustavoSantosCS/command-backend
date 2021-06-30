@@ -7,11 +7,13 @@ import {
   DeleteDateColumn,
   OneToOne,
   JoinColumn,
-  ManyToOne
+  ManyToOne,
+  OneToMany
 } from 'typeorm';
 import { EstablishmentModel } from '@/domain/models';
 import { EstablishmentImageEntity } from './establishment-image-entity';
 import { UserEntity } from './user-entity';
+import { ProductEntity } from './product-entity';
 
 @Entity('establishments')
 export class EstablishmentEntity {
@@ -33,6 +35,9 @@ export class EstablishmentEntity {
   @ManyToOne(() => UserEntity, user => user.establishments)
   @JoinColumn()
   manager: UserEntity;
+
+  @OneToMany(() => ProductEntity, product => product.establishment)
+  products?: ProductEntity[];
 
   @OneToOne(() => EstablishmentImageEntity)
   @JoinColumn()

@@ -14,3 +14,10 @@ export const establishmentImageMulter = adapterMulter(
   'establishmentImage',
   'Não foi possível salvar a imagem do estabelecimento'
 );
+
+export const productImageMulter = adapterMulter(
+  'image',
+  `${env.app.protocol}://${env.app.host}:${env.app.port}/files/`,
+  'productImage',
+  'Não foi possível salvar a imagem do estabelecimento'
+);
