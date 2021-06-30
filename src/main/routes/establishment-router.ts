@@ -17,13 +17,13 @@ export default (router: Router): void => {
   );
 
   router.get(
-    '/user/establishment/:id',
+    '/establishment/:id',
     authorization,
     adapterRoute(makeGetUserEstablishmentByIdController())
   );
 
   router.get(
-    '/user/establishment',
+    '/user/establishments',
     authorization,
     adapterRoute(makeGetAllUserEstablishmentController())
   );

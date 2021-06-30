@@ -4,6 +4,7 @@ import { productImageMulter } from '@/presentation/middleware';
 import { adapterRoute } from '@/main/adapter/express';
 import {
   makeAddProductController,
+  makeGetAllEstablishedProductsController,
   makerGetProductByIdController
 } from '@/main/factory/product';
 import { authorization } from '@/main/middleware';
@@ -13,6 +14,12 @@ export default (router: Router): void => {
     '/product/:id',
     authorization,
     adapterRoute(makerGetProductByIdController())
+  );
+
+  router.get(
+    '/establishment/:id/products',
+    authorization,
+    adapterRoute(makeGetAllEstablishedProductsController())
   );
 
   router.post(

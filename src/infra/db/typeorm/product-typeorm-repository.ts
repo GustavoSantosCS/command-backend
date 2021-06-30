@@ -5,13 +5,17 @@ import {
 } from '@/data/entities';
 import {
   AddProductRepository,
+  GetAllEstablishmentProductsRepository,
   GetProductByIdRepository
 } from '@/data/protocols/db/product';
 import { ProductModel } from '@/domain/models';
 import { TypeORMHelpers } from './typeorm-helper';
 
 export class ProductTypeOrmRepository
-  implements AddProductRepository, GetProductByIdRepository
+  implements
+    AddProductRepository,
+    GetProductByIdRepository,
+    GetAllEstablishmentProductsRepository
 {
   async save(
     product: ProductModel,
@@ -75,5 +79,20 @@ export class ProductTypeOrmRepository
       .getOne();
 
     return productEntity;
+  }
+
+  async getAllEstablishmentProducts(
+    idEstablishment: string
+  ): Promise<ProductEntity[]> {
+    const productRepo = await TypeORMHelpers.getRepository(ProductEntity);
+
+    const productsEntity = await productRepo
+      .createQueryBuilder('products')
+      .innerJoinAndSelect('products.image', 'product_image')
+      .innerJoinAndSelect('products.establishment', 'establishments')
+      .where('establishments.id = :id', { id: idEstablishment })
+      .getMany();
+
+    return productsEntity;
   }
 }
