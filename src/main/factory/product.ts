@@ -1,19 +1,22 @@
 import { DBAddProduct } from '@/data/implementations/product';
+import { DBGetProductByID } from '@/data/implementations/product/db-get-product-by-id';
 import { EstablishmentTypeOrmRepository } from '@/infra/db/typeorm';
 import { ProductTypeOrmRepository } from '@/infra/db/typeorm/product-typeorm-repository';
 import { UUIDAdapter } from '@/infra/uuid-adapter';
 import { AddProductController } from '@/presentation/controllers/product';
+import { GetProductByIdController } from '@/presentation/controllers/product/get-product-by-id-controller';
 import { Controller } from '@/presentation/protocols';
 import { Validator } from '@/validation/protocols';
 import { ValidationComposite, ValidatorBuilder } from '@/validation/validators';
 
 const establishmentRepository = new EstablishmentTypeOrmRepository();
+const productRepository = new ProductTypeOrmRepository();
 
 export const makeAddProductController = (): Controller => {
   const usecase = new DBAddProduct(
     new UUIDAdapter(),
     establishmentRepository,
-    new ProductTypeOrmRepository()
+    productRepository
   );
 
   const nameValidator = ValidatorBuilder.field('name')
@@ -44,4 +47,9 @@ export const makeAddProductController = (): Controller => {
   ]);
 
   return new AddProductController(validator, usecase);
+};
+
+export const makerGetProductByIdController = (): Controller => {
+  const usecase = new DBGetProductByID(productRepository);
+  return new GetProductByIdController(usecase);
 };

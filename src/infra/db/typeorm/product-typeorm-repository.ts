@@ -1,14 +1,18 @@
-import { getManager } from 'typeorm';
 import {
   EstablishmentEntity,
   ProductEntity,
   ProductImageEntity
 } from '@/data/entities';
-import { AddProductRepository } from '@/data/protocols/db/product';
+import {
+  AddProductRepository,
+  GetProductByIdRepository
+} from '@/data/protocols/db/product';
 import { ProductModel } from '@/domain/models';
 import { TypeORMHelpers } from './typeorm-helper';
 
-export class ProductTypeOrmRepository implements AddProductRepository {
+export class ProductTypeOrmRepository
+  implements AddProductRepository, GetProductByIdRepository
+{
   async save(
     product: ProductModel,
     establishmentId: string
@@ -32,8 +36,6 @@ export class ProductTypeOrmRepository implements AddProductRepository {
           relations: ['products']
         }
       );
-
-      console.log(trackEstablishment);
 
       // Save product
       let productEntity = new ProductEntity(product);
@@ -60,5 +62,18 @@ export class ProductTypeOrmRepository implements AddProductRepository {
       await queryRunner.release();
     }
     return null;
+  }
+
+  async getProductById(id: string): Promise<ProductEntity> {
+    const productRepo = await TypeORMHelpers.getRepository(ProductEntity);
+
+    const productEntity = await productRepo
+      .createQueryBuilder('products')
+      .innerJoinAndSelect('products.establishment', 'establishments')
+      .innerJoinAndSelect('establishments.manager', 'users')
+      .where('products.id = :id', { id })
+      .getOne();
+
+    return productEntity;
   }
 }

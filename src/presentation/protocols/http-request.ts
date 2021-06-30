@@ -1,6 +1,6 @@
-export interface HttpRequest<T = any> {
+export interface HttpRequest<T = any, P = any> {
   body?: T;
   headers?: any;
-  params?: any;
+  params?: P;
   query?: any;
 }
