@@ -1,11 +1,18 @@
-import { DBAddMusic } from '@/data/implementations';
+import {
+  DBAddMusic,
+  DBGetAllEstablishmentMusics
+} from '@/data/implementations';
 import { EstablishmentTypeOrmRepository } from '@/infra/db/typeorm';
 import { MusicTypeOrmRepository } from '@/infra/db/typeorm/music-typeorm-repository';
 import { UUIDAdapter } from '@/infra/uuid-adapter';
 import { AddMusicController } from '@/presentation/controllers/music';
+import { GetAllEstablishmentMusicsController } from '@/presentation/controllers/music/get-all-establishment-music-controller';
 import { Controller } from '@/presentation/protocols';
 import { Validator } from '@/validation/protocols';
 import { ValidationComposite, ValidatorBuilder } from '@/validation/validators';
+
+const repoEstablished = new EstablishmentTypeOrmRepository();
+const repoMusic = new MusicTypeOrmRepository();
 
 export const makeAddMusicController = (): Controller => {
   const nameValidator = ValidatorBuilder.field('name')
@@ -34,11 +41,12 @@ export const makeAddMusicController = (): Controller => {
     ...establishmentIdValidator
   ]);
 
-  const usecase = new DBAddMusic(
-    new UUIDAdapter(),
-    new EstablishmentTypeOrmRepository(),
-    new MusicTypeOrmRepository()
-  );
+  const usecase = new DBAddMusic(new UUIDAdapter(), repoEstablished, repoMusic);
 
   return new AddMusicController(validator, usecase);
+};
+
+export const makeGetAllEstablishedMusicsController = (): Controller => {
+  const usecase = new DBGetAllEstablishmentMusics(repoEstablished, repoMusic);
+  return new GetAllEstablishmentMusicsController(usecase);
 };

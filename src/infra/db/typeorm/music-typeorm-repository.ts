@@ -1,9 +1,14 @@
 import { EstablishmentEntity, MusicEntity } from '@/data/entities';
-import { AddMusicRepository } from '@/data/protocols';
+import {
+  AddMusicRepository,
+  GetAllEstablishmentMusicsRepository
+} from '@/data/protocols';
 import { MusicModel } from '@/domain/models';
 import { TypeORMHelpers } from './typeorm-helper';
 
-export class MusicTypeOrmRepository implements AddMusicRepository {
+export class MusicTypeOrmRepository
+  implements AddMusicRepository, GetAllEstablishmentMusicsRepository
+{
   async add(
     musicModel: MusicModel,
     establishmentId: string
@@ -44,5 +49,19 @@ export class MusicTypeOrmRepository implements AddMusicRepository {
       await queryRunner.release();
     }
     return null;
+  }
+
+  async getAllEstablishmentMusics(
+    idEstablishment: string
+  ): Promise<MusicEntity[]> {
+    const productRepo = await TypeORMHelpers.getRepository(MusicEntity);
+
+    const productsEntity = await productRepo
+      .createQueryBuilder('musics')
+      .innerJoinAndSelect('musics.establishment', 'establishments')
+      .where('establishments.id = :id', { id: idEstablishment })
+      .getMany();
+
+    return productsEntity;
   }
 }
