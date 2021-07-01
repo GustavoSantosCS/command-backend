@@ -3,7 +3,7 @@ import {
   GetAllEstablishmentProductsRepository
 } from '@/data/protocols';
 import { ProductModel } from '@/domain/models';
-import { GetAllEstablishmentProductsUseCase } from '@/domain/usecases/product';
+import { GetAllEstablishmentProductsUseCase } from '@/domain/usecases';
 import { AppError } from '@/shared/app-error';
 import { Either, left, right } from '@/shared/either';
 
@@ -34,7 +34,7 @@ export class DBGetAllEstablishmentProducts
       // eslint-disable-next-line no-param-reassign
       delete product.establishment;
       // eslint-disable-next-line no-param-reassign
-      delete product.deleteAt;
+      delete product.deletedAt;
       return product;
     });
 

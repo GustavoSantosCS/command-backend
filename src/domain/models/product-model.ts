@@ -10,5 +10,5 @@ export type ProductModel = {
   image: ImagePersistenceData;
   establishment: EstablishmentModel;
   createdAt?: Date;
-  updateAt?: Date;
+  updatedAt?: Date;
 };

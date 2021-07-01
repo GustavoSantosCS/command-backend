@@ -1,7 +1,7 @@
 import faker from 'faker';
 import { UserEntity } from '@/data/entities';
 import { UserModel } from '@/domain/models';
-import { UpdateUserUseCase } from '@/domain/usecases/user';
+import { UpdateUserUseCase } from '@/domain/usecases';
 import { makeMockUserEntity } from '@tests/data/mock/entities';
 import { makeMockUserModel } from '@tests/domain/mock/models';
 import { HasherSpy } from '@tests/infra/mock/cryptography';
@@ -12,7 +12,7 @@ import {
 } from '@tests/infra/mock/db/user';
 import { right } from '@/shared/either';
 import { EmailAlreadyUseError } from '@/domain/errors';
-import { DBUpdateUser } from '@/data/implementations/user';
+import { DBUpdateUser } from '@/data/implementations';
 
 let sut: UpdateUserUseCase;
 let searchByEmailRepositorySpy: SearchUserByEmailRepositorySpy;

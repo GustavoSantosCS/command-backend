@@ -1,5 +1,5 @@
-import { EstablishmentModel } from '@/domain/models/establishment-model';
-import { GetAllEstablishmentsOfUserUseCase } from '@/domain/usecases/establishment';
+import { EstablishmentModel } from '@/domain/models';
+import { GetAllEstablishmentsOfUserUseCase } from '@/domain/usecases';
 import {
   Controller,
   HttpRequest,

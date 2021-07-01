@@ -9,5 +9,5 @@ export type UserModel = {
   avatar?: AvatarModel;
   establishments?: EstablishmentModel[];
   createdAt?: Date;
-  updateAt?: Date;
+  updatedAt?: Date;
 };

@@ -1,6 +1,6 @@
 import { AvatarModel, UserModel } from '@/domain/models';
-import { CreateSessionUseCase } from '@/domain/usecases/session';
-import { UpdateUserUseCase } from '@/domain/usecases/user';
+import { CreateSessionUseCase, UpdateUserUseCase } from '@/domain/usecases';
+
 import {
   Controller,
   HttpRequest,

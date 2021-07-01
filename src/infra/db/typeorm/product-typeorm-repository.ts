@@ -7,7 +7,7 @@ import {
   AddProductRepository,
   GetAllEstablishmentProductsRepository,
   GetProductByIdRepository
-} from '@/data/protocols/db/product';
+} from '@/data/protocols';
 import { ProductModel } from '@/domain/models';
 import { TypeORMHelpers } from './typeorm-helper';
 

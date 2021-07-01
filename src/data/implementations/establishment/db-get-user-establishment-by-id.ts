@@ -1,6 +1,6 @@
 import { GetEstablishedByIdRepository } from '@/data/protocols';
 import { EstablishmentModel } from '@/domain/models';
-import { GetUserEstablishedByIdUseCase } from '@/domain/usecases/establishment';
+import { GetUserEstablishedByIdUseCase } from '@/domain/usecases';
 import { AppError } from '@/shared/app-error';
 import { Either, left, right } from '@/shared/either';
 

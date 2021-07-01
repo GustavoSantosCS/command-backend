@@ -18,7 +18,7 @@ export class CreateProductTable1625019009005 implements MigrationInterface {
           { name: 'price', type: 'decimal', precision: 5, scale: 2 },
           { name: 'created_at', type: 'timestamp', default: 'now()' },
           { name: 'updated_at', type: 'timestamp', default: 'now()' },
-          { name: 'delete_at', type: 'timestamp', isNullable: true },
+          { name: 'deleted_at', type: 'timestamp', isNullable: true },
           { name: 'establishment_id', type: 'uuid' }
         ]
       })

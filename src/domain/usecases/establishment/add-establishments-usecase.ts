@@ -24,7 +24,5 @@ export namespace AddEstablishmentUseCase {
     establishmentImage: EstablishmentImageModel;
   };
 
-  export type Response = Promise<
-    Either<AppError, Omit<EstablishmentModel, 'manager'>>
-  >;
+  export type Response = Promise<Either<AppError, EstablishmentModel>>;
 }

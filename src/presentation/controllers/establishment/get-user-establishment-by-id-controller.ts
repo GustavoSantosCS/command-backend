@@ -1,5 +1,5 @@
 import { EstablishmentModel } from '@/domain/models';
-import { GetUserEstablishedByIdUseCase } from '@/domain/usecases/establishment';
+import { GetUserEstablishedByIdUseCase } from '@/domain/usecases';
 import {
   Controller,
   HttpRequest,

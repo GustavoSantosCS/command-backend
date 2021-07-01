@@ -1,8 +1,9 @@
 import {
   DBAddEstablishment,
-  DBGetAllEstablishmentsUser
-} from '@/data/implementations/establishment';
-import { DBGetUserEstablishmentById } from '@/data/implementations/establishment/db-get-user-establishment-by-id';
+  DBGetAllEstablishmentsUser,
+  DBGetUserEstablishmentById
+} from '@/data/implementations';
+
 import { IDGenerator } from '@/data/protocols';
 import { CATEGORY } from '@/domain/models';
 import { EstablishmentTypeOrmRepository } from '@/infra/db/typeorm';

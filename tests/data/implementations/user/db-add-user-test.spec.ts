@@ -1,12 +1,11 @@
 import faker from 'faker';
 
-import { DBAddUser } from '@/data/implementations/user';
-import {
-  IDGenerator,
+import { DBAddUser } from '@/data/implementations';
+import {IDGenerator,
   AddUserRepository,
   SearchUserByEmailRepository
-} from '@/data/protocols';
-import { Hasher } from '@/data/protocols/cryptography';
+, Hasher } from '@/data/protocols';
+
 import { EmailAlreadyUseError } from '@/domain/errors';
 import { UserModel } from '@/domain/models';
 

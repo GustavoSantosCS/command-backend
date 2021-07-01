@@ -3,7 +3,7 @@ import {
   UnlinkAvatar,
   UserAvatarRepository
 } from '@/data/protocols';
-import { UserAvatarUseCase } from '@/domain/usecases/user';
+import { UserAvatarUseCase } from '@/domain/usecases';
 
 export class DBUserAvatar implements UserAvatarUseCase {
   constructor(

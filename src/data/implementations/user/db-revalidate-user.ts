@@ -1,6 +1,6 @@
 import { GetUserByIdRepository } from '@/data/protocols';
 import { UserModel } from '@/domain/models';
-import { RevalidateUserUseCase } from '@/domain/usecases/user';
+import { RevalidateUserUseCase } from '@/domain/usecases';
 import { UserNotFoundError } from '@/presentation/errors';
 import { Either, left, right } from '@/shared/either';
 
@@ -15,7 +15,7 @@ export class DBRevalidateUser implements RevalidateUserUseCase {
     }
 
     const userModel = user;
-    delete userModel.deleteAt;
+    delete userModel.deletedAt;
 
     return right(userModel as UserModel);
   }

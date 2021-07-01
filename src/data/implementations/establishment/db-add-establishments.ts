@@ -1,7 +1,7 @@
-import { IDGenerator } from '@/data/protocols';
-import { AddEstablishmentRepository } from '@/data/protocols/db/establishment';
+import { IDGenerator, AddEstablishmentRepository } from '@/data/protocols';
+
 import { EstablishmentModel } from '@/domain/models';
-import { AddEstablishmentUseCase } from '@/domain/usecases/establishment';
+import { AddEstablishmentUseCase } from '@/domain/usecases';
 import { right } from '@/shared/either';
 
 export class DBAddEstablishment implements AddEstablishmentUseCase {
@@ -29,8 +29,8 @@ export class DBAddEstablishment implements AddEstablishmentUseCase {
       establishmentModel
     );
 
-    delete establishmentEntity.manager;
+    delete establishmentEntity.deletedAt;
 
-    return right(establishmentEntity as Omit<EstablishmentModel, 'manager'>);
+    return right(establishmentEntity as any);
   }
 }

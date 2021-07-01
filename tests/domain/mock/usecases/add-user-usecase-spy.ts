@@ -2,7 +2,7 @@ import { Either, left, right } from '@/shared/either';
 import { EmailAlreadyUseError } from '@/domain/errors';
 import { UserModel } from '@/domain/models';
 import { makeMockUserModel } from '@tests/domain/mock/models';
-import { AddUserUseCase } from '@/domain/usecases/user';
+import { AddUserUseCase } from '@/domain/usecases';
 import { AppError } from '@/shared/app-error';
 
 type Returns = {

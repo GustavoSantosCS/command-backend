@@ -1,14 +1,18 @@
 import {
   DBAddProduct,
-  DBGetAllEstablishmentProducts
-} from '@/data/implementations/product';
-import { DBGetProductByID } from '@/data/implementations/product/db-get-product-by-id';
-import { EstablishmentTypeOrmRepository } from '@/infra/db/typeorm';
-import { ProductTypeOrmRepository } from '@/infra/db/typeorm/product-typeorm-repository';
+  DBGetAllEstablishmentProducts,
+  DBGetProductByID
+} from '@/data/implementations';
+import {
+  EstablishmentTypeOrmRepository,
+  ProductTypeOrmRepository
+} from '@/infra/db/typeorm';
 import { UUIDAdapter } from '@/infra/uuid-adapter';
-import { AddProductController } from '@/presentation/controllers/product';
-import { GetAllEstablishmentProductsController } from '@/presentation/controllers/product/get-all-establishment-products-controller';
-import { GetProductByIdController } from '@/presentation/controllers/product/get-product-by-id-controller';
+import {
+  AddProductController,
+  GetProductByIdController,
+  GetAllEstablishmentProductsController
+} from '@/presentation/controllers/product';
 import { Controller } from '@/presentation/protocols';
 import { Validator } from '@/validation/protocols';
 import { ValidationComposite, ValidatorBuilder } from '@/validation/validators';

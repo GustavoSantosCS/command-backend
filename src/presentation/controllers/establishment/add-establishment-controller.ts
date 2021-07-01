@@ -1,9 +1,10 @@
-import { EstablishmentImageModel } from '@/domain/models';
 import {
+  EstablishmentImageModel,
   CATEGORY,
   EstablishmentModel
-} from '@/domain/models/establishment-model';
-import { AddEstablishmentUseCase } from '@/domain/usecases/establishment';
+} from '@/domain/models';
+
+import { AddEstablishmentUseCase } from '@/domain/usecases';
 import {
   Controller,
   HttpRequest,

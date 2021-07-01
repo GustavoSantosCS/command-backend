@@ -37,11 +37,11 @@ export class UserEntity {
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'update_at' })
-  updateAt: Date;
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
 
-  @DeleteDateColumn({ name: 'delete_at' })
-  deleteAt: Date;
+  @DeleteDateColumn({ name: 'deleted_at' })
+  deletedAt: Date;
 
   constructor(user: UserModel) {
     Object.assign(this, user);

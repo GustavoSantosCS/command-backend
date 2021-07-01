@@ -1,5 +1,5 @@
 import { ProductModel } from '@/domain/models';
-import { GetAllEstablishmentProductsUseCase } from '@/domain/usecases/product';
+import { GetAllEstablishmentProductsUseCase } from '@/domain/usecases';
 import {
   Controller,
   HttpRequest,

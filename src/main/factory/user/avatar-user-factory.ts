@@ -1,4 +1,4 @@
-import { DBUserAvatar } from '@/data/implementations/user';
+import { DBUserAvatar } from '@/data/implementations';
 import { UserTypeOrmRepository } from '@/infra/db/typeorm';
 import { UnlinkAvatarDisc } from '@/infra/unlink-avatar';
 import { UserAvatarController } from '@/presentation/controllers/user';

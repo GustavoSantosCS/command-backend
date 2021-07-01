@@ -1,5 +1,5 @@
 import { UserModel } from '@/domain/models';
-import { AddUserUseCase } from '@/domain/usecases/user';
+import { AddUserUseCase } from '@/domain/usecases';
 import { InternalServerError } from '@/presentation/errors';
 import {
   Controller,
@@ -44,7 +44,7 @@ export class AddUserController implements Controller {
       const user: any = resultAddUser.value;
       delete user.password;
       delete user.confirmPassword;
-      delete user.deleteAt;
+      delete user.deletedAt;
 
       return ok(user);
     } catch (error) {

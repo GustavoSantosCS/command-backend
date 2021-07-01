@@ -1,5 +1,5 @@
 import { AvatarModel, UserModel } from '@/domain/models';
-import { UserAvatarUseCase } from '@/domain/usecases/user';
+import { UserAvatarUseCase } from '@/domain/usecases';
 import {
   Controller,
   HttpRequest,

@@ -1,13 +1,12 @@
-import {
-  IDGenerator,
+import {IDGenerator,
   AddUserRepository,
   SearchUserByEmailRepository
-} from '@/data/protocols/';
-import { Hasher } from '@/data/protocols/cryptography';
+, Hasher } from '@/data/protocols';
+
 import { EmailAlreadyUseError } from '@/domain/errors';
 import { UserModel } from '@/domain/models';
 
-import { AddUserUseCase } from '@/domain/usecases/user';
+import { AddUserUseCase } from '@/domain/usecases';
 import { left, right } from '@/shared/either';
 
 export class DBAddUser implements AddUserUseCase {

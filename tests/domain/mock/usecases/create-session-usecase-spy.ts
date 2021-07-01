@@ -1,7 +1,7 @@
 import faker from 'faker';
 import { right } from '@/shared/either';
 
-import { CreateSessionUseCase } from '@/domain/usecases/session';
+import { CreateSessionUseCase } from '@/domain/usecases';
 import { AppError } from '@/shared/app-error';
 import { UserModel } from '@/domain/models';
 

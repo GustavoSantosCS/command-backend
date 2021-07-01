@@ -2,7 +2,7 @@
 import jwt from 'jsonwebtoken';
 import { env } from '@/shared/config';
 import { notAuthorizedErro, ok } from '@/utils/http';
-import { PayloadModel } from '@/domain/models/payload-model';
+import { PayloadModel } from '@/domain/models';
 import { GetUserByIdRepository } from '@/data/protocols';
 import {
   HttpRequest,

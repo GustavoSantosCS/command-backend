@@ -1,5 +1,5 @@
 import { ImagePersistenceData, ProductModel } from '@/domain/models';
-import { AddProductUseCase } from '@/domain/usecases/product';
+import { AddProductUseCase } from '@/domain/usecases';
 import {
   Controller,
   HttpRequest,

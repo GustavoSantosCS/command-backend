@@ -1,7 +1,7 @@
-import { GetEstablishedByIdRepository, IDGenerator } from '@/data/protocols';
-import { AddProductRepository } from '@/data/protocols/db/product';
+import { GetEstablishedByIdRepository, IDGenerator , AddProductRepository } from '@/data/protocols';
+
 import { ProductModel } from '@/domain/models';
-import { AddProductUseCase } from '@/domain/usecases/product';
+import { AddProductUseCase } from '@/domain/usecases';
 import { AppError } from '@/shared/app-error';
 import { left, right } from '@/shared/either';
 
@@ -39,7 +39,7 @@ export class DBAddProduct implements AddProductUseCase {
       establishmentId
     );
 
-    delete product.deleteAt;
+    delete product.deletedAt;
 
     return right(product as ProductModel);
   }

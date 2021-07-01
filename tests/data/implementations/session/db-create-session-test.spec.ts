@@ -1,6 +1,6 @@
 import { Encrypter, HashComparer } from '@/data/protocols';
-import { CreateSessionUseCase } from '@/domain/usecases/session';
-import { DBCreateSession } from '@/data/implementations/session';
+import { CreateSessionUseCase } from '@/domain/usecases';
+import { DBCreateSession } from '@/data/implementations';
 import { UserEntity } from '@/data/entities';
 import { makeMockUserEntity } from '@tests/data/mock/entities';
 import { throwError } from '@tests/shared';
@@ -112,7 +112,7 @@ describe('Test Unit: DBCreateSession', () => {
   });
 
   it('should return success if success', async () => {
-    const returnOfUseCase: Omit<UserModel, 'password'> = { ...data };
+    const returnOfUseCase: Omit<UserModel, 'password'> = { ...(data as any) };
 
     const result = await sut.createSession(request);
 

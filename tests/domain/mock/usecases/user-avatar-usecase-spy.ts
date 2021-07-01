@@ -1,5 +1,5 @@
 import { AvatarModel } from '@/domain/models';
-import { UserAvatarUseCase } from '@/domain/usecases/user';
+import { UserAvatarUseCase } from '@/domain/usecases';
 import { PersistencyError } from '@/infra/errors';
 import { AppError } from '@/shared/app-error';
 import { Either, left, right } from '@/shared/either';

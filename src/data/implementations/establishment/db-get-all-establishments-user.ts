@@ -1,6 +1,6 @@
 import { GetAllEstablishmentsUserRepository } from '@/data/protocols';
-import { EstablishmentModel } from '@/domain/models/establishment-model';
-import { GetAllEstablishmentsOfUserUseCase } from '@/domain/usecases/establishment';
+import { EstablishmentModel } from '@/domain/models';
+import { GetAllEstablishmentsOfUserUseCase } from '@/domain/usecases';
 import { left, right } from '@/shared/either';
 
 export class DBGetAllEstablishmentsUser

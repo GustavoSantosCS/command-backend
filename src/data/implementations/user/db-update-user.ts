@@ -3,10 +3,10 @@ import {
   Hasher,
   SearchUserByEmailRepository,
   UpdateUserRepository
-} from '@/data/protocols/';
+} from '@/data/protocols';
 import { EmailAlreadyUseError } from '@/domain/errors';
 import { UserModel } from '@/domain/models';
-import { UpdateUserUseCase } from '@/domain/usecases/user';
+import { UpdateUserUseCase } from '@/domain/usecases';
 import { left } from '@/shared/either';
 
 export class DBUpdateUser implements UpdateUserUseCase {

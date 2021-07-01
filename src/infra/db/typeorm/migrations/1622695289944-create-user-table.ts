@@ -13,7 +13,7 @@ export class CreateUserTable1622695289944 implements MigrationInterface {
           { name: 'password', type: 'varchar' },
           { name: 'created_at', type: 'timestamp', default: 'now()' },
           { name: 'updated_at', type: 'timestamp', default: 'now()' },
-          { name: 'delete_at', type: 'timestamp', isNullable: true }
+          { name: 'deleted_at', type: 'timestamp', isNullable: true }
         ]
       }),
       true

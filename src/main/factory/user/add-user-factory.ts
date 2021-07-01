@@ -4,7 +4,7 @@ import { AddUserController } from '@/presentation/controllers/user';
 import { Controller } from '@/presentation/protocols';
 import { Validator } from '@/validation/protocols';
 import { ValidatorBuilder, ValidationComposite } from '@/validation/validators';
-import { DBAddUser } from '@/data/implementations/user';
+import { DBAddUser } from '@/data/implementations';
 import {
   SearchUserByEmailRepository,
   AddUserRepository,

@@ -1,4 +1,4 @@
-import { DBUserAvatar } from '@/data/implementations/user';
+import { DBUserAvatar } from '@/data/implementations';
 import { UnlinkImageSpy } from '@tests/infra/mock/img-handler';
 import { AvatarModel, UserModel } from '@/domain/models';
 import {

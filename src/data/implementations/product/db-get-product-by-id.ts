@@ -1,6 +1,6 @@
-import { GetProductByIdRepository } from '@/data/protocols/db/product';
+import { GetProductByIdRepository } from '@/data/protocols';
 import { ProductModel } from '@/domain/models';
-import { GetProductByIdUseCase } from '@/domain/usecases/product';
+import { GetProductByIdUseCase } from '@/domain/usecases';
 import { AppError } from '@/shared/app-error';
 import { Either, left, right } from '@/shared/either';
 
@@ -16,7 +16,7 @@ export class DBGetProductByID implements GetProductByIdUseCase {
     if (idUser !== userIdProduct)
       return left(new AppError('Produto Não Encontrado'));
 
-    delete product.deleteAt;
+    delete product.deletedAt;
 
     return right(product as ProductModel);
   }

@@ -1,4 +1,4 @@
-import { Hasher } from '@/data/protocols/cryptography';
+import { Hasher } from '@/data/protocols';
 
 export class HasherSpy implements Hasher {
   parameters: string;

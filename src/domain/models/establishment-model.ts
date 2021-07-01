@@ -17,5 +17,5 @@ export type EstablishmentModel = {
   image?: EstablishmentImageModel;
   manager?: UserModel;
   createdAt?: Date;
-  updateAt?: Date;
+  updatedAt?: Date;
 };

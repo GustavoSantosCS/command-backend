@@ -3,13 +3,13 @@ import { Controller } from '@/presentation/protocols';
 import { Validator } from '@/validation/protocols';
 import { ValidatorBuilder, ValidationComposite } from '@/validation/validators';
 
-import { DBUpdateUser } from '@/data/implementations/user';
+import { DBUpdateUser , DBCreateSession } from '@/data/implementations';
 import { UpdateUserController } from '@/presentation/controllers/user/update-user-controller';
 import { BcryptAdapter } from '@/infra/cryptography';
 import { HashComparer } from '@/data/protocols';
 import { JwtAdapter } from '@/infra/cryptography/jwt-adapter';
 import { env } from '@/shared/config';
-import { DBCreateSession } from '@/data/implementations/session';
+
 
 const repository = new UserTypeOrmRepository();
 

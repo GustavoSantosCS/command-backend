@@ -1,7 +1,7 @@
 import faker from 'faker';
 
 import { UserModel } from '@/domain/models';
-import { AddUserUseCase } from '@/domain/usecases/user';
+import { AddUserUseCase } from '@/domain/usecases';
 import { AddUserController } from '@/presentation/controllers/user';
 import { Validator } from '@/validation/protocols';
 

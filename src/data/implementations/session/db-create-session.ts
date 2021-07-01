@@ -4,7 +4,7 @@ import {
   SearchUserByEmailRepository
 } from '@/data/protocols';
 import { PayloadModel } from '@/domain/models';
-import { CreateSessionUseCase } from '@/domain/usecases/session';
+import { CreateSessionUseCase } from '@/domain/usecases';
 import { LoginError } from '@/presentation/errors/login-error';
 import { left, right } from '@/shared/either';
 
@@ -43,7 +43,7 @@ export class DBCreateSession implements CreateSessionUseCase {
         email: user.email,
         avatar: user.avatar,
         createdAt: user.createdAt,
-        updateAt: user.updateAt
+        updatedAt: user.updatedAt
       }
     });
   }

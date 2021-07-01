@@ -1,6 +1,6 @@
 import { UserModel } from '@/domain/models';
-import { CreateSessionUseCase } from '@/domain/usecases/session';
-import { RevalidateUserUseCase } from '@/domain/usecases/user';
+import { CreateSessionUseCase, RevalidateUserUseCase } from '@/domain/usecases';
+
 import {
   Controller,
   HttpRequest,

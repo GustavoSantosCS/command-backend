@@ -2,7 +2,8 @@ import {
   createConnection,
   Connection,
   Repository,
-  EntityTarget
+  EntityTarget,
+  QueryRunner
 } from 'typeorm';
 
 export class TypeORMHelpers {
@@ -29,6 +30,16 @@ export class TypeORMHelpers {
       await TypeORMHelpers.connect();
     }
     return TypeORMHelpers.connection.getRepository(entity);
+  }
+
+  static async createQueryRunner(): Promise<QueryRunner> {
+    if (!TypeORMHelpers.connection) {
+      await TypeORMHelpers.connect();
+    }
+    const queryRunner = TypeORMHelpers.connection.createQueryRunner();
+    await queryRunner.connect();
+
+    return queryRunner;
   }
 
   static async disconnect(): Promise<void> {

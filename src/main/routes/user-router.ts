@@ -7,7 +7,7 @@ import {
 import { avatarMulter } from '@/presentation/middleware';
 import { adapterRoute } from '@/main/adapter/express';
 import { authorization } from '@/main/middleware';
-import { makeRevalidateUserController } from '../factory/user/revalidate-user.factory';
+import { makeRevalidateUserController } from '@/main/factory/user/revalidate-user.factory';
 
 export default (router: Router): void => {
   router.post(

@@ -1,6 +1,6 @@
-import { DBCreateSession } from '@/data/implementations/session';
+import { DBCreateSession } from '@/data/implementations';
 import { HashComparer, SearchUserByEmailRepository } from '@/data/protocols';
-import { CreateSessionUseCase } from '@/domain/usecases/session';
+import { CreateSessionUseCase } from '@/domain/usecases';
 import { BcryptAdapter } from '@/infra/cryptography';
 import { JwtAdapter } from '@/infra/cryptography/jwt-adapter';
 import { UserTypeOrmRepository } from '@/infra/db/typeorm';

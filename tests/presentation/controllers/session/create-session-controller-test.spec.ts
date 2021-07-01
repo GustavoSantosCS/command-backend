@@ -3,7 +3,7 @@ import { CreateSessionController } from '@/presentation/controllers/session';
 import { HttpRequest } from '@/presentation/protocols';
 import { Validator } from '@/validation/protocols';
 import { ValidatorSpy } from '@tests/validation/mock';
-import { CreateSessionUseCase } from '@/domain/usecases/session';
+import { CreateSessionUseCase } from '@/domain/usecases';
 import { CreateSessionUseCaseSpy } from '@tests/domain/mock/usecases';
 import { left } from '@/shared/either';
 import { LoginError } from '@/presentation/errors/login-error';
