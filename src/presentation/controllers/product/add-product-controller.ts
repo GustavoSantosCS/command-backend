@@ -42,7 +42,7 @@ export class AddProductController implements Controller {
       return ok(usecaseResponse.value);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(error);
+      console.error('AddProductController:45 => ', error);
       return serverError();
     }
   }

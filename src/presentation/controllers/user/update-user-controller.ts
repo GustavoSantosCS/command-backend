@@ -46,7 +46,7 @@ export class UpdateUserController implements Controller {
       return ok(response.value);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(error);
+      console.error('UpdateUserController:49 => ', error);
       return serverError(error);
     }
   }

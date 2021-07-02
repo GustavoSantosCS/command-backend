@@ -35,7 +35,7 @@ export class AddUserController implements Controller {
       if (resultAddUser.isLeft()) {
         if (resultAddUser.value.name === 'PersistencyError') {
           // eslint-disable-next-line no-console
-          console.error(resultAddUser.value);
+          console.error('AddUserController:38 => ', resultAddUser.value);
           return serverError(new InternalServerError());
         }
         return badRequest(resultAddUser.value);
@@ -49,7 +49,7 @@ export class AddUserController implements Controller {
       return ok(user);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(error);
+      console.error('AddUserController:52 => ', error);
       return serverError(error);
     }
   }

@@ -51,7 +51,7 @@ export class AddMusicController implements Controller {
       return ok(music);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(error);
+      console.error('AddMusicController:54 => ', error);
       return serverError();
     }
   }

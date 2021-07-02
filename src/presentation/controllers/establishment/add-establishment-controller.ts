@@ -56,7 +56,7 @@ export class AddEstablishmentController implements Controller {
       return ok(establishment);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(error);
+      console.error('AddEstablishmentController:59 => ', error);
       return serverError(error);
     }
   }

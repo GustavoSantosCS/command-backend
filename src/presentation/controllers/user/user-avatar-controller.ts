@@ -29,7 +29,7 @@ export class UserAvatarController implements Controller {
       return ok(response.value);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(error);
+      console.error('UserAvatarController:32 => ', error);
       return serverError(error);
     }
   }

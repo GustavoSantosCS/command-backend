@@ -44,7 +44,7 @@ export class GetUserEstablishedByIdController implements Controller {
       return ok(establishment);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(error);
+      console.error('GetUserEstablishedByIdController:47 => ', error);
       return serverError();
     }
   }

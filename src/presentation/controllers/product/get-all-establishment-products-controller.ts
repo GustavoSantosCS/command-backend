@@ -32,7 +32,7 @@ export class GetAllEstablishmentProductsController implements Controller {
       return ok(response.value);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(error);
+      console.error('GetAllEstablishmentProductsController:35 => ', error);
       return serverError();
     }
   }

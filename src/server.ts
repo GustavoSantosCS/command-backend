@@ -17,5 +17,5 @@ TypeORMHelpers.connect()
   )
   .catch(error => {
     console.error('Can not connect into database');
-    console.error(error);
+    console.error('server: 20 =>', error);
   });
