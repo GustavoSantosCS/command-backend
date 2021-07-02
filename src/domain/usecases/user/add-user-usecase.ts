@@ -17,6 +17,6 @@ export namespace AddUserUseCase {
 
   export type Response = Either<
     EmailAlreadyUseError | PersistencyError,
-    UserModel
+    Omit<UserModel, 'password' | 'establishments' | 'avatar'>
   >;
 }

@@ -1,7 +1,9 @@
-import {IDGenerator,
+import {
+  IDGenerator,
   AddUserRepository,
-  SearchUserByEmailRepository
-, Hasher } from '@/data/protocols';
+  SearchUserByEmailRepository,
+  Hasher
+} from '@/data/protocols';
 
 import { EmailAlreadyUseError } from '@/domain/errors';
 import { UserModel } from '@/domain/models';
@@ -36,8 +38,18 @@ export class DBAddUser implements AddUserUseCase {
     };
 
     const resultAddUser = await this.addUserRepository.save(user);
-    return resultAddUser.isRight()
-      ? right(resultAddUser.value as any)
-      : left(resultAddUser.value as any);
+
+    const userResult: Omit<
+      UserModel,
+      'password' | 'establishments' | 'avatar'
+    > = {
+      id: resultAddUser.id,
+      name: resultAddUser.name,
+      email: resultAddUser.email,
+      createdAt: resultAddUser.createdAt,
+      updatedAt: resultAddUser.updatedAt
+    };
+
+    return right(userResult);
   }
 }

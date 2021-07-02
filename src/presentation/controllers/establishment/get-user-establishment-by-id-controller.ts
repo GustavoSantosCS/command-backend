@@ -30,8 +30,16 @@ export class GetUserEstablishedByIdController implements Controller {
           new AppError('Não foi possível encontro o estabelecimento')
         );
 
-      const establishment: any = response.value;
-      delete establishment.manager;
+      const establishment: Omit<EstablishmentModel, 'manager'> = {
+        id: response.value.id,
+        name: response.value.name,
+        description: response.value.description,
+        category: response.value.category,
+        isOpen: response.value.isOpen,
+        image: response.value.image,
+        createdAt: response.value.createdAt,
+        updatedAt: response.value.updatedAt
+      };
 
       return ok(establishment);
     } catch (error) {

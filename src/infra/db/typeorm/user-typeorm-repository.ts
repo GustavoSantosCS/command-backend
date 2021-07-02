@@ -8,7 +8,7 @@ import {
   UpdateUserRepository
 } from '@/data/protocols';
 import { AvatarModel, UserModel } from '@/domain/models';
-import { Either, left, right } from '@/shared/either';
+
 import { PersistencyError } from '@/infra/errors';
 
 export class UserTypeOrmRepository
@@ -30,19 +30,11 @@ export class UserTypeOrmRepository
     return findUser;
   }
 
-  async save(user: UserModel): Promise<Either<PersistencyError, UserEntity>> {
+  async save(user: UserModel): Promise<UserEntity> {
     const repository = await TypeORMHelpers.getRepository(UserEntity);
     const userEntity = new UserEntity(user);
     const result = await repository.save(userEntity);
-    return !result
-      ? left(
-          new PersistencyError(
-            'Erro ao Persistir No Banco de Dados',
-            user,
-            'UserTypeOrmRepository'
-          )
-        )
-      : right(result);
+    return result;
   }
 
   async saveInfoAvatar({
@@ -51,23 +43,23 @@ export class UserTypeOrmRepository
   }: {
     user: { id: string };
     avatar: AvatarModel;
-  }): Promise<Either<PersistencyError, AvatarModel>> {
-    const repository = await TypeORMHelpers.getRepository(UserEntity);
+  }): Promise<AvatarEntity> {
+    const userRepo = await TypeORMHelpers.getRepository(UserEntity);
     const avatarEntity = new AvatarEntity(avatar);
 
-    const userEntity = await repository.findOne(user.id);
+    const userEntity = await userRepo.findOne(user.id, {
+      relations: ['avatar']
+    });
+    const oldAvatar = userEntity.avatar;
     userEntity.avatar = avatarEntity;
 
-    const repositoryAvatar = await TypeORMHelpers.getRepository(AvatarEntity);
-    const resultAvatar = await repositoryAvatar.save(avatarEntity);
+    const avatarRepo = await TypeORMHelpers.getRepository(AvatarEntity);
+    const resultAvatar = await avatarRepo.save(avatarEntity);
+    if (oldAvatar) await avatarRepo.remove(oldAvatar);
 
-    if (!resultAvatar) return left(this.buildPersistentError(avatarEntity));
+    await userRepo.save(userEntity);
 
-    const result = await repository.save(userEntity);
-
-    return !result
-      ? left(this.buildPersistentError(avatarEntity))
-      : right(avatar);
+    return resultAvatar;
   }
 
   async getUserById(id: string): Promise<UserEntity> {
@@ -88,10 +80,10 @@ export class UserTypeOrmRepository
       relations: ['avatar']
     });
 
-    const newUser: UserEntity = Object.assign(userEntity, newUserData);
-    await repository.save(newUser);
+    const newUserEntity: UserEntity = Object.assign(userEntity, newUserData);
+    await repository.save(newUserEntity);
 
-    return right(newUser);
+    return newUserEntity;
   }
 
   private buildPersistentError(entity: any) {

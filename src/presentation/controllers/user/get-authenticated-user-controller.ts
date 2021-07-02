@@ -1,5 +1,8 @@
 import { UserModel } from '@/domain/models';
-import { CreateSessionUseCase, RevalidateUserUseCase } from '@/domain/usecases';
+import {
+  CreateSessionUseCase,
+  GetAuthenticatedUserUseCase
+} from '@/domain/usecases';
 
 import {
   Controller,
@@ -8,13 +11,15 @@ import {
 } from '@/presentation/protocols';
 import { badRequest, ok } from '@/utils/http';
 
-export class RevalidateUserController implements Controller {
-  constructor(private readonly revalidateUserUseCase: RevalidateUserUseCase) {}
+export class GetAuthenticatedUserController implements Controller {
+  constructor(
+    private readonly getAuthenticatedUserUsecase: GetAuthenticatedUserUseCase
+  ) {}
 
   async handle(
-    httpRequest: HttpRequest<RevalidateUserController.Params>
-  ): Promise<HttpResponse<RevalidateUserController.Response>> {
-    const revalidateUser = await this.revalidateUserUseCase.getUser(
+    httpRequest: HttpRequest<GetAuthenticatedUserController.Params>
+  ): Promise<HttpResponse<GetAuthenticatedUserController.Response>> {
+    const revalidateUser = await this.getAuthenticatedUserUsecase.getUser(
       httpRequest.body.authenticated.id
     );
 
@@ -32,7 +37,7 @@ export class RevalidateUserController implements Controller {
 }
 
 // eslint-disable-next-line no-redeclare
-export namespace RevalidateUserController {
+export namespace GetAuthenticatedUserController {
   export type Params = {
     authenticated: {
       id: string;

@@ -12,8 +12,7 @@ import { Validator } from '@/validation/protocols';
 export class UpdateUserController implements Controller {
   constructor(
     private readonly validator: Validator,
-    private readonly updateUserUsecase: UpdateUserUseCase,
-    private readonly createSession: CreateSessionUseCase
+    private readonly updateUserUsecase: UpdateUserUseCase
   ) {}
 
   async handle(
@@ -44,14 +43,7 @@ export class UpdateUserController implements Controller {
         return badRequest(response.value);
       }
 
-      const session = await this.createSession.createSession({
-        email: body.email.toLowerCase(),
-        password: body.password
-      });
-
-      if (session.isRight()) delete (session.value as any).user.password;
-
-      return session.isRight() ? ok(session.value) : badRequest(session.value);
+      return ok(response.value);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
@@ -72,8 +64,5 @@ export namespace UpdateUserController {
     };
   };
 
-  export type Response = {
-    token: string;
-    user: Omit<UserModel, 'id' | 'password'>;
-  };
+  export type Response = Omit<UserModel, 'id' | 'password'>;
 }

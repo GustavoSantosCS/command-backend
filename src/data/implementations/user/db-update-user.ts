@@ -7,37 +7,46 @@ import {
 import { EmailAlreadyUseError } from '@/domain/errors';
 import { UserModel } from '@/domain/models';
 import { UpdateUserUseCase } from '@/domain/usecases';
-import { left } from '@/shared/either';
+import { left, right } from '@/shared/either';
 
 export class DBUpdateUser implements UpdateUserUseCase {
   constructor(
-    private readonly getUserByIdRepository: GetUserByIdRepository,
+    private readonly getUserByIdRepo: GetUserByIdRepository,
     private readonly hasher: Hasher,
-    private readonly searchByEmailRepository: SearchUserByEmailRepository,
-    private readonly updateUserRepository: UpdateUserRepository
+    private readonly searchByEmailRepo: SearchUserByEmailRepository,
+    private readonly updateUserRepo: UpdateUserRepository
   ) {}
-  async update(newUserData: UserModel): Promise<UpdateUserUseCase.Response> {
-    const trackUserData = await this.getUserByIdRepository.getUserById(
-      newUserData.id
-    );
 
-    if (trackUserData.email !== newUserData.email) {
-      const foundUser = await this.searchByEmailRepository.searchByEmail(
-        newUserData.email
+  async update(newUser: UserModel): Promise<UpdateUserUseCase.Response> {
+    const trackedUser = await this.getUserByIdRepo.getUserById(newUser.id);
+
+    if (trackedUser.email !== newUser.email) {
+      const foundUser = await this.searchByEmailRepo.searchByEmail(
+        newUser.email
       );
 
-      if (foundUser) return left(new EmailAlreadyUseError(newUserData.email));
+      if (foundUser) return left(new EmailAlreadyUseError(newUser.email));
     }
 
     const user: UserModel = {
-      id: newUserData.id,
-      email: newUserData.email,
-      name: newUserData.name,
-      password: await this.hasher.hash(newUserData.password),
-      avatar: newUserData.avatar
+      id: newUser.id,
+      email: newUser.email,
+      name: newUser.name,
+      password: await this.hasher.hash(newUser.password),
+      avatar: newUser.avatar
     };
 
-    const result = await this.updateUserRepository.update(user);
-    return result as any;
+    const result = await this.updateUserRepo.update(user);
+
+    const userReturn: Omit<UserModel, 'password'> = {
+      id: result.id,
+      name: result.name,
+      email: result.email,
+      avatar: result.avatar,
+      createdAt: result.createdAt,
+      updatedAt: result.updatedAt
+    };
+
+    return right(userReturn);
   }
 }

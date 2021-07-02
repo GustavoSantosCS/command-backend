@@ -12,5 +12,5 @@ export interface UpdateUserUseCase {
 export namespace UpdateUserUseCase {
   export type Params = UserModel;
 
-  export type Response = Either<PersistencyError, UserModel>;
+  export type Response = Either<PersistencyError, Omit<UserModel, 'password'>>;
 }

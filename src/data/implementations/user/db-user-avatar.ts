@@ -4,6 +4,7 @@ import {
   UserAvatarRepository
 } from '@/data/protocols';
 import { UserAvatarUseCase } from '@/domain/usecases';
+import { right } from '@/shared/either';
 
 export class DBUserAvatar implements UserAvatarUseCase {
   constructor(
@@ -27,6 +28,6 @@ export class DBUserAvatar implements UserAvatarUseCase {
       avatar
     });
 
-    return result;
+    return right(result);
   }
 }

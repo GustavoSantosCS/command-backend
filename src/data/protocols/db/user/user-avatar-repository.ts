@@ -1,6 +1,5 @@
-import { Either } from '@/shared/either';
 import { AvatarModel } from '@/domain/models';
-import { PersistencyError } from '@/infra/errors';
+import { AvatarEntity } from '@/data/entities';
 
 export interface UserAvatarRepository {
   saveInfoAvatar(
@@ -15,5 +14,5 @@ export namespace UserAvatarRepository {
     avatar: AvatarModel;
   };
 
-  export type Result = Either<PersistencyError, AvatarModel>;
+  export type Result = AvatarEntity;
 }

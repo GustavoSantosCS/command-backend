@@ -1,10 +1,10 @@
 import { GetUserByIdRepository } from '@/data/protocols';
 import { UserModel } from '@/domain/models';
-import { RevalidateUserUseCase } from '@/domain/usecases';
+import { GetAuthenticatedUserUseCase } from '@/domain/usecases';
 import { UserNotFoundError } from '@/presentation/errors';
 import { Either, left, right } from '@/shared/either';
-
-export class DBRevalidateUser implements RevalidateUserUseCase {
+// get-authenticated-user-controller
+export class DBGetAuthenticatedUser implements GetAuthenticatedUserUseCase {
   constructor(private readonly repository: GetUserByIdRepository) {}
 
   async getUser(id: string): Promise<Either<UserNotFoundError, UserModel>> {

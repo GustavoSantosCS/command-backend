@@ -2,7 +2,7 @@ import { AvatarModel } from '.';
 import { EstablishmentModel } from './establishment-model';
 
 export type UserModel = {
-  id: string;
+  id?: string;
   name: string;
   email: string;
   password: string;
