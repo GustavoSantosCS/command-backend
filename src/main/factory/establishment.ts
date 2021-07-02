@@ -1,5 +1,6 @@
 import {
   DBAddEstablishment,
+  DBGetAllEstablishments,
   DBGetAllEstablishmentsUser,
   DBGetUserEstablishmentById
 } from '@/data/implementations';
@@ -11,7 +12,8 @@ import { UUIDAdapter } from '@/infra/uuid-adapter';
 import {
   AddEstablishmentController,
   GetAllUserEstablishmentsController,
-  GetUserEstablishedByIdController
+  GetUserEstablishedByIdController,
+  GetAllEstablishmentsController
 } from '@/presentation/controllers/establishment';
 import { Controller } from '@/presentation/protocols';
 import { Validator } from '@/validation/protocols';
@@ -45,6 +47,11 @@ export const makeAddEstablishmentController = (): Controller => {
   const usecase = new DBAddEstablishment(idGenerator, repository);
 
   return new AddEstablishmentController(validator, usecase);
+};
+
+export const makeGetAllEstablishmentController = (): Controller => {
+  const usecase = new DBGetAllEstablishments(repository);
+  return new GetAllEstablishmentsController(usecase);
 };
 
 export const makeGetAllUserEstablishmentController = (): Controller => {

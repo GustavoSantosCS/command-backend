@@ -1,5 +1,5 @@
 import { EstablishmentModel } from '@/domain/models';
-import { GetAllEstablishmentsOfUserUseCase } from '@/domain/usecases';
+import { GetAlUserEstablishmentsUseCase } from '@/domain/usecases';
 import {
   Controller,
   HttpRequest,
@@ -9,7 +9,7 @@ import { ok, serverError } from '@/utils/http';
 
 export class GetAllUserEstablishmentsController implements Controller {
   constructor(
-    private readonly getEstablishmentsOfUser: GetAllEstablishmentsOfUserUseCase
+    private readonly getEstablishmentsOfUser: GetAlUserEstablishmentsUseCase
   ) {}
 
   async handle(

@@ -11,7 +11,7 @@ export enum CATEGORY {
 export type EstablishmentModel = {
   id?: string;
   name: string;
-  category: CATEGORY;
+  category: CATEGORY | string;
   description: string;
   isOpen: boolean;
   image?: EstablishmentImageModel;

@@ -3,6 +3,7 @@ import { Router } from 'express';
 import { adapterRoute } from '@/main/adapter/express';
 import {
   makeAddEstablishmentController,
+  makeGetAllEstablishmentController,
   makeGetAllUserEstablishmentController,
   makeGetUserEstablishmentByIdController
 } from '@/main/factory/establishment';
@@ -26,5 +27,10 @@ export default (router: Router): void => {
     '/user/establishments',
     authorization,
     adapterRoute(makeGetAllUserEstablishmentController())
+  );
+
+  router.get(
+    '/establishments',
+    adapterRoute(makeGetAllEstablishmentController())
   );
 };

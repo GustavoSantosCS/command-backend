@@ -6,7 +6,8 @@ import {
 import {
   AddEstablishmentRepository,
   GetAllEstablishmentsUserRepository,
-  GetEstablishedByIdRepository
+  GetEstablishedByIdRepository,
+  GetAllEstablishmentsRepository
 } from '@/data/protocols';
 import { EstablishmentModel } from '@/domain/models';
 import { TypeORMHelpers } from './typeorm-helper';
@@ -15,7 +16,8 @@ export class EstablishmentTypeOrmRepository
   implements
     AddEstablishmentRepository,
     GetAllEstablishmentsUserRepository,
-    GetEstablishedByIdRepository
+    GetEstablishedByIdRepository,
+    GetAllEstablishmentsRepository
 {
   async save(
     userId: string,
@@ -88,5 +90,13 @@ export class EstablishmentTypeOrmRepository
     const establishmentsUser = await query.getOne();
 
     return establishmentsUser;
+  }
+
+  async getAllEstablishments(): Promise<EstablishmentEntity[]> {
+    const establishmentRepo = await TypeORMHelpers.getRepository(
+      EstablishmentEntity
+    );
+    const establishments = establishmentRepo.find({ relations: ['image'] });
+    return establishments;
   }
 }
