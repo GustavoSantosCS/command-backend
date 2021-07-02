@@ -5,7 +5,7 @@ import {
   TableForeignKey
 } from 'typeorm';
 
-export class createMusicTable1625035984711 implements MigrationInterface {
+export class CreateMusicTable1625035984711 implements MigrationInterface {
   tableName = 'musics';
   fatherTableName = 'establishments';
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -15,7 +15,7 @@ export class createMusicTable1625035984711 implements MigrationInterface {
         columns: [
           { name: 'id', type: 'uuid', isPrimary: true },
           { name: 'name', type: 'varchar' },
-          { name: 'talent_name', type: 'varchar' },
+          { name: 'talent', type: 'varchar' },
           { name: 'duration', type: 'int' },
           { name: 'created_at', type: 'timestamp', default: 'now()' },
           { name: 'updated_at', type: 'timestamp', default: 'now()' },
@@ -39,7 +39,7 @@ export class createMusicTable1625035984711 implements MigrationInterface {
   public async down(queryRunner: QueryRunner): Promise<void> {
     const table = await queryRunner.getTable(this.fatherTableName);
     const foreignKey = table.foreignKeys.find(
-      fk => fk.columnNames.indexOf('establishment_id') !== -1
+      fk => fk.columnNames.indexOf('establishment_music_fk') !== -1
     );
     await queryRunner.dropForeignKey(this.fatherTableName, foreignKey);
     await queryRunner.dropTable(this.tableName);

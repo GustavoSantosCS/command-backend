@@ -24,6 +24,9 @@ export class EstablishmentTypeOrmRepository
     establishmentModel: EstablishmentModel
   ): Promise<EstablishmentEntity> {
     const userRep = await TypeORMHelpers.getRepository(UserEntity);
+    const userEntity = await userRep.findOne(userId, {
+      relations: ['establishments']
+    });
     const establishmentRepo = await TypeORMHelpers.getRepository(
       EstablishmentEntity
     );
@@ -38,13 +41,11 @@ export class EstablishmentTypeOrmRepository
 
     const newEstablishmentEntity = new EstablishmentEntity(establishmentModel);
     newEstablishmentEntity.image = trackImage;
+    newEstablishmentEntity.manager = userEntity;
     const trackEstablishment = await establishmentRepo.save(
       newEstablishmentEntity
     );
 
-    const userEntity = await userRep.findOne(userId, {
-      relations: ['establishments']
-    });
     if (!userEntity.establishments) {
       userEntity.establishments = [];
     }

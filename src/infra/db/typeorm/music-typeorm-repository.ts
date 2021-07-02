@@ -44,6 +44,7 @@ export class MusicTypeOrmRepository
       delete persistentMusic.establishment;
       return persistentMusic;
     } catch (err) {
+      console.error(err);
       await queryRunner.rollbackTransaction();
     } finally {
       await queryRunner.release();

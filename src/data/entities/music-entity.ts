@@ -26,7 +26,7 @@ export class MusicEntity {
   duration: number;
 
   @ManyToOne(() => EstablishmentEntity, establishment => establishment.musics)
-  @JoinColumn()
+  @JoinColumn({ name: 'establishment_id' })
   establishment: EstablishmentEntity;
 
   @CreateDateColumn({ name: 'created_at' })

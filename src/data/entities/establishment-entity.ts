@@ -34,14 +34,14 @@ export class EstablishmentEntity {
   isOpen: boolean;
 
   @ManyToOne(() => UserEntity, user => user.establishments)
-  @JoinColumn()
-  manager: UserEntity;
+  @JoinColumn({ name: 'manager' })
+  manager?: UserEntity;
 
   @OneToMany(() => ProductEntity, product => product.establishment)
   products?: ProductEntity[];
 
   @OneToOne(() => EstablishmentImageEntity)
-  @JoinColumn()
+  @JoinColumn({ name: 'image' })
   image: EstablishmentImageEntity;
 
   @OneToMany(() => MusicEntity, music => music.establishment)

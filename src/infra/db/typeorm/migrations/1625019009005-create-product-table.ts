@@ -13,7 +13,8 @@ export class CreateProductTable1625019009005 implements MigrationInterface {
         name: this.tableName,
         columns: [
           { name: 'id', type: 'uuid', isPrimary: true },
-          { name: 'description', type: 'text', isNullable: true },
+          { name: 'name', type: 'varchar' },
+          { name: 'description', type: 'text' },
           { name: 'isAvailable', type: 'boolean', default: true },
           { name: 'price', type: 'decimal', precision: 5, scale: 2 },
           { name: 'created_at', type: 'timestamp', default: 'now()' },

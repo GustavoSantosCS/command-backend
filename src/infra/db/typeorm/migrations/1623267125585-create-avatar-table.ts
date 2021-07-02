@@ -23,7 +23,11 @@ export class CreateAvatarTable1623267125585 implements MigrationInterface {
 
     await queryRunner.addColumn(
       'users',
-      new TableColumn({ name: 'avatar', type: 'varchar', isNullable: true })
+      new TableColumn({
+        name: 'avatar',
+        type: 'varchar',
+        isNullable: true
+      })
     );
 
     await queryRunner.createForeignKey(

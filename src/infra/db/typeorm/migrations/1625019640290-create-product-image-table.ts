@@ -6,10 +6,10 @@ import {
   TableForeignKey
 } from 'typeorm';
 
-export class createProductImageTable1625019640290
+export class CreateProductImageTable1625019640290
   implements MigrationInterface
 {
-  tableName = 'establishment_image';
+  tableName = 'product_image';
   fatherTableName = 'products';
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(

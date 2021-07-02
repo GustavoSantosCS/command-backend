@@ -7,7 +7,7 @@
     "username": "docker",
     "password": "docker",
     "database": "docker",
-    "synchronize": true,
+    "synchronize": false,
     "logging": false,
     "entities": ["./src/data/entities/**.*"],
     "migrations": ["./src/infra/db/typeorm/migrations/**.*"],

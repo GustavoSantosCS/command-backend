@@ -61,6 +61,8 @@ export class ProductTypeOrmRepository
 
       return productEntity;
     } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error(err);
       await queryRunner.rollbackTransaction();
     } finally {
       await queryRunner.release();
@@ -73,6 +75,7 @@ export class ProductTypeOrmRepository
 
     const productEntity = await productRepo
       .createQueryBuilder('products')
+      .innerJoinAndSelect('products.image', 'product_image')
       .innerJoinAndSelect('products.establishment', 'establishments')
       .innerJoinAndSelect('establishments.manager', 'users')
       .where('products.id = :id', { id })

@@ -27,8 +27,8 @@ export class UserEntity {
   @Column()
   password: string;
 
-  @OneToOne(() => AvatarEntity, { onDelete: 'CASCADE' })
-  @JoinColumn()
+  @OneToOne(() => AvatarEntity, avatar => avatar.user, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'avatar' })
   avatar?: AvatarEntity;
 
   @OneToMany(() => EstablishmentEntity, establishment => establishment.manager)

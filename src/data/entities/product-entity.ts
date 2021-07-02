@@ -31,11 +31,11 @@ export class ProductEntity {
   price: number;
 
   @OneToOne(() => ProductImageEntity)
-  @JoinColumn()
+  @JoinColumn({ name: 'image' })
   image: ProductImageEntity;
 
   @ManyToOne(() => EstablishmentEntity, establishment => establishment.products)
-  @JoinColumn()
+  @JoinColumn({ name: 'establishment_id' })
   establishment: EstablishmentEntity;
 
   @CreateDateColumn({ name: 'created_at' })
