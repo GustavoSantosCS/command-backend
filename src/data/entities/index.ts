@@ -5,3 +5,4 @@ export * from './establishment-image-entity';
 export * from './product-entity';
 export * from './product-image-entity';
 export * from './music-entity';
+export * from './playlist-entity';

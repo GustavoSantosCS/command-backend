@@ -1,5 +1,6 @@
 export * from './establishment';
-export * from './product';
 export * from './music';
+export * from './playlist';
+export * from './product';
 export * from './session';
 export * from './user';

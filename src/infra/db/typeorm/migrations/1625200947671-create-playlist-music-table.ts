@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class createPlaylistMusicTable1625200947671
+export class CreatePlaylistMusicTable1625200947671
   implements MigrationInterface
 {
   tableName = 'playlist_music';
