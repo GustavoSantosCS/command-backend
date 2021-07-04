@@ -21,17 +21,16 @@ export class CreateMusicTable1625035984711 implements MigrationInterface {
           { name: 'updated_at', type: 'timestamp', default: 'now()' },
           { name: 'deleted_at', type: 'timestamp', isNullable: true },
           { name: 'establishment_id', type: 'uuid' }
+        ],
+        foreignKeys: [
+          {
+            columnNames: ['establishment_id'],
+            referencedColumnNames: ['id'],
+            referencedTableName: 'establishments',
+            name: 'establishment_playlist_fk', // Nome da ForeignKey
+            onDelete: 'CASCADE'
+          }
         ]
-      })
-    );
-    await queryRunner.createForeignKey(
-      this.tableName, // Tabela pai
-      new TableForeignKey({
-        columnNames: ['establishment_id'], // Coluna pai da Tabela pai
-        referencedTableName: this.fatherTableName, // Tabela referenciada
-        referencedColumnNames: ['id'], // Coluna referenciada
-        name: 'establishment_music_fk', // Nome da ForeignKey
-        onDelete: 'CASCADE'
       })
     );
   }

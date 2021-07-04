@@ -5,11 +5,14 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   PrimaryColumn,
   UpdateDateColumn
 } from 'typeorm';
 import { EstablishmentEntity } from './establishment-entity';
+import { MusicEntity } from './music-entity';
 
 @Entity('playlists')
 export class PlaylistEntity {
@@ -21,6 +24,14 @@ export class PlaylistEntity {
 
   @Column()
   isActive: boolean;
+
+  @ManyToMany(() => MusicEntity, musics => musics.playlists)
+  @JoinTable({
+    name: 'playlist_music',
+    inverseJoinColumn: { name: 'idMusic' },
+    joinColumn: { name: 'idPlaylist' }
+  })
+  musics: MusicEntity[];
 
   @ManyToOne(() => EstablishmentEntity, establishment => establishment.musics)
   @JoinColumn({ name: 'establishment_id' })
@@ -34,5 +45,6 @@ export class PlaylistEntity {
 
   constructor(playlistModel: PlayListModel) {
     Object.assign(this, playlistModel);
+    if (this.musics) this.musics = [];
   }
 }

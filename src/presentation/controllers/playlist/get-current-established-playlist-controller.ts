@@ -1,41 +1,38 @@
 import { PlayListModel } from '@/domain/models';
-import { AddPlayListUseCase } from '@/domain/usecases';
+import { GetCurrentEstablishedPlaylistUseCase } from '@/domain/usecases';
 import {
   Controller,
   HttpRequest,
   HttpResponse
 } from '@/presentation/protocols';
-import { AppError } from '@/shared/app-error';
-import { Either } from '@/shared/either';
 import { badRequest, ok, serverError } from '@/utils/http';
 import { Validator } from '@/validation/protocols';
 
-export class AddPlayListController implements Controller {
+export class GetCurrentEstablishedPlaylistController implements Controller {
   constructor(
-    private readonly validate: Validator,
-    private readonly addPlayerUseCase: AddPlayListUseCase
+    private readonly validator: Validator,
+    private readonly getCurrentPlaylist: GetCurrentEstablishedPlaylistUseCase
   ) {}
 
   async handle(
-    httpRequest: HttpRequest<AddPlayListController.Body>
-  ): Promise<HttpResponse<AddPlayListController.Response>> {
+    httpRequest: HttpRequest<
+      any,
+      GetCurrentEstablishedPlaylistController.Params
+    >
+  ): Promise<HttpResponse<GetCurrentEstablishedPlaylistController.Response>> {
     try {
-      const { name, establishmentId, authenticated, musics } = httpRequest.body;
+      const { establishmentId } = httpRequest.params;
+      const userId = httpRequest.body.authenticated.id;
 
-      const validation = this.validate.validate({
-        name,
-        establishmentId,
-        musics
+      const validation = this.validator.validate({
+        establishmentId
       });
 
       if (validation.isLeft()) return badRequest(validation.value);
-
-      const result = await this.addPlayerUseCase.addPlayList({
-        name,
-        establishmentId,
-        idUser: authenticated.id,
-        musics
-      });
+      const result = await this.getCurrentPlaylist.getCurrentPlaylist(
+        userId,
+        establishmentId
+      );
       if (result.isLeft()) return badRequest(result.value);
 
       const playerList: Omit<PlayListModel, 'establishment'> = {
@@ -50,20 +47,18 @@ export class AddPlayListController implements Controller {
       return ok(playerList);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('AddPlayListController: => ', error);
+      console.error('GetCurrentEstablishedPlaylistUseCase:50 => ', error);
       return serverError();
     }
   }
 }
 
 // eslint-disable-next-line no-redeclare
-export namespace AddPlayListController {
-  export type Body = {
+export namespace GetCurrentEstablishedPlaylistController {
+  export type Params = {
     authenticated: {
       id: string;
     };
-    musics: { id: string }[];
-    name: string;
     establishmentId: string;
   };
 

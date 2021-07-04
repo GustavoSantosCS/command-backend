@@ -1,4 +1,4 @@
-import { PlayListModel } from '@/domain/models';
+import { PlaylistEntity } from '@/data/entities';
 import { AppError } from '@/shared/app-error';
 import { Either } from '@/shared/either';
 
@@ -12,6 +12,7 @@ export namespace AddPlayListUseCase {
     name: string;
     establishmentId: string;
     idUser: string;
+    musics: { id: string }[];
   };
-  export type Result = Promise<Either<AppError, PlayListModel>>;
+  export type Result = Promise<Either<AppError, PlaylistEntity>>;
 }

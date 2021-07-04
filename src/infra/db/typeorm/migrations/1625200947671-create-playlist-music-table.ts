@@ -11,22 +11,6 @@ export class CreatePlaylistMusicTable1625200947671
         columns: [
           { name: 'idPlaylist', type: 'uuid', isPrimary: true },
           { name: 'idMusic', type: 'uuid', isPrimary: true }
-        ],
-        foreignKeys: [
-          {
-            columnNames: ['idPlaylist'],
-            referencedColumnNames: ['id'],
-            referencedTableName: 'playlists',
-            name: 'playlist_music_fk', // Nome da ForeignKey
-            onDelete: 'CASCADE'
-          },
-          {
-            columnNames: ['idMusic'],
-            referencedColumnNames: ['id'],
-            referencedTableName: 'musics',
-            name: 'music_playlist_fk', // Nome da ForeignKey
-            onDelete: 'CASCADE'
-          }
         ]
       })
     );

@@ -85,12 +85,4 @@ export class UserTypeOrmRepository
 
     return newUserEntity;
   }
-
-  private buildPersistentError(entity: any) {
-    return new PersistencyError(
-      'Erro ao Persistir No Banco de Dados',
-      entity,
-      'UserTypeOrmRepository'
-    );
-  }
 }

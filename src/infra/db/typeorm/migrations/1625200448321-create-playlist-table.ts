@@ -28,6 +28,11 @@ export class CreatePlaylistTable1625200448321 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
+    const table = await queryRunner.getTable(this.tableName);
+    const foreignKey = table.foreignKeys.find(
+      fk => fk.columnNames.indexOf('establishment_playlist_fk') !== -1
+    );
+    await queryRunner.dropForeignKey(this.tableName, foreignKey);
     await queryRunner.dropTable(this.tableName);
   }
 }

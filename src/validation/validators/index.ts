@@ -4,5 +4,6 @@ export * from './email-validator';
 export * from './number-validator';
 export * from './min-size-validator';
 export * from './belongs-to-array-validator';
+export * from './is-array-validator';
 export * from './validator-composite';
 export * from './validator-builder';

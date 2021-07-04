@@ -3,6 +3,7 @@ import { PlayListModel } from '@/domain/models';
 
 export interface AddPlayListRepository {
   add(
-    playlistModel: PlayListModel
-  ): Promise<Omit<PlaylistEntity, 'establishment'>>;
+    playlistModel: PlayListModel,
+    musics: { id: string }[]
+  ): Promise<PlaylistEntity>;
 }

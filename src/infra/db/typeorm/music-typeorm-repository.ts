@@ -1,13 +1,17 @@
 import { EstablishmentEntity, MusicEntity } from '@/data/entities';
 import {
   AddMusicRepository,
-  GetAllEstablishmentMusicsRepository
+  GetAllEstablishmentMusicsRepository,
+  GetMusicByIdRepository
 } from '@/data/protocols';
 import { MusicModel } from '@/domain/models';
 import { TypeORMHelpers } from './typeorm-helper';
 
 export class MusicTypeOrmRepository
-  implements AddMusicRepository, GetAllEstablishmentMusicsRepository
+  implements
+    AddMusicRepository,
+    GetAllEstablishmentMusicsRepository,
+    GetMusicByIdRepository
 {
   async add(
     musicModel: MusicModel,
@@ -44,6 +48,7 @@ export class MusicTypeOrmRepository
       delete persistentMusic.establishment;
       return persistentMusic;
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error('MusicTypeOrmRepository:47 => ', err);
       await queryRunner.rollbackTransaction();
     } finally {
@@ -62,6 +67,14 @@ export class MusicTypeOrmRepository
       .innerJoinAndSelect('musics.establishment', 'establishments')
       .where('establishments.id = :id', { id: idEstablishment })
       .getMany();
+
+    return productsEntity;
+  }
+
+  async getById(id: string): Promise<MusicEntity> {
+    const productRepo = await TypeORMHelpers.getRepository(MusicEntity);
+
+    const productsEntity = await productRepo.findOne(id);
 
     return productsEntity;
   }

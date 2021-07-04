@@ -1,7 +1,8 @@
 import {
   GetEstablishedByIdRepository,
   IDGenerator,
-  AddPlayListRepository
+  AddPlayListRepository,
+  GetMusicByIdRepository
 } from '@/data/protocols';
 
 import { PlayListModel } from '@/domain/models';
@@ -12,29 +13,44 @@ import { left, right } from '@/shared/either';
 export class DBAddPlayList implements AddPlayListUseCase {
   constructor(
     private readonly idGenerator: IDGenerator,
-    private readonly establishedRepo: GetEstablishedByIdRepository,
-    private readonly playerRepo: AddPlayListRepository
+    private readonly establishmentRepo: GetEstablishedByIdRepository,
+    private readonly playerRepo: AddPlayListRepository,
+    private readonly musicRepo: GetMusicByIdRepository
   ) {}
 
   async addPlayList({
     establishmentId,
     idUser,
-    name
+    name,
+    musics
   }: AddPlayListUseCase.Params): AddPlayListUseCase.Result {
-    const establishment = await this.establishedRepo.getById(establishmentId);
+    const establishment = await this.establishmentRepo.getById(establishmentId);
 
     if (establishment?.manager.id !== idUser)
       return left(new AppError('Não foi possível encontrar o estabelecimento'));
+
+    const findMusics = [];
+
+    // eslint-disable-next-line no-restricted-syntax
+    for await (const music of musics) {
+      const trackedMusic = await this.musicRepo.getById(music.id);
+      if (!trackedMusic) {
+        return left(
+          new AppError('Não foi possível encontrar a musica informada')
+        );
+      }
+    }
 
     const newPlaylistModel: PlayListModel = {
       id: this.idGenerator.generate(),
       name,
       isActive: true,
-      establishment
+      establishment,
+      musics: findMusics
     };
 
-    const result = await this.playerRepo.add(newPlaylistModel);
+    const result = await this.playerRepo.add(newPlaylistModel, musics);
 
-    return right(result as any);
+    return right(result);
   }
 }

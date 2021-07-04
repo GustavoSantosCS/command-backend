@@ -6,6 +6,7 @@ import {
   MinimumSizeValidator
 } from '@/validation/validators';
 import { BelongsToArrayValidator } from './belongs-to-array-validator';
+import { IsArrayValidator } from './is-array-validator';
 import { NumberValidator } from './number-validator';
 
 export class ValidatorBuilder {
@@ -53,6 +54,11 @@ export class ValidatorBuilder {
     this.validators.push(
       new BelongsToArrayValidator(this.fieldName, array, customMessage)
     );
+    return this;
+  }
+
+  isArray(customMessage?: string) {
+    this.validators.push(new IsArrayValidator(this.fieldName, customMessage));
     return this;
   }
 
