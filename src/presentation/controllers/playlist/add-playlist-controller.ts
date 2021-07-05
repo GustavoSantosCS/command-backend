@@ -62,7 +62,7 @@ export namespace AddPlayListController {
     authenticated: {
       id: string;
     };
-    musics: { id: string }[];
+    musics: { id: string; position: number }[];
     name: string;
     establishmentId: string;
   };

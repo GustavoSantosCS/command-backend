@@ -8,11 +8,13 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryColumn,
   UpdateDateColumn
 } from 'typeorm';
 import { EstablishmentEntity } from './establishment-entity';
 import { MusicEntity } from './music-entity';
+import { MusicPlaylistEntity } from './music-playlist-entity';
 
 @Entity('playlists')
 export class PlaylistEntity {
@@ -43,8 +45,13 @@ export class PlaylistEntity {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
+  @OneToMany(
+    () => MusicPlaylistEntity,
+    musicToPlaylist => musicToPlaylist.playlist
+  )
+  public musicToPlaylist!: MusicPlaylistEntity[];
+
   constructor(playlistModel: PlayListModel) {
     Object.assign(this, playlistModel);
-    if (this.musics) this.musics = [];
   }
 }

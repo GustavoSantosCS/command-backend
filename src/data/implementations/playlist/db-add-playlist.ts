@@ -29,8 +29,6 @@ export class DBAddPlayList implements AddPlayListUseCase {
     if (establishment?.manager.id !== idUser)
       return left(new AppError('Não foi possível encontrar o estabelecimento'));
 
-    const findMusics = [];
-
     // eslint-disable-next-line no-restricted-syntax
     for await (const music of musics) {
       const trackedMusic = await this.musicRepo.getById(music.id);
@@ -45,8 +43,7 @@ export class DBAddPlayList implements AddPlayListUseCase {
       id: this.idGenerator.generate(),
       name,
       isActive: true,
-      establishment,
-      musics: findMusics
+      establishment
     };
 
     const result = await this.playerRepo.add(newPlaylistModel, musics);

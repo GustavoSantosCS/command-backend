@@ -1,7 +1,10 @@
+/* eslint-disable no-console */
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable no-param-reassign */
 import {
   EstablishmentEntity,
   MusicEntity,
+  MusicPlaylistEntity,
   PlaylistEntity
 } from '@/data/entities';
 import {
@@ -16,13 +19,12 @@ export class PlaylistTypeOrmRepository
 {
   async add(
     newPlaylist: PlayListModel,
-    musics: { id: string }[]
+    musics: { id: string; position: number }[]
   ): Promise<PlaylistEntity> {
     const queryRunner = await TypeORMHelpers.createQueryRunner();
 
     await queryRunner.startTransaction();
     try {
-      // get establishment
       const establishment = await queryRunner.manager.findOne(
         EstablishmentEntity,
         newPlaylist.establishment.id,
@@ -31,45 +33,37 @@ export class PlaylistTypeOrmRepository
         }
       );
 
-      // Save playlist
       const playlist = new PlaylistEntity(newPlaylist);
-      playlist.establishment = establishment; // Link playlist to establishment
+      playlist.establishment = establishment;
       await queryRunner.manager.save(playlist);
 
-      // Link music to playlists
-      // eslint-disable-next-line no-restricted-syntax
+      playlist.musics = [];
       for await (const music of musics) {
         const trackedMusic = await queryRunner.manager.findOne(
           MusicEntity,
-          music.id,
-          {
-            relations: ['playlists', 'establishment']
-          }
+          music.id
         );
 
-        trackedMusic.playlists.push(playlist);
-        playlist.musics.push(trackedMusic);
+        const musicPlaylist = new MusicPlaylistEntity(
+          trackedMusic,
+          playlist,
+          music.position
+        );
 
-        await queryRunner.manager.save(trackedMusic);
+        playlist.musics.push({
+          id: trackedMusic.id,
+          name: trackedMusic.name,
+          talent: trackedMusic.talent,
+          duration: trackedMusic.duration
+        } as any);
+        await queryRunner.manager.save(musicPlaylist);
       }
-
-      // Link playlists to establishment
       establishment.playlists.push(playlist);
       await queryRunner.manager.save(establishment);
       await queryRunner.commitTransaction();
-      delete playlist.establishment;
-      playlist.musics = playlist.musics.map(music => {
-        delete music.playlists;
-        delete music.establishment;
-        delete music.createdAt;
-        delete music.updatedAt;
-        delete music.deletedAt;
-        return music;
-      });
 
       return playlist;
     } catch (err) {
-      // eslint-disable-next-line no-console
       console.error('PlaylistTypeOrmRepository:35 => ', err);
       await queryRunner.rollbackTransaction();
     } finally {

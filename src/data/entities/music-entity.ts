@@ -8,10 +8,12 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryColumn,
   UpdateDateColumn
 } from 'typeorm';
 import { EstablishmentEntity } from './establishment-entity';
+import { MusicPlaylistEntity } from './music-playlist-entity';
 import { PlaylistEntity } from './playlist-entity';
 
 @Entity('musics')
@@ -41,13 +43,19 @@ export class MusicEntity {
   playlists: PlaylistEntity[];
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
+  createdAt?: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
+  updatedAt?: Date;
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt?: Date;
+
+  @OneToMany(
+    () => MusicPlaylistEntity,
+    musicToPlaylist => musicToPlaylist.music
+  )
+  public musicToPlaylist?: MusicPlaylistEntity[];
 
   constructor(music: MusicModel) {
     Object.assign(this, music);
