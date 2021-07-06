@@ -1,5 +1,4 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
-import { v4 as uuid } from 'uuid';
 import { MusicEntity } from './music-entity';
 import { PlaylistEntity } from './playlist-entity';
 
@@ -25,8 +24,13 @@ export class MusicPlaylistEntity {
   @JoinColumn({ name: 'idPlaylist' })
   playlist?: PlaylistEntity;
 
-  constructor(music: MusicEntity, playlist: PlaylistEntity, position: number) {
-    this.id = uuid();
+  constructor(
+    id: string,
+    music: MusicEntity,
+    playlist: PlaylistEntity,
+    position: number
+  ) {
+    this.id = id;
     this.position = position;
     this.music = music;
     this.playlist = playlist;

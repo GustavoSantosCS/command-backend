@@ -12,7 +12,7 @@ export namespace AddPlayListUseCase {
     name: string;
     establishmentId: string;
     idUser: string;
-    musics: { id: string }[];
+    musics: { id: string; position: number }[];
   };
   export type Result = Promise<Either<AppError, PlaylistEntity>>;
 }

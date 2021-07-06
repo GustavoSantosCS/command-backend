@@ -4,8 +4,6 @@ import {
   AddPlayListRepository,
   GetMusicByIdRepository
 } from '@/data/protocols';
-
-import { PlayListModel } from '@/domain/models';
 import { AddPlayListUseCase } from '@/domain/usecases';
 import { AppError } from '@/shared/app-error';
 import { left, right } from '@/shared/either';
@@ -29,24 +27,35 @@ export class DBAddPlayList implements AddPlayListUseCase {
     if (establishment?.manager.id !== idUser)
       return left(new AppError('Não foi possível encontrar o estabelecimento'));
 
-    // eslint-disable-next-line no-restricted-syntax
-    for await (const music of musics) {
-      const trackedMusic = await this.musicRepo.getById(music.id);
-      if (!trackedMusic) {
-        return left(
-          new AppError('Não foi possível encontrar a musica informada')
-        );
-      }
-    }
-
-    const newPlaylistModel: PlayListModel = {
+    const playlist = {
       id: this.idGenerator.generate(),
       name,
       isActive: true,
       establishment
     };
 
-    const result = await this.playerRepo.add(newPlaylistModel, musics);
+    const playlistMusics = [];
+    // eslint-disable-next-line no-restricted-syntax
+    for await (const music of musics) {
+      const trackedMusic = await this.musicRepo.getById(music.id);
+      if (!trackedMusic)
+        return left(
+          new AppError('Não foi possível encontrar a musica informada')
+        );
+
+      playlistMusics.push({
+        id: this.idGenerator.generate(),
+        position: music.position,
+        music: trackedMusic,
+        playlist
+      });
+    }
+
+    const result = await this.playerRepo.add(
+      playlistMusics,
+      establishmentId,
+      playlist
+    );
 
     return right(result);
   }

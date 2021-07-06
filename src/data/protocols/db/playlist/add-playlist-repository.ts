@@ -1,9 +1,20 @@
-import { PlaylistEntity } from '@/data/entities';
+import { MusicEntity, PlaylistEntity } from '@/data/entities';
 import { PlayListModel } from '@/domain/models';
 
 export interface AddPlayListRepository {
   add(
-    playlistModel: PlayListModel,
-    musics: { id: string }[]
+    data: AddPlayListRepository.Params,
+    establishmentId: string,
+    playlist: PlayListModel
   ): Promise<PlaylistEntity>;
+}
+
+// eslint-disable-next-line no-redeclare
+export namespace AddPlayListRepository {
+  export type Params = {
+    id: string;
+    position: number;
+    music: MusicEntity;
+    playlist: PlaylistEntity;
+  }[];
 }

@@ -3,7 +3,6 @@
 /* eslint-disable no-param-reassign */
 import {
   EstablishmentEntity,
-  MusicEntity,
   MusicPlaylistEntity,
   PlaylistEntity
 } from '@/data/entities';
@@ -18,8 +17,9 @@ export class PlaylistTypeOrmRepository
   implements AddPlayListRepository, GetCurrentEstablishedPlaylistRepository
 {
   async add(
-    newPlaylist: PlayListModel,
-    musics: { id: string; position: number }[]
+    data: AddPlayListRepository.Params,
+    establishmentId: string,
+    playlistModel: PlayListModel
   ): Promise<PlaylistEntity> {
     const queryRunner = await TypeORMHelpers.createQueryRunner();
 
@@ -27,39 +27,23 @@ export class PlaylistTypeOrmRepository
     try {
       const establishment = await queryRunner.manager.findOne(
         EstablishmentEntity,
-        newPlaylist.establishment.id,
-        {
-          relations: ['playlists']
-        }
+        establishmentId
       );
 
-      const playlist = new PlaylistEntity(newPlaylist);
+      const playlist = new PlaylistEntity(playlistModel);
       playlist.establishment = establishment;
       await queryRunner.manager.save(playlist);
 
-      playlist.musics = [];
-      for await (const music of musics) {
-        const trackedMusic = await queryRunner.manager.findOne(
-          MusicEntity,
-          music.id
+      for await (const playlistMusic of data) {
+        const playlistMusicEntity = new MusicPlaylistEntity(
+          playlistMusic.id,
+          playlistMusic.music,
+          playlistMusic.playlist,
+          playlistMusic.position
         );
-
-        const musicPlaylist = new MusicPlaylistEntity(
-          trackedMusic,
-          playlist,
-          music.position
-        );
-
-        playlist.musics.push({
-          id: trackedMusic.id,
-          name: trackedMusic.name,
-          talent: trackedMusic.talent,
-          duration: trackedMusic.duration
-        } as any);
-        await queryRunner.manager.save(musicPlaylist);
+        await queryRunner.manager.save(playlistMusicEntity);
       }
-      establishment.playlists.push(playlist);
-      await queryRunner.manager.save(establishment);
+
       await queryRunner.commitTransaction();
 
       return playlist;
@@ -87,7 +71,6 @@ export class PlaylistTypeOrmRepository
       )
       .innerJoinAndSelect('playlists.musics', 'musics.id');
 
-    // eslint-disable-next-line no-console
     const playlist = await queryBuilder.getOne();
 
     playlist.musics = playlist.musics.map(music => {
@@ -98,6 +81,30 @@ export class PlaylistTypeOrmRepository
       delete music.deletedAt;
       return music;
     });
+
+    return playlist;
+  }
+
+  async getPlaylistById(id: string): Promise<PlaylistEntity> {
+    const playlistRepo = await TypeORMHelpers.getRepository(PlaylistEntity);
+    const musicRepo = await TypeORMHelpers.getRepository(MusicPlaylistEntity);
+
+    const playlist = await playlistRepo.findOne(id, {
+      relations: ['musicToPlaylist']
+    });
+
+    for await (const music of playlist.musicToPlaylist) {
+      const musicTrack = await musicRepo.findOne(music.id, {
+        relations: ['music']
+      });
+      const musicClean = {
+        id: musicTrack.music.id,
+        name: musicTrack.music.name,
+        talent: musicTrack.music.talent,
+        duration: musicTrack.music.duration
+      };
+      music.music = musicClean as any;
+    }
 
     return playlist;
   }
