@@ -15,6 +15,7 @@ import {
 import { EstablishmentEntity } from './establishment-entity';
 import { MusicPlaylistEntity } from './music-playlist-entity';
 import { PlaylistEntity } from './playlist-entity';
+import { SurveyEntity } from './survey-entity';
 
 @Entity('musics')
 export class MusicEntity {
@@ -41,6 +42,14 @@ export class MusicEntity {
     inverseJoinColumn: { name: 'idPlaylist' }
   })
   playlists: PlaylistEntity[];
+
+  @ManyToMany(() => SurveyEntity, surveys => surveys.musics)
+  @JoinTable({
+    name: 'survey_music',
+    joinColumn: { name: 'idMusic' },
+    inverseJoinColumn: { name: 'idSurvey' }
+  })
+  surveys?: SurveyEntity[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt?: Date;

@@ -16,6 +16,8 @@ import { UserEntity } from './user-entity';
 import { ProductEntity } from './product-entity';
 import { MusicEntity } from './music-entity';
 import { PlaylistEntity } from './playlist-entity';
+import { AccountEntity } from './account-entity';
+import { SurveyEntity } from './survey-entity';
 
 @Entity('establishments')
 export class EstablishmentEntity {
@@ -43,6 +45,12 @@ export class EstablishmentEntity {
 
   @OneToMany(() => PlaylistEntity, playlist => playlist.establishment)
   playlists?: PlaylistEntity[];
+
+  @OneToMany(() => AccountEntity, account => account.establishment)
+  accounts?: AccountEntity[];
+
+  @OneToMany(() => SurveyEntity, survey => survey.establishment)
+  surveys?: SurveyEntity[];
 
   @OneToOne(() => EstablishmentImageEntity)
   @JoinColumn({ name: 'image' })

@@ -12,6 +12,8 @@ import {
 import { UserModel } from '@/domain/models';
 import { AvatarEntity } from './avatar-entity';
 import { EstablishmentEntity } from './establishment-entity';
+import { VoteEntity } from './vote-entity';
+import { AccountEntity } from './account-entity';
 
 @Entity('users')
 export class UserEntity {
@@ -33,6 +35,12 @@ export class UserEntity {
 
   @OneToMany(() => EstablishmentEntity, establishment => establishment.manager)
   establishments?: EstablishmentEntity[];
+
+  @OneToMany(() => AccountEntity, account => account.client)
+  accounts?: AccountEntity[];
+
+  @OneToMany(() => VoteEntity, vote => vote.client)
+  pollVotes?: VoteEntity[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

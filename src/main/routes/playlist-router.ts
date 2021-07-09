@@ -15,7 +15,7 @@ export default (router: Router): void => {
   );
 
   router.get(
-    '/establishment/:establishmentId/playlists',
+    '/establishment/:establishmentId/playlist',
     authorization,
     adapterRoute(makeGetCurrentEstablishedPlaylistController())
   );

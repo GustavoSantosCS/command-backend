@@ -1,8 +1,7 @@
-import { MusicModel, PlayListModel } from '@/domain/models';
+import { PlayListModel } from '@/domain/models';
 import {
   Column,
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   JoinColumn,
   JoinTable,
@@ -30,8 +29,8 @@ export class PlaylistEntity {
   @ManyToMany(() => MusicEntity, musics => musics.playlists)
   @JoinTable({
     name: 'playlist_music',
-    inverseJoinColumn: { name: 'idMusic' },
-    joinColumn: { name: 'idPlaylist' }
+    joinColumn: { name: 'idPlaylist' },
+    inverseJoinColumn: { name: 'idMusic' }
   })
   musics: MusicEntity[];
 
