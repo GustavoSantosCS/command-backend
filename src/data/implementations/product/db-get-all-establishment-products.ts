@@ -23,7 +23,7 @@ export class DBGetAllEstablishmentProducts
       idEstablishment
     );
 
-    if (establishment?.manager.id !== idUser)
+    if (!establishment)
       return left(new AppError('Não foi possível encontrar o estabelecimento'));
 
     let products = await this.repository.getAllEstablishmentProducts(

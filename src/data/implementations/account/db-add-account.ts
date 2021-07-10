@@ -36,8 +36,7 @@ export class DBCreateAccount implements CreateAccountUseCase {
     const result = await this.addAccountRepository.add(newAccount, idUser);
 
     delete result.client;
-    delete result.establishment;
-
+    delete result.establishment.manager;
     return right(result);
   }
 }

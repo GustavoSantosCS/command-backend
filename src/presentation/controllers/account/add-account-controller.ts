@@ -38,10 +38,11 @@ export class CreateAccountController implements Controller {
         return badRequest(result.value);
       }
 
-      const newAccount: Omit<AccountModel, 'client' | 'establishment'> = {
+      const newAccount: Omit<AccountModel, 'client'> = {
         id: result.value.id,
         requestsMusic: [],
         requestsProduct: [],
+        establishment: result.value.establishment,
         createdAt: result.value.createdAt,
         updatedAt: result.value.updatedAt
       };
