@@ -3,12 +3,17 @@ import {
   ProductEntity,
   RequestProductEntity
 } from '@/data/entities';
-import { CreateRequestProductRepository } from '@/data/protocols';
+import {
+  CreateRequestProductRepository,
+  GetAllAccountRequestProductRepository
+} from '@/data/protocols';
 import { RequestProductModel } from '@/domain/models';
 import { TypeORMHelpers } from './typeorm-helper';
 
 export class RequestProductTypeOrmRepository
-  implements CreateRequestProductRepository
+  implements
+    CreateRequestProductRepository,
+    GetAllAccountRequestProductRepository
 {
   async save(
     newRequestProduct: RequestProductModel,
@@ -45,5 +50,42 @@ export class RequestProductTypeOrmRepository
       await queryRunner.release();
     }
     return null;
+  }
+
+  async getAllAccountRequestProduct(
+    idAccount: any
+  ): Promise<RequestProductEntity[]> {
+    const requestProductRepo = await TypeORMHelpers.getRepository(
+      RequestProductEntity
+    );
+
+    const userRequestProduct = await requestProductRepo
+      .createQueryBuilder('requests_product')
+      .innerJoin('requests_product.account', 'accounts')
+      .innerJoinAndSelect('requests_product.product', 'products')
+      .innerJoinAndSelect('products.image', 'product_image')
+      .where('accounts.id = :id', { id: idAccount })
+      .getMany();
+
+    return userRequestProduct;
+  }
+
+  async getAllEstablishmentRequestProduct(
+    idEstablishment: any
+  ): Promise<RequestProductEntity[]> {
+    const requestProductRepo = await TypeORMHelpers.getRepository(
+      RequestProductEntity
+    );
+
+    const userRequestProduct = await requestProductRepo
+      .createQueryBuilder('requests_product')
+      .innerJoinAndSelect('requests_product.product', 'products')
+      .innerJoinAndSelect('requests_product.account', 'accounts')
+      .innerJoin('products.establishment', 'establishments')
+      .where('establishments.id = :id', { id: idEstablishment })
+      .orderBy('requests_product.created_at')
+      .getMany();
+
+    return userRequestProduct;
   }
 }

@@ -1,4 +1,7 @@
-import { DBCreateRequestProduct } from '@/data/implementations';
+import {
+  DBCreateRequestProduct,
+  DbGetAllAccountRequestProduct
+} from '@/data/implementations';
 import {
   EstablishmentTypeOrmRepository,
   ProductTypeOrmRepository,
@@ -6,8 +9,11 @@ import {
 } from '@/infra/db/typeorm';
 import { UUIDAdapter } from '@/infra/uuid-adapter';
 import { CreateRequestProductController } from '@/presentation/controllers/request-product';
+import { GetAllAccountRequestProductController } from '@/presentation/controllers/request-product/get-all-account-request-product-controller';
 import { Controller } from '@/presentation/protocols';
 import { ValidationComposite, ValidatorBuilder } from '@/validation/validators';
+
+const requestProductRepository = new RequestProductTypeOrmRepository();
 
 export const makeCreateRequestProductController = (): Controller => {
   const productValidator = ValidatorBuilder.field('idProduct')
@@ -43,8 +49,13 @@ export const makeCreateRequestProductController = (): Controller => {
     new UUIDAdapter(),
     new EstablishmentTypeOrmRepository(),
     new ProductTypeOrmRepository(),
-    new RequestProductTypeOrmRepository()
+    requestProductRepository
   );
 
   return new CreateRequestProductController(validator, usecase);
+};
+
+export const makeGetAllRequestProductController = (): Controller => {
+  const usecase = new DbGetAllAccountRequestProduct(requestProductRepository);
+  return new GetAllAccountRequestProductController(usecase);
 };
