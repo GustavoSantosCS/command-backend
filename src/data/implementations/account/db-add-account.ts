@@ -37,6 +37,6 @@ export class DBCreateAccount implements CreateAccountUseCase {
 
     delete result.client;
     delete result.establishment.manager;
-    return right(result);
+    return right(result as any);
   }
 }

@@ -1,5 +1,5 @@
-export interface HttpRequest<T = any, P = any> {
-  body?: T;
+export interface HttpRequest<B = any, P = any> {
+  body?: B;
   headers?: any;
   params?: P;
   query?: any;

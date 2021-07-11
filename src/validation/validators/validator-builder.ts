@@ -3,7 +3,8 @@ import {
   RequiredFieldValidator,
   EmailValidator,
   CompareFieldsValidator,
-  MinimumSizeValidator
+  MinimumSizeValidator,
+  MaxSizeValidator
 } from '@/validation/validators';
 import { BelongsToArrayValidator } from './belongs-to-array-validator';
 import { IsArrayValidator } from './is-array-validator';
@@ -34,6 +35,13 @@ export class ValidatorBuilder {
   min(minimumSize: number, customMessage?: string): ValidatorBuilder {
     this.validators.push(
       new MinimumSizeValidator(this.fieldName, minimumSize, customMessage)
+    );
+    return this;
+  }
+
+  max(maxSize: number, customMessage?: string): ValidatorBuilder {
+    this.validators.push(
+      new MaxSizeValidator(this.fieldName, maxSize, customMessage)
     );
     return this;
   }

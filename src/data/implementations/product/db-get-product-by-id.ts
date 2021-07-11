@@ -7,7 +7,7 @@ import { Either, left, right } from '@/shared/either';
 export class DBGetProductByID implements GetProductByIdUseCase {
   constructor(private readonly repository: GetProductByIdRepository) {}
   async getById(idProduct: string): Promise<Either<AppError, ProductModel>> {
-    const product = await this.repository.getProductById(idProduct);
+    const product = await this.repository.getById(idProduct);
 
     if (!product) return left(new AppError('Produto Não Encontrado'));
 

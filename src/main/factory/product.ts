@@ -45,7 +45,6 @@ export const makeAddProductController = (): Controller => {
   const establishmentIdValidator = ValidatorBuilder.field('establishmentId')
     .required('Estabelecimento não informado')
     .build();
-  // establishmentId
 
   const validator: Validator = new ValidationComposite([
     ...establishmentIdValidator,

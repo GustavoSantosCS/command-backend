@@ -1,3 +1,4 @@
+import { RequestProductModel } from '@/domain/models';
 import {
   Column,
   CreateDateColumn,
@@ -11,7 +12,7 @@ import {
 import { AccountEntity } from './account-entity';
 import { ProductEntity } from './product-entity';
 
-@Entity('request_product')
+@Entity('requests_product')
 export class RequestProductEntity {
   @PrimaryColumn()
   id: string;
@@ -41,4 +42,8 @@ export class RequestProductEntity {
 
   @DeleteDateColumn({ name: 'closed_at' })
   closedAt: Date;
+
+  constructor(requestProduct: RequestProductModel) {
+    Object.assign(this, requestProduct);
+  }
 }

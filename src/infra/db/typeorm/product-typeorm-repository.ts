@@ -70,7 +70,7 @@ export class ProductTypeOrmRepository
     return null;
   }
 
-  async getProductById(id: string): Promise<ProductEntity> {
+  async getById(id: string): Promise<ProductEntity> {
     const productRepo = await TypeORMHelpers.getRepository(ProductEntity);
 
     const productEntity = await productRepo
