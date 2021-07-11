@@ -1,23 +1,23 @@
 import { adapterMulter } from '@/main/adapter/express';
 import { env } from '@/shared/config';
 
-export const avatarMulter = adapterMulter(
-  'avatar',
-  `${env.app.protocol}://${env.app.host}:${env.app.port}/files/`,
-  'avatar',
-  'Não foi possível salvar o seu avatar'
-);
+export const avatarMulter = adapterMulter('avatar', {
+  destination: env.multer.destinationRoot.avatar,
+  errorMessage: 'Não foi possível salvar o seu avatar',
+  resultObjectName: 'avatar',
+  target: `${env.app.protocol}://${env.app.host}:${env.app.port}/files/avatar`
+});
 
-export const establishmentImageMulter = adapterMulter(
-  'image',
-  `${env.app.protocol}://${env.app.host}:${env.app.port}/files/`,
-  'establishmentImage',
-  'Não foi possível salvar a imagem do estabelecimento'
-);
+export const establishmentImageMulter = adapterMulter('image', {
+  destination: env.multer.destinationRoot.establishment,
+  errorMessage: 'Não foi possível salvar a imagem do estabelecimento',
+  resultObjectName: 'establishmentImage',
+  target: `${env.app.protocol}://${env.app.host}:${env.app.port}/files/establishment`
+});
 
-export const productImageMulter = adapterMulter(
-  'image',
-  `${env.app.protocol}://${env.app.host}:${env.app.port}/files/`,
-  'productImage',
-  'Não foi possível salvar a imagem do estabelecimento'
-);
+export const productImageMulter = adapterMulter('image', {
+  destination: env.multer.destinationRoot.product,
+  errorMessage: 'Não foi possível salvar a imagem do estabelecimento',
+  resultObjectName: 'productImage',
+  target: `${env.app.protocol}://${env.app.host}:${env.app.port}/files/product`
+});

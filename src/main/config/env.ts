@@ -20,7 +20,33 @@ const db = {
 
 const multer = {
   destinationRoot: {
-    disc: path.resolve(__dirname, '..', '..', '..', 'tmp', 'storage')
+    avatar: path.resolve(
+      __dirname,
+      '..',
+      '..',
+      '..',
+      'tmp',
+      'storage',
+      'avatar'
+    ),
+    establishment: path.resolve(
+      __dirname,
+      '..',
+      '..',
+      '..',
+      'tmp',
+      'storage',
+      'establishment'
+    ),
+    product: path.resolve(
+      __dirname,
+      '..',
+      '..',
+      '..',
+      'tmp',
+      'storage',
+      'product'
+    )
   }
 };
 

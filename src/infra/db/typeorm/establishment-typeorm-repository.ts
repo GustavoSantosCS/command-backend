@@ -68,8 +68,6 @@ export class EstablishmentTypeOrmRepository
       .innerJoinAndSelect('establishments.image', 'establishment_image')
       .where('users.id = :id', { id: userId });
 
-    // console.log(query.getSql());
-
     const establishmentsUser = await query.getMany();
 
     return establishmentsUser;
@@ -85,8 +83,6 @@ export class EstablishmentTypeOrmRepository
       .innerJoinAndSelect('establishments.manager', 'users')
       .innerJoinAndSelect('establishments.image', 'establishment_image')
       .where('establishments.id = :id', { id });
-
-    // console.log(query.getSql());
 
     const establishmentsUser = await query.getOne();
 

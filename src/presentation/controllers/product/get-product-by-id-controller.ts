@@ -17,10 +17,9 @@ export class GetProductByIdController implements Controller {
     >
   ): Promise<HttpResponse<GetProductByIdController.Response>> {
     try {
-      const { id: idUser } = httpRequest.body.authenticated;
-      const { id: idProduct } = httpRequest.params;
+      const { id } = httpRequest.params;
 
-      const response = await this.getProductById.getById(idUser, idProduct);
+      const response = await this.getProductById.getById(id);
 
       if (response.isLeft()) return badRequest(response.value);
 
@@ -40,7 +39,6 @@ export namespace GetProductByIdController {
     authenticated: {
       id: string;
     };
-    establishmentId: string;
   };
 
   export type Params = {

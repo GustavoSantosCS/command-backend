@@ -4,13 +4,15 @@ import { Request, Response, NextFunction } from 'express';
 import { env } from '@/main/config/env';
 import { HttpRequest } from '@/presentation/protocols';
 
+type Config = {
+  target: string;
+  resultObjectName: string;
+  errorMessage: string;
+  destination: string;
+};
+
 export const adapterMulter =
-  (
-    fieldLabel: string,
-    target: string,
-    resultObjectName: string,
-    errorMessage: string
-  ) =>
+  (fieldLabel: string, configPersister: Config) =>
   async (req: Request, res: Response, next: NextFunction) => {
     const httpRequest: HttpRequest = {
       body: req.body,
@@ -20,16 +22,16 @@ export const adapterMulter =
     };
     const config = {
       storage: multer.diskStorage({
-        destination: env.multer.destinationRoot.disc,
+        destination: configPersister.destination,
         filename(_, file, callback) {
           const fileName = `${uuid()}-${file.originalname}`
             .split(' ')
             .join('_');
 
-          httpRequest.body[resultObjectName] = {
+          httpRequest.body[configPersister.resultObjectName] = {
             originalName: file.originalname,
             persistentName: fileName,
-            target: `${target}${fileName}`
+            target: `${configPersister.target}/${fileName}`
           };
           callback(null, fileName);
         }
@@ -40,11 +42,7 @@ export const adapterMulter =
     return update(req, res, error => {
       if (error) {
         return res.status(500).json({
-          errors: [
-            {
-              message: errorMessage
-            }
-          ]
+          errors: [{ message: configPersister.errorMessage }]
         });
       }
       Object.assign(req.body, httpRequest.body);
