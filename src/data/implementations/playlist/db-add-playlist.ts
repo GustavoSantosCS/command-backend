@@ -46,7 +46,7 @@ export class DBAddPlayList implements AddPlayListUseCase {
     const playlist = {
       id: this.idGenerator.generate(),
       name,
-      isActive: true,
+      isActive: false,
       establishment
     };
 
