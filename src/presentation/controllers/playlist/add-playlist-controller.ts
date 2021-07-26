@@ -38,6 +38,7 @@ export class AddPlayListController implements Controller {
         userId: authenticated.id,
         musics
       });
+
       if (resultAdd.isLeft()) {
         return badRequest(resultAdd.value);
       }

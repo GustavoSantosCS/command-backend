@@ -9,7 +9,7 @@ export class RequiredFieldValidator implements Validator {
   ) {}
 
   validate(value: any): Either<MissingParamError, true> {
-    return value[this.fieldName]
+    return value[this.fieldName] !== undefined
       ? right(true)
       : left(new MissingParamError(this.customMessage, this.fieldName));
   }

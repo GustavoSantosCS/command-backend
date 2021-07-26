@@ -62,11 +62,14 @@ export class MusicTypeOrmRepository
     return productsEntity;
   }
 
-  async getById(id: string): Promise<MusicEntity> {
+  async getById(musicId: string): Promise<MusicEntity> {
     const productRepo = await TypeORMHelpers.getRepository(MusicEntity);
-    const productsEntity = await productRepo.findOne(id, {
-      relations: ['establishment']
-    });
+    const productsEntity = await productRepo
+      .createQueryBuilder('musics')
+      .innerJoinAndSelect('musics.establishment', 'establishments')
+      .innerJoinAndSelect('establishments.manager', 'users')
+      .where('musics.id = :musicId', { musicId })
+      .getOne();
     return productsEntity;
   }
 }

@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-param-reassign */
 import {
   GetEstablishmentByIdRepository,
   IDGenerator,
@@ -40,6 +42,7 @@ export class DBAddPlayList implements AddPlayListUseCase {
       establishmentId
     );
     if (!establishment) return left(new EstablishmentNotFoundError());
+
     if (!this.isOwner(establishment as EstablishmentEntity, userId))
       return left(new EstablishmentNotFoundError());
 
@@ -51,7 +54,6 @@ export class DBAddPlayList implements AddPlayListUseCase {
     };
 
     const playlistMusics = [];
-    // eslint-disable-next-line no-restricted-syntax
     for await (const music of musics) {
       const trackedMusic = await this.getMusicByIdRepo.getById(music.id);
       if (!trackedMusic) return left(new MusicNotFoundError());
@@ -73,11 +75,18 @@ export class DBAddPlayList implements AddPlayListUseCase {
       playlist
     );
 
+    result.musics = result.musics.map(music => {
+      delete music.establishment;
+      delete music.createdAt;
+      delete music.updatedAt;
+      delete music.deletedAt;
+      return music;
+    });
+
     return right(result);
   }
 
-  // check if the owner of the establishment is the same as the user
-  isOwner(establishment: EstablishmentEntity, userId: string): boolean {
+  private isOwner(establishment: EstablishmentEntity, userId: string): boolean {
     const { manager } = establishment;
     return manager.id === userId;
   }

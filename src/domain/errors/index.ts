@@ -7,3 +7,4 @@ export * from './product-not-found-error';
 export * from './establishment-not-found-error';
 export * from './incorrect-password-error';
 export * from './music-not-found-error';
+export * from './playlist-not-found-error';

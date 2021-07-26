@@ -48,7 +48,7 @@ export class PlaylistEntity {
     () => MusicPlaylistEntity,
     musicToPlaylist => musicToPlaylist.playlist
   )
-  public musicToPlaylist!: MusicPlaylistEntity[];
+  musicToPlaylist!: MusicPlaylistEntity[];
 
   constructor(playlistModel: PlayListModel) {
     Object.assign(this, playlistModel);

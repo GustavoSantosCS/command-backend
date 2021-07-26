@@ -79,6 +79,13 @@ export class ValidatorBuilder {
     return this;
   }
 
+  isBoolean(customMessage: string): ValidatorBuilder {
+    this.validators.push(
+      new TypeValidator(this.fieldName, customMessage, 'boolean')
+    );
+    return this;
+  }
+
   build(): Validator[] {
     return this.validators;
   }
