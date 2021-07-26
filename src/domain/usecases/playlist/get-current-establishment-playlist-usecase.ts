@@ -6,20 +6,12 @@ export interface GetCurrentEstablishmentPlaylistUseCase {
   getCurrentPlaylist(
     userId: string,
     establishmentId: string
-  ): Promise<
-    Either<
-      EstablishmentNotFoundError,
-      Omit<PlaylistEntity, 'establishment' | 'musicToPlaylist'>
-    >
-  >;
+  ): Promise<GetCurrentEstablishmentPlaylistUseCase.Response>;
 }
 
 // eslint-disable-next-line no-redeclare
 export namespace GetCurrentEstablishmentPlaylistUseCase {
-  export type Result = Omit<
-    PlaylistEntity,
-    'establishment' | 'musicToPlaylist'
-  >;
+  export type Result = Omit<PlaylistEntity, 'establishment' | 'musics'>;
 
   export type Response = Either<EstablishmentNotFoundError, Result>;
 }

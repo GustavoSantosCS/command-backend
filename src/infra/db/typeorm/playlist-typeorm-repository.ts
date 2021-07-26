@@ -76,16 +76,17 @@ export class PlaylistTypeOrmRepository
 
     const queryBuilder = playlistRepo
       .createQueryBuilder('playlists')
+      .innerJoinAndSelect('playlists.musicToPlaylist', 'playlist_music')
+      .innerJoinAndSelect('playlist_music.music', 'musics')
       .innerJoin(
         'playlists.establishment',
         'establishments',
         'establishments.id = :establishmentId and playlists.isActive = :ative',
         { ative: true, establishmentId }
-      )
-      .innerJoinAndSelect('playlists.musics', 'musics.id');
+      );
 
     const playlist = await queryBuilder.getOne();
-
+    console.log(playlist);
     return playlist;
   }
 

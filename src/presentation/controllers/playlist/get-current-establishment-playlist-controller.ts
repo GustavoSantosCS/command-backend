@@ -1,3 +1,4 @@
+import { PlaylistEntity } from '@/data/entities';
 import { PlayListModel } from '@/domain/models';
 import { GetCurrentEstablishmentPlaylistUseCase } from '@/domain/usecases';
 import {
@@ -29,7 +30,6 @@ export class GetCurrentEstablishmentPlaylistController implements Controller {
     try {
       const { establishmentId } = httpRequest.params;
       const userId = httpRequest.body.authenticated.id;
-
       const validation = this.validator.validate({
         establishmentId
       });
@@ -45,11 +45,11 @@ export class GetCurrentEstablishmentPlaylistController implements Controller {
         return badRequest(result.value);
       }
 
-      const playerList: Omit<PlayListModel, 'establishment'> = {
+      const playerList: Omit<PlaylistEntity, 'establishment' | 'musics'> = {
         id: result.value.id,
         name: result.value.name,
         isActive: result.value.isActive,
-        musics: result.value.musics,
+        musicToPlaylist: result.value.musicToPlaylist,
         createdAt: result.value.createdAt,
         updatedAt: result.value.updatedAt
       };

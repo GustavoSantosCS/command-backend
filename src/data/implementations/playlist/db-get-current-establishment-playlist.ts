@@ -29,8 +29,7 @@ export class DBGetCurrentEstablishmentPlaylist
       establishmentId
     );
 
-    if (establishment?.manager.id !== userId)
-      return left(new EstablishmentNotFoundError());
+    if (!establishment) return left(new EstablishmentNotFoundError());
 
     const currentPlaylist =
       await this.getCurrentEstablishmentPlaylistRepo.getEstablishmentPlaylist(
@@ -40,7 +39,7 @@ export class DBGetCurrentEstablishmentPlaylist
     const result: GetCurrentEstablishmentPlaylistUseCase.Result = {
       id: currentPlaylist.id,
       name: currentPlaylist.name,
-      musics: currentPlaylist.musics,
+      musicToPlaylist: currentPlaylist.musicToPlaylist,
       isActive: currentPlaylist.isActive,
       createdAt: currentPlaylist.createdAt,
       updatedAt: currentPlaylist.updatedAt
