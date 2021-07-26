@@ -10,3 +10,4 @@ export * from './product-model';
 export * from './request-music-model';
 export * from './request-product-model';
 export * from './user-model';
+export * from './survey-model';

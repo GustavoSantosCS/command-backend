@@ -7,6 +7,7 @@ import {
   ProductTypeOrmRepository,
   RequestProductTypeOrmRepository
 } from '@/infra/db/typeorm';
+import { AccountTypeOrmRepository } from '@/infra/db/typeorm/account-typeorm-repository';
 import { UUIDAdapter } from '@/infra/uuid-adapter';
 import { CreateRequestProductController } from '@/presentation/controllers/request-product';
 import { GetAllAccountRequestProductController } from '@/presentation/controllers/request-product/get-all-account-request-product-controller';
@@ -16,7 +17,7 @@ import { ValidationComposite, ValidatorBuilder } from '@/validation/validators';
 const requestProductRepository = new RequestProductTypeOrmRepository();
 
 export const makeCreateRequestProductController = (): Controller => {
-  const productValidator = ValidatorBuilder.field('idProduct')
+  const productValidator = ValidatorBuilder.field('productId')
     .required('Produto não informado')
     .build();
 
@@ -34,7 +35,7 @@ export const makeCreateRequestProductController = (): Controller => {
     .isNumber('O Valor total deve ser um numero')
     .build();
 
-  const accountIdValidator = ValidatorBuilder.field('idAccount')
+  const accountIdValidator = ValidatorBuilder.field('accountId')
     .required('Conta não informado')
     .build();
 
@@ -45,9 +46,10 @@ export const makeCreateRequestProductController = (): Controller => {
     ...accountIdValidator,
     ...amountOfProductValidator
   ]);
+
   const usecase = new DBCreateRequestProduct(
     new UUIDAdapter(),
-    new EstablishmentTypeOrmRepository(),
+    new AccountTypeOrmRepository(),
     new ProductTypeOrmRepository(),
     requestProductRepository
   );
@@ -56,6 +58,9 @@ export const makeCreateRequestProductController = (): Controller => {
 };
 
 export const makeGetAllRequestProductController = (): Controller => {
-  const usecase = new DbGetAllAccountRequestProduct(requestProductRepository);
+  const usecase = new DbGetAllAccountRequestProduct(
+    requestProductRepository,
+    new AccountTypeOrmRepository()
+  );
   return new GetAllAccountRequestProductController(usecase);
 };

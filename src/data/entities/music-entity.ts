@@ -1,4 +1,3 @@
-import { MusicModel } from '@/domain/models';
 import {
   Column,
   CreateDateColumn,
@@ -12,10 +11,12 @@ import {
   PrimaryColumn,
   UpdateDateColumn
 } from 'typeorm';
+import { MusicModel } from '@/domain/models';
 import { EstablishmentEntity } from './establishment-entity';
 import { MusicPlaylistEntity } from './music-playlist-entity';
 import { PlaylistEntity } from './playlist-entity';
 import { SurveyEntity } from './survey-entity';
+import { SurveyMusicEntity } from './survey-music-entity';
 
 @Entity('musics')
 export class MusicEntity {
@@ -64,9 +65,12 @@ export class MusicEntity {
     () => MusicPlaylistEntity,
     musicToPlaylist => musicToPlaylist.music
   )
-  public musicToPlaylist?: MusicPlaylistEntity[];
+  musicToPlaylist?: MusicPlaylistEntity[];
 
-  constructor(music: MusicModel) {
-    Object.assign(this, music);
+  @OneToMany(() => SurveyMusicEntity, surveyToMusic => surveyToMusic.music)
+  surveyToMusic?: SurveyMusicEntity[];
+
+  constructor(music?: MusicModel) {
+    if (music) Object.assign(this, music);
   }
 }

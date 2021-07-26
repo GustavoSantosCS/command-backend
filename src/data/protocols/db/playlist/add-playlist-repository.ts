@@ -6,7 +6,7 @@ export interface AddPlayListRepository {
     data: AddPlayListRepository.Params,
     establishmentId: string,
     playlist: PlayListModel
-  ): Promise<PlaylistEntity>;
+  ): Promise<Omit<PlaylistEntity, 'establishment' | 'musicToPlaylist'>>;
 }
 
 // eslint-disable-next-line no-redeclare

@@ -1,15 +1,8 @@
 import { ValidatorError } from './validator-erros';
 
 export class NotEqualFieldsError extends ValidatorError {
-  constructor(
-    paramFieldName: string,
-    otherFieldName: string,
-    customMessage?: string
-  ) {
-    const message =
-      customMessage ||
-      `Valores não são iguais ${paramFieldName} ${otherFieldName}`;
-    super(message);
+  constructor(message: string, filed: string) {
+    super(message, filed);
     this.name = 'NotEqualFieldsError';
   }
 }

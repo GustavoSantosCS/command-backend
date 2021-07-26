@@ -25,23 +25,13 @@ export class MusicTypeOrmRepository
       // get establishment
       const trackedEstablishment = await queryRunner.manager.findOne(
         EstablishmentEntity,
-        establishmentId,
-        {
-          relations: ['musics']
-        }
+        establishmentId
       );
 
       // create music entity
       const musicEntity = new MusicEntity(musicModel);
       musicEntity.establishment = trackedEstablishment;
       const persistentMusic = await queryRunner.manager.save(musicEntity);
-
-      // Save establishment with the new product
-      if (!trackedEstablishment.musics) {
-        trackedEstablishment.musics = [];
-      }
-      trackedEstablishment.musics.push(persistentMusic);
-      await queryRunner.manager.save(trackedEstablishment);
 
       await queryRunner.commitTransaction();
 
@@ -51,21 +41,22 @@ export class MusicTypeOrmRepository
       // eslint-disable-next-line no-console
       console.error('MusicTypeOrmRepository:47 => ', err);
       await queryRunner.rollbackTransaction();
+      throw err;
     } finally {
       await queryRunner.release();
     }
-    return null;
   }
 
   async getAllEstablishmentMusics(
-    idEstablishment: string
+    establishmentId: string
   ): Promise<MusicEntity[]> {
     const productRepo = await TypeORMHelpers.getRepository(MusicEntity);
 
     const productsEntity = await productRepo
       .createQueryBuilder('musics')
-      .innerJoinAndSelect('musics.establishment', 'establishments')
-      .where('establishments.id = :id', { id: idEstablishment })
+      .innerJoin('musics.establishment', 'establishments')
+      .where('establishments.id = :id', { id: establishmentId })
+      .orderBy('musics.name', 'ASC')
       .getMany();
 
     return productsEntity;
@@ -73,9 +64,9 @@ export class MusicTypeOrmRepository
 
   async getById(id: string): Promise<MusicEntity> {
     const productRepo = await TypeORMHelpers.getRepository(MusicEntity);
-
-    const productsEntity = await productRepo.findOne(id);
-
+    const productsEntity = await productRepo.findOne(id, {
+      relations: ['establishment']
+    });
     return productsEntity;
   }
 }

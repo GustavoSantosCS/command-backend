@@ -1,6 +1,5 @@
 import { UserModel } from '@/domain/models';
 import { AddUserUseCase } from '@/domain/usecases';
-import { InternalServerError } from '@/presentation/errors';
 import {
   Controller,
   HttpRequest,
@@ -10,41 +9,42 @@ import { badRequest, ok, serverError } from '@/utils/http';
 import { Validator } from '@/validation/protocols';
 
 export class AddUserController implements Controller {
-  constructor(
-    private readonly validator: Validator,
-    private readonly addUserUseCase: AddUserUseCase
-  ) {}
+  private readonly validator: Validator;
+  private readonly addUser: AddUserUseCase;
+
+  constructor(validator: Validator, addUserUseCase: AddUserUseCase) {
+    this.validator = validator;
+    this.addUser = addUserUseCase;
+  }
 
   async handle(
-    httpRequest: HttpRequest<AddUserController.Params>
+    httpRequest: HttpRequest<AddUserController.DTO>
   ): Promise<HttpResponse<AddUserController.Response>> {
     try {
-      const { body } = httpRequest;
-
-      const validatorResult = this.validator.validate(body);
-      if (validatorResult.isLeft()) {
-        return badRequest(validatorResult.value);
+      const validation = this.validator.validate(httpRequest.body);
+      if (validation.isLeft()) {
+        return badRequest(validation.value);
       }
 
-      const resultAddUser = await this.addUserUseCase.add({
-        name: body.name,
-        email: body.email.toLowerCase(),
-        password: body.password
+      const { name, email, password } = httpRequest.body;
+      const resultAddUser = await this.addUser.add({
+        name,
+        email: email.toLowerCase(),
+        password
       });
 
       if (resultAddUser.isLeft()) {
-        if (resultAddUser.value.name === 'PersistencyError') {
-          // eslint-disable-next-line no-console
-          console.error('AddUserController:38 => ', resultAddUser.value);
-          return serverError(new InternalServerError());
-        }
         return badRequest(resultAddUser.value);
       }
 
-      const user: any = resultAddUser.value;
-      delete user.password;
-      delete user.confirmPassword;
-      delete user.deletedAt;
+      const { value: newUserEntity } = resultAddUser;
+      const user: AddUserController.Response = {
+        id: newUserEntity.id,
+        name: newUserEntity.name,
+        email: newUserEntity.email,
+        createdAt: newUserEntity.createdAt,
+        updatedAt: newUserEntity.updatedAt
+      };
 
       return ok(user);
     } catch (error) {
@@ -57,14 +57,15 @@ export class AddUserController implements Controller {
 
 // eslint-disable-next-line no-redeclare
 export namespace AddUserController {
-  export type Params = {
+  export type DTO = {
     name: string;
     email: string;
     password: string;
     confirmPassword: string;
   };
 
-  export type Response = {
-    user?: Omit<UserModel, 'password'>;
-  };
+  export type Response = Omit<
+    UserModel,
+    'password' | 'avatar' | 'establishments'
+  >;
 }

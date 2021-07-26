@@ -8,31 +8,33 @@ import {
 import { badRequest, ok, serverError } from '@/utils/http';
 
 export class GetAllEstablishmentMusicsController implements Controller {
+  private readonly getAllEstablishmentMusics: GetAllEstablishmentMusicsUseCase;
+
   constructor(
-    private readonly getAllEstablishmentMusics: GetAllEstablishmentMusicsUseCase
-  ) {}
+    getAllEstablishmentMusicsUseCase: GetAllEstablishmentMusicsUseCase
+  ) {
+    this.getAllEstablishmentMusics = getAllEstablishmentMusicsUseCase;
+  }
 
   async handle(
     httpRequest: HttpRequest<
-      GetAllEstablishmentMusicsController.Body,
-      GetAllEstablishmentMusicsController.Params
+      GetAllEstablishmentMusicsController.DTOBody,
+      GetAllEstablishmentMusicsController.DTOParams
     >
-  ): Promise<HttpResponse<GetAllEstablishmentMusicsController.Body>> {
+  ): Promise<HttpResponse<GetAllEstablishmentMusicsController.DTOBody>> {
     try {
-      const idUser = httpRequest.body.authenticated.id;
-      const idEstablished = httpRequest.params.id;
+      const idEstablishment = httpRequest.params.id;
 
       const response =
         await this.getAllEstablishmentMusics.getAllEstablishmentMusics(
-          idUser,
-          idEstablished
+          idEstablishment
         );
 
       if (response.isLeft()) return badRequest(response.value);
       return ok(response.value);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('GetAllEstablishmentMusicsController:35 => ', error);
+      console.error('GetAllEstablishmentMusicsController:37 => ', error);
       return serverError();
     }
   }
@@ -40,13 +42,13 @@ export class GetAllEstablishmentMusicsController implements Controller {
 
 // eslint-disable-next-line no-redeclare
 export namespace GetAllEstablishmentMusicsController {
-  export type Body = {
+  export type DTOBody = {
     authenticated: {
       id: string;
     };
   };
 
-  export type Params = {
+  export type DTOParams = {
     id: string;
   };
 

@@ -14,28 +14,32 @@ import { badRequest, ok, serverError } from '@/utils/http';
 import { Validator } from '@/validation/protocols';
 
 export class AddEstablishmentController implements Controller {
+  private readonly validator: Validator;
+  private readonly addEstablishment: AddEstablishmentUseCase;
+
   constructor(
-    private readonly validator: Validator,
-    private readonly addEstablishmentUseCase: AddEstablishmentUseCase
-  ) {}
+    validator: Validator,
+    addEstablishmentUseCase: AddEstablishmentUseCase
+  ) {
+    this.validator = validator;
+    this.addEstablishment = addEstablishmentUseCase;
+  }
 
   async handle(
-    httpRequest: HttpRequest<AddEstablishmentController.Params>
+    httpRequest: HttpRequest<AddEstablishmentController.DTO>
   ): Promise<HttpResponse<AddEstablishmentController.Response>> {
     const { body } = httpRequest;
-
-    const validatorResult = this.validator.validate({
+    const validation = this.validator.validate({
       name: body.name,
       category: body.category,
       description: body.description
     });
-
-    if (validatorResult.isLeft()) {
-      return badRequest(validatorResult.value);
+    if (validation.isLeft()) {
+      return badRequest(validation.value);
     }
 
     try {
-      const response = await this.addEstablishmentUseCase.addEstablishment({
+      const newEstablishment = await this.addEstablishment.addEstablishment({
         userId: body.authenticated.id,
         establishment: {
           name: body.name,
@@ -45,18 +49,10 @@ export class AddEstablishmentController implements Controller {
         establishmentImage: body.establishmentImage
       });
 
-      if (response.isLeft()) {
-        return badRequest(response.value);
-      }
-
-      const establishment: EstablishmentModel = response.value;
-
-      delete establishment.manager;
-
-      return ok(establishment);
+      return ok(newEstablishment);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('AddEstablishmentController:59 => ', error);
+      console.error('AddEstablishmentController:55 => ', error);
       return serverError(error);
     }
   }
@@ -64,7 +60,7 @@ export class AddEstablishmentController implements Controller {
 
 // eslint-disable-next-line no-redeclare
 export namespace AddEstablishmentController {
-  export type Params = {
+  export type DTO = {
     authenticated: {
       id: string;
     };
@@ -74,5 +70,5 @@ export namespace AddEstablishmentController {
     establishmentImage: EstablishmentImageModel;
   };
 
-  export type Response = EstablishmentModel;
+  export type Response = Omit<EstablishmentModel, 'manager'>;
 }

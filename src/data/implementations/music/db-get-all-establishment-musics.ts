@@ -1,42 +1,34 @@
-import { GetEstablishedByIdRepository } from '@/data/protocols';
+import { GetEstablishmentByIdRepository } from '@/data/protocols';
 import { GetAllEstablishmentMusicsRepository } from '@/data/protocols/db/music/get-all-establishment-music-repository';
-import { MusicModel } from '@/domain/models';
 import { GetAllEstablishmentMusicsUseCase } from '@/domain/usecases';
-import { AppError } from '@/shared/app-error';
-import { Either, left, right } from '@/shared/either';
-
-type MusicsReturn = Omit<MusicModel, 'establishment'>;
+import { left, right } from '@/shared/either';
+import { EstablishmentNotFoundError } from '@/domain/errors';
 
 export class DBGetAllEstablishmentMusics
   implements GetAllEstablishmentMusicsUseCase
 {
+  private readonly getEstablishmentByIdRepo: GetEstablishmentByIdRepository;
+  private readonly getAllEstablishmentMusicsRepo: GetAllEstablishmentMusicsRepository;
   constructor(
-    private readonly establishedRepo: GetEstablishedByIdRepository,
-    private readonly musicRepo: GetAllEstablishmentMusicsRepository
-  ) {}
+    getEstablishmentByIdRepo: GetEstablishmentByIdRepository,
+    getAllEstablishmentMusicsRepo: GetAllEstablishmentMusicsRepository
+  ) {
+    this.getEstablishmentByIdRepo = getEstablishmentByIdRepo;
+    this.getAllEstablishmentMusicsRepo = getAllEstablishmentMusicsRepo;
+  }
+
   async getAllEstablishmentMusics(
-    idUser: string,
     establishmentId: string
-  ): Promise<Either<AppError, MusicsReturn[]>> {
-    const trackedEstablishment = await this.establishedRepo.getById(
+  ): Promise<GetAllEstablishmentMusicsUseCase.Result> {
+    const establishment = await this.getEstablishmentByIdRepo.getById(
       establishmentId
     );
+    if (!establishment) return left(new EstablishmentNotFoundError());
 
-    if (trackedEstablishment?.manager.id !== idUser)
-      return left(new AppError('Não foi possível encontrar o estabelecimento'));
-
-    const musicsEntity = await this.musicRepo.getAllEstablishmentMusics(
-      establishmentId
-    );
-
-    const musics: MusicsReturn[] = musicsEntity.map(music => {
-      // eslint-disable-next-line no-param-reassign
-      delete music.establishment;
-      // eslint-disable-next-line no-param-reassign
-      delete music.deletedAt;
-      return music as MusicsReturn;
-    });
-
+    const musics =
+      await this.getAllEstablishmentMusicsRepo.getAllEstablishmentMusics(
+        establishmentId
+      );
     return right(musics);
   }
 }

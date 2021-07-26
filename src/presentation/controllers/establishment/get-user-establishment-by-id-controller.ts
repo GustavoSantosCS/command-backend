@@ -1,28 +1,28 @@
 import { EstablishmentModel } from '@/domain/models';
-import { GetUserEstablishedByIdUseCase } from '@/domain/usecases';
+import { GetUserEstablishmentByIdUseCase } from '@/domain/usecases';
 import {
   Controller,
   HttpRequest,
   HttpResponse
 } from '@/presentation/protocols';
-import { AppError } from '@/shared/app-error';
+import { AppError } from '@/shared/errors';
 import { badRequest, ok, serverError } from '@/utils/http';
 
-export class GetUserEstablishedByIdController implements Controller {
+export class GetUserEstablishmentByIdController implements Controller {
   constructor(
-    private readonly getUserEstablishedByIdUsecase: GetUserEstablishedByIdUseCase
+    private readonly getUserEstablishmentByIdUsecase: GetUserEstablishmentByIdUseCase
   ) {}
 
   async handle(
-    httpRequest: HttpRequest<GetUserEstablishedByIdController.Params>
-  ): Promise<HttpResponse<GetUserEstablishedByIdController.Response>> {
+    httpRequest: HttpRequest<GetUserEstablishmentByIdController.DTO>
+  ): Promise<HttpResponse<GetUserEstablishmentByIdController.Response>> {
     try {
-      const { id: idUser } = httpRequest.body.authenticated;
-      const { id: idEstablished } = httpRequest.params;
+      const { id: userId } = httpRequest.body.authenticated;
+      const { id: idEstablishment } = httpRequest.params;
       const response =
-        await this.getUserEstablishedByIdUsecase.getUserEstablishedById(
-          idUser,
-          idEstablished
+        await this.getUserEstablishmentByIdUsecase.getUserEstablishmentById(
+          userId,
+          idEstablishment
         );
 
       if (response.isLeft())
@@ -44,15 +44,15 @@ export class GetUserEstablishedByIdController implements Controller {
       return ok(establishment);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('GetUserEstablishedByIdController:47 => ', error);
+      console.error('GetUserEstablishmentByIdController:47 => ', error);
       return serverError();
     }
   }
 }
 
 // eslint-disable-next-line no-redeclare
-export namespace GetUserEstablishedByIdController {
-  export type Params = {
+export namespace GetUserEstablishmentByIdController {
+  export type DTO = {
     authenticated: {
       id: string;
     };

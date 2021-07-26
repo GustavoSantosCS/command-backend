@@ -1,21 +1,46 @@
-import { GetAllAccountRequestProductRepository } from '@/data/protocols';
-import { RequestProductModel } from '@/domain/models';
+import {
+  GetAccountByIdRepository,
+  GetAllAccountRequestProductRepository
+} from '@/data/protocols';
+import { AccountNotFoundError } from '@/domain/errors';
 import { GetAllAccountRequestProductUseCase } from '@/domain/usecases';
-import { AppError } from '@/shared/app-error';
-import { Either, right } from '@/shared/either';
+import { left, right } from '@/shared/either';
 
 export class DbGetAllAccountRequestProduct
   implements GetAllAccountRequestProductUseCase
 {
-  constructor(
-    private readonly repository: GetAllAccountRequestProductRepository
-  ) {}
+  private readonly getAllRepo: GetAllAccountRequestProductRepository;
+  private readonly getByIdRepo: GetAccountByIdRepository;
 
-  async getAllAccountRequestProduct(
-    idAccount: string
-  ): Promise<Either<AppError, RequestProductModel[]>> {
-    return right(
-      (await this.repository.getAllAccountRequestProduct(idAccount)) as any
+  constructor(
+    getAllRepo: GetAllAccountRequestProductRepository,
+    getByIdRepo: GetAccountByIdRepository
+  ) {
+    this.getByIdRepo = getByIdRepo;
+    this.getAllRepo = getAllRepo;
+  }
+
+  async getAllAccountRequestsProduct(
+    accountId: string
+  ): Promise<GetAllAccountRequestProductUseCase.Result> {
+    const account = await this.getByIdRepo.getById(accountId);
+    if (!account) return left(new AccountNotFoundError());
+
+    const requestsProduct = await this.getAllRepo.getAllAccountRequestsProduct(
+      accountId
     );
+
+    const result: GetAllAccountRequestProductUseCase.Return =
+      requestsProduct.map(request => ({
+        id: request.id,
+        obs: request.obs,
+        amountOfProduct: request.amountOfProduct,
+        product: request.product,
+        total: request.total,
+        createdAt: request.createdAt,
+        updatedAt: request.updatedAt
+      }));
+
+    return right(result);
   }
 }

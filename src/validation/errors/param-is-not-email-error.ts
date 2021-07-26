@@ -1,8 +1,8 @@
 import { ValidatorError } from './validator-erros';
 
 export class ParamIsNotEmailError extends ValidatorError {
-  constructor(email: string, value?: string) {
-    super(`Parâmetro não é um email: ${email}`, value);
+  constructor(message: string, filed: string) {
+    super(message, filed);
     this.name = 'ParamIsNotEmailError';
   }
 }

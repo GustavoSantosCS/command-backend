@@ -9,7 +9,7 @@ import { MusicEntity } from './music-entity';
 import { SurveyEntity } from './survey-entity';
 import { UserEntity } from './user-entity';
 
-@Entity('vote')
+@Entity('votes')
 export class VoteEntity {
   @PrimaryColumn()
   id: string;

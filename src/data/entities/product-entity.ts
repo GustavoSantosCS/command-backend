@@ -1,4 +1,3 @@
-import { ProductModel } from '@/domain/models';
 import {
   Column,
   CreateDateColumn,
@@ -10,6 +9,7 @@ import {
   PrimaryColumn,
   UpdateDateColumn
 } from 'typeorm';
+import { ProductModel } from '@/domain/models';
 import { EstablishmentEntity } from './establishment-entity';
 import { ProductImageEntity } from './product-image-entity';
 

@@ -1,6 +1,5 @@
-import { PersistencyError } from '@/infra/errors';
+import { UserEntity } from '@/data/entities';
 import { EmailAlreadyUseError } from '@/domain/errors';
-import { UserModel } from '@/domain/models';
 import { Either } from '@/shared/either';
 
 export interface AddUserUseCase {
@@ -14,9 +13,14 @@ export namespace AddUserUseCase {
     email: string;
     password: string;
   };
-
-  export type Response = Either<
-    EmailAlreadyUseError | PersistencyError,
-    Omit<UserModel, 'password' | 'establishments' | 'avatar'>
+  export type Result = Omit<
+    UserEntity,
+    | 'password'
+    | 'avatar'
+    | 'establishments'
+    | 'accounts'
+    | 'pollVotes'
+    | 'deletedAt'
   >;
+  export type Response = Either<EmailAlreadyUseError, Result>;
 }

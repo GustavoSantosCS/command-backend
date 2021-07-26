@@ -8,23 +8,36 @@ import {
 import { badRequest, ok, serverError } from '@/utils/http';
 
 export class GetProductByIdController implements Controller {
-  constructor(private readonly getProductById: GetProductByIdUseCase) {}
+  private readonly getProductById: GetProductByIdUseCase;
+
+  constructor(getProductById: GetProductByIdUseCase) {
+    this.getProductById = getProductById;
+  }
 
   async handle(
     httpRequest: HttpRequest<
-      GetProductByIdController.Body,
-      GetProductByIdController.Params
+      GetProductByIdController.DTOBody,
+      GetProductByIdController.DTOParams
     >
   ): Promise<HttpResponse<GetProductByIdController.Response>> {
     try {
       const { id } = httpRequest.params;
+      const result = await this.getProductById.getById(id);
+      if (result.isLeft()) return badRequest(result.value);
 
-      const response = await this.getProductById.getById(id);
+      const { value } = result;
+      const product: GetProductByIdController.Response = {
+        id: value.id,
+        description: value.description,
+        isAvailable: value.isAvailable,
+        name: value.name,
+        price: value.price,
+        image: value.image,
+        createdAt: value.createdAt,
+        updatedAt: value.updatedAt
+      };
 
-      if (response.isLeft()) return badRequest(response.value);
-
-      delete response.value.establishment;
-      return ok(response.value);
+      return ok(product);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('GetProductByIdController:31 => ', error);
@@ -35,13 +48,13 @@ export class GetProductByIdController implements Controller {
 
 // eslint-disable-next-line no-redeclare
 export namespace GetProductByIdController {
-  export type Body = {
+  export type DTOBody = {
     authenticated: {
       id: string;
     };
   };
 
-  export type Params = {
+  export type DTOParams = {
     id: string;
   };
 

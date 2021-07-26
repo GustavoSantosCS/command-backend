@@ -1,14 +1,18 @@
 import { IDGenerator, AddEstablishmentRepository } from '@/data/protocols';
-
 import { EstablishmentModel } from '@/domain/models';
 import { AddEstablishmentUseCase } from '@/domain/usecases';
-import { right } from '@/shared/either';
 
 export class DBAddEstablishment implements AddEstablishmentUseCase {
+  private readonly idGenerator: IDGenerator;
+  private readonly addEstablishmentRepository: AddEstablishmentRepository;
+
   constructor(
-    private readonly idGenerator: IDGenerator,
-    private readonly addEstablishmentRepository: AddEstablishmentRepository
-  ) {}
+    idGenerator: IDGenerator,
+    addEstablishmentRepository: AddEstablishmentRepository
+  ) {
+    this.idGenerator = idGenerator;
+    this.addEstablishmentRepository = addEstablishmentRepository;
+  }
 
   async addEstablishment({
     userId,
@@ -20,7 +24,7 @@ export class DBAddEstablishment implements AddEstablishmentUseCase {
       name: establishment.name,
       category: establishment.category,
       description: establishment.description,
-      isOpen: true, // TODO: cadastra como false para depois poder alterar para false
+      isOpen: true,
       image: establishmentImage
     };
 
@@ -29,8 +33,6 @@ export class DBAddEstablishment implements AddEstablishmentUseCase {
       establishmentModel
     );
 
-    delete establishmentEntity.deletedAt;
-
-    return right(establishmentEntity as any);
+    return establishmentEntity;
   }
 }

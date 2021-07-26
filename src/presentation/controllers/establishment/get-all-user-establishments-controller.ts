@@ -1,5 +1,5 @@
 import { EstablishmentModel } from '@/domain/models';
-import { GetAlUserEstablishmentsUseCase } from '@/domain/usecases';
+import { GetAllUserEstablishmentsUseCase } from '@/domain/usecases';
 import {
   Controller,
   HttpRequest,
@@ -8,31 +8,37 @@ import {
 import { ok, serverError } from '@/utils/http';
 
 export class GetAllUserEstablishmentsController implements Controller {
-  constructor(
-    private readonly getEstablishmentsOfUser: GetAlUserEstablishmentsUseCase
-  ) {}
+  private readonly getEstablishmentsOfUser: GetAllUserEstablishmentsUseCase;
+
+  constructor(getEstablishmentsOfUserUseCase: GetAllUserEstablishmentsUseCase) {
+    this.getEstablishmentsOfUser = getEstablishmentsOfUserUseCase;
+  }
 
   async handle(
-    httpRequest: HttpRequest<GetAllUserEstablishmentsController.Params>
+    httpRequest: HttpRequest<GetAllUserEstablishmentsController.DTO>
   ): Promise<HttpResponse<GetAllUserEstablishmentsController.Response>> {
-    const response =
-      await this.getEstablishmentsOfUser.getAllEstablishmentsUser(
-        httpRequest.body.authenticated.id
-      );
-    if (response.isLeft()) return serverError(response.value);
-    return ok(response.value);
+    try {
+      const establishments =
+        await this.getEstablishmentsOfUser.getAllEstablishmentsUser(
+          httpRequest.body.authenticated.id
+        );
+
+      return ok(establishments);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('GetAllUserEstablishmentsController:41 => ', error);
+      return serverError(error);
+    }
   }
 }
 
 // eslint-disable-next-line no-redeclare
 export namespace GetAllUserEstablishmentsController {
-  export type Params = {
+  export type DTO = {
     authenticated: {
       id: string;
     };
   };
 
-  export type Response = {
-    establishments: Omit<EstablishmentModel, 'manager'>[];
-  };
+  export type Response = Omit<EstablishmentModel, 'manager'>[];
 }

@@ -5,25 +5,33 @@ import {
 } from '@/data/protocols';
 import { PayloadModel } from '@/domain/models';
 import { CreateSessionUseCase } from '@/domain/usecases';
-import { LoginError } from '@/presentation/errors/login-error';
+import { FailedLoginError } from '@/domain/errors';
 import { left, right } from '@/shared/either';
 
 export class DBCreateSession implements CreateSessionUseCase {
+  private readonly searchUserByEmailRepo: SearchUserByEmailRepository;
+  private readonly comparatorHasher: HashComparer;
+  private readonly encrypt: Encrypter;
+
   constructor(
-    private readonly repository: SearchUserByEmailRepository,
-    private comparatorHasher: HashComparer,
-    private encrypt: Encrypter
-  ) {}
+    repository: SearchUserByEmailRepository,
+    comparatorHasher: HashComparer,
+    encrypt: Encrypter
+  ) {
+    this.searchUserByEmailRepo = repository;
+    this.comparatorHasher = comparatorHasher;
+    this.encrypt = encrypt;
+  }
 
   async createSession({
     email,
     password
   }: CreateSessionUseCase.Params): Promise<CreateSessionUseCase.Result> {
-    const user = await this.repository.searchByEmail(email);
-    if (!user) return left(new LoginError({ password, email }));
+    const user = await this.searchUserByEmailRepo.searchByEmail(email);
+    if (!user) return left(new FailedLoginError({ password, email }));
 
     if (!(await this.comparatorHasher.compare(password, user.password)))
-      return left(new LoginError({ password, email }));
+      return left(new FailedLoginError({ password, email }));
 
     const now = Date.now();
     const payload: PayloadModel = {
@@ -34,17 +42,18 @@ export class DBCreateSession implements CreateSessionUseCase {
 
     const token = await this.encrypt.encrypt(payload);
 
-    return right({
+    const result: CreateSessionUseCase.Return = {
       token,
       user: {
         id: user.id,
         name: user.name,
-        password: user.password,
         email: user.email,
         avatar: user.avatar,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt
       }
-    });
+    };
+
+    return right(result);
   }
 }

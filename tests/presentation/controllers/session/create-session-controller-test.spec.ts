@@ -10,8 +10,8 @@ import { LoginError } from '@/presentation/errors/login-error';
 
 let sut: CreateSessionController;
 let validatorSpy: Validator;
-let httpRequest: HttpRequest<CreateSessionController.Params>;
-let data: CreateSessionController.Params;
+let httpRequest: HttpRequest<CreateSessionController.DTO>;
+let data: CreateSessionController.DTO;
 let usecase: CreateSessionUseCase;
 
 describe('Test Unit: CreateSessionController', () => {

@@ -1,7 +1,18 @@
-import { UserModel } from '@/domain/models';
-import { UserNotFoundError } from '@/presentation/errors';
+import { UserNotFoundError } from '@/domain/errors';
 import { Either } from '@/shared/either';
+import { UserEntity } from '@/data/entities';
 
 export interface GetAuthenticatedUserUseCase {
-  getUser(id: string): Promise<Either<UserNotFoundError, UserModel>>;
+  getAuthenticatedUser(
+    userId: string
+  ): Promise<GetAuthenticatedUserUseCase.Result>;
+}
+
+// eslint-disable-next-line no-redeclare
+export namespace GetAuthenticatedUserUseCase {
+  export type Return = Omit<
+    UserEntity,
+    'establishments' | 'accounts' | 'password' | 'pollVotes' | 'deletedAt'
+  >;
+  export type Result = Either<UserNotFoundError, Return>;
 }

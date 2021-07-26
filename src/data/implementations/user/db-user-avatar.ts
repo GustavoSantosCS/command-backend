@@ -3,27 +3,35 @@ import {
   UnlinkAvatar,
   UserAvatarRepository
 } from '@/data/protocols';
-import { UserAvatarUseCase } from '@/domain/usecases';
+import { UpdateUserAvatarUseCase } from '@/domain/usecases';
 import { right } from '@/shared/either';
 
-export class DBUserAvatar implements UserAvatarUseCase {
+export class DBUserAvatar implements UpdateUserAvatarUseCase {
+  private readonly getUserByIdRepo: GetUserByIdRepository;
+  private readonly unlinkAvatar: UnlinkAvatar;
+  private readonly avatarRepo: UserAvatarRepository;
+
   constructor(
-    private readonly getUserByIdRepository: GetUserByIdRepository,
-    private readonly unlinkAvatar: UnlinkAvatar,
-    private readonly avatarRepository: UserAvatarRepository
-  ) {}
+    getUserByIdRepository: GetUserByIdRepository,
+    unlinkAvatar: UnlinkAvatar,
+    avatarRepository: UserAvatarRepository
+  ) {
+    this.getUserByIdRepo = getUserByIdRepository;
+    this.unlinkAvatar = unlinkAvatar;
+    this.avatarRepo = avatarRepository;
+  }
 
   async saveAvatar({
     user,
     avatar
-  }: UserAvatarUseCase.Params): Promise<UserAvatarUseCase.Response> {
-    const userEntity = await this.getUserByIdRepository.getUserById(user.id);
+  }: UpdateUserAvatarUseCase.Params): Promise<UpdateUserAvatarUseCase.Response> {
+    const userEntity = await this.getUserByIdRepo.getUserById(user.id);
 
     if (userEntity.avatar) {
       await this.unlinkAvatar.removeAvatar(userEntity.avatar);
     }
 
-    const result = await this.avatarRepository.saveInfoAvatar({
+    const result = await this.avatarRepo.saveInfoAvatar({
       user: { id: user.id },
       avatar
     });

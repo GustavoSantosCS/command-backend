@@ -61,14 +61,17 @@ describe('Test Unit BelongsToArrayValidator', () => {
   });
 
   test('should return error if the array is empty', () => {
-    const sut = new BelongsToArrayValidator(fieldLabel, []);
+    const customMessage = 'any message';
+    const sut = new BelongsToArrayValidator(fieldLabel, [], customMessage);
 
     const testValue = null;
 
     const result = sut.validate({ [fieldLabel]: testValue });
 
     expect(result.isLeft()).toBeTruthy();
-    expect(result.value).toEqual(new InvalidParamError(fieldLabel, testValue));
+    expect(result.value).toEqual(
+      new InvalidParamError(customMessage, fieldLabel)
+    );
   });
 
   test('should return InvalidParamError container the customMessage if fall', () => {

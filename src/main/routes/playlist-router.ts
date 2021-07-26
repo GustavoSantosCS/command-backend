@@ -4,7 +4,7 @@ import { adapterRoute } from '@/main/adapter/express';
 import { authorization } from '../middleware';
 import {
   makeAddPlaylistController,
-  makeGetCurrentEstablishedPlaylistController
+  makeGetCurrentEstablishmentPlaylistController
 } from '../factory/playlist';
 
 export default (router: Router): void => {
@@ -15,8 +15,8 @@ export default (router: Router): void => {
   );
 
   router.get(
-    '/establishment/:establishmentId/playlist',
+    '/establishment/:establishmentId/playlists',
     authorization,
-    adapterRoute(makeGetCurrentEstablishedPlaylistController())
+    adapterRoute(makeGetCurrentEstablishmentPlaylistController())
   );
 };

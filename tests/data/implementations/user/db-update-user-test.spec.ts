@@ -4,13 +4,12 @@ import { UserModel } from '@/domain/models';
 import { UpdateUserUseCase } from '@/domain/usecases';
 import { makeMockUserEntity } from '@tests/data/mock/entities';
 import { makeMockUserModel } from '@tests/domain/mock/models';
-import { HasherSpy } from '@tests/infra/mock/cryptography';
+import { HasherSpy, HashComparerSpy } from '@tests/infra/mock/cryptography';
 import {
   GetUserByIdRepositorySpy,
   SearchUserByEmailRepositorySpy,
   UpdateUserRepositorySpy
 } from '@tests/infra/mock/db/user';
-import { right } from '@/shared/either';
 import { EmailAlreadyUseError } from '@/domain/errors';
 import { DBUpdateUser } from '@/data/implementations';
 
@@ -19,6 +18,7 @@ let searchByEmailRepositorySpy: SearchUserByEmailRepositorySpy;
 let updateUserRepositorySpy: UpdateUserRepositorySpy;
 let getUserByIdRepository: GetUserByIdRepositorySpy;
 let hasherSpy: HasherSpy;
+let hashComparerSpy: HashComparerSpy;
 
 let newUserModel: UserModel;
 let newUserModelHashPassword: UserModel;
@@ -49,9 +49,10 @@ describe('Test Unit: DBUpdateUser', () => {
 
     hasherSpy = new HasherSpy();
     hasherSpy.return = hashPassword;
+    hashComparerSpy = new HashComparerSpy();
 
     updateUserRepositorySpy = new UpdateUserRepositorySpy();
-    updateUserRepositorySpy.return = right(userEntityHashPassword);
+    updateUserRepositorySpy.return = userEntityHashPassword;
 
     getUserByIdRepository = new GetUserByIdRepositorySpy();
     getUserByIdRepository.return = userEntity;
@@ -59,6 +60,7 @@ describe('Test Unit: DBUpdateUser', () => {
     sut = new DBUpdateUser(
       getUserByIdRepository,
       hasherSpy,
+      hashComparerSpy,
       searchByEmailRepositorySpy,
       updateUserRepositorySpy
     );

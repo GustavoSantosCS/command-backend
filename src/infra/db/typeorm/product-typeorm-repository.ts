@@ -64,10 +64,10 @@ export class ProductTypeOrmRepository
       // eslint-disable-next-line no-console
       console.error('ProductTypeOrmRepository:65 => ', err);
       await queryRunner.rollbackTransaction();
+      throw err;
     } finally {
       await queryRunner.release();
     }
-    return null;
   }
 
   async getById(id: string): Promise<ProductEntity> {
@@ -85,7 +85,7 @@ export class ProductTypeOrmRepository
   }
 
   async getAllEstablishmentProducts(
-    idEstablishment: string
+    establishmentId: string
   ): Promise<ProductEntity[]> {
     const productRepo = await TypeORMHelpers.getRepository(ProductEntity);
 
@@ -93,7 +93,8 @@ export class ProductTypeOrmRepository
       .createQueryBuilder('products')
       .innerJoinAndSelect('products.image', 'product_image')
       .innerJoinAndSelect('products.establishment', 'establishments')
-      .where('establishments.id = :id', { id: idEstablishment })
+      .where('establishments.id = :id', { id: establishmentId })
+      .orderBy('products.name', 'ASC')
       .getMany();
 
     return productsEntity;

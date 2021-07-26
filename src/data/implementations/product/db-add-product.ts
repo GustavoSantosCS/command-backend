@@ -1,37 +1,48 @@
-import { GetEstablishedByIdRepository, IDGenerator , AddProductRepository } from '@/data/protocols';
-
-import { ProductModel } from '@/domain/models';
+import {
+  GetEstablishmentByIdRepository,
+  IDGenerator,
+  AddProductRepository
+} from '@/data/protocols';
 import { AddProductUseCase } from '@/domain/usecases';
-import { AppError } from '@/shared/app-error';
 import { left, right } from '@/shared/either';
+import { EstablishmentNotFoundError } from '@/domain/errors';
 
 export class DBAddProduct implements AddProductUseCase {
+  private readonly idGenerator: IDGenerator;
+  private readonly getEstablishmentByIdRepo: GetEstablishmentByIdRepository;
+  private readonly addProductRepo: AddProductRepository;
+
   constructor(
-    private readonly idGenerator: IDGenerator,
-    private readonly establishedRepository: GetEstablishedByIdRepository,
-    private readonly productRepository: AddProductRepository
-  ) {}
-  async save({
+    idGenerator: IDGenerator,
+    getEstablishmentByIdRepo: GetEstablishmentByIdRepository,
+    addProductRepo: AddProductRepository
+  ) {
+    this.idGenerator = idGenerator;
+    this.getEstablishmentByIdRepo = getEstablishmentByIdRepo;
+    this.addProductRepo = addProductRepo;
+  }
+
+  async add({
     establishmentId,
-    idUser,
+    userId,
     name,
     description,
     price,
     productImage
-  }: AddProductUseCase.Params): AddProductUseCase.Response {
-    const establishment = await this.establishedRepository.getById(
+  }: AddProductUseCase.Params): AddProductUseCase.Result {
+    const establishment = await this.getEstablishmentByIdRepo.getById(
       establishmentId
     );
 
-    if (establishment?.manager.id !== idUser)
-      return left(new AppError('Não foi possível encontrar o estabelecimento'));
+    if (!establishment || establishment?.manager.id !== userId)
+      return left(new EstablishmentNotFoundError());
 
-    const product = await this.productRepository.save(
+    const product = await this.addProductRepo.save(
       {
         id: this.idGenerator.generate(),
         name,
         description,
-        isAvailable: true, // TODO: cadastra como true mas na alteração deve ser possível alterar tal valor
+        isAvailable: true,
         price,
         image: productImage,
         establishment: null
@@ -39,8 +50,6 @@ export class DBAddProduct implements AddProductUseCase {
       establishmentId
     );
 
-    delete product.deletedAt;
-
-    return right(product as ProductModel);
+    return right(product);
   }
 }

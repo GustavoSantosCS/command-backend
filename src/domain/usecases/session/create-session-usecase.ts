@@ -1,21 +1,23 @@
-import { UserModel } from '@/domain/models';
-import { LoginError } from '@/presentation/errors';
+import { FailedLoginError } from '@/domain/errors';
 import { Either } from '@/shared/either';
+import { UserEntity } from '@/data/entities';
 
 export interface CreateSessionUseCase {
   createSession(
-    data: CreateSessionUseCase.Params
+    userData: CreateSessionUseCase.Params
   ): Promise<CreateSessionUseCase.Result>;
 }
 // eslint-disable-next-line no-redeclare
 export namespace CreateSessionUseCase {
   export type Params = { email: string; password: string };
 
-  export type Result = Either<
-    LoginError,
-    {
-      token: string;
-      user: Omit<UserModel, 'password'>;
-    }
-  >;
+  export type Return = {
+    token: string;
+    user: Omit<
+      UserEntity,
+      'password' | 'establishments' | 'accounts' | 'pollVotes' | 'deletedAt'
+    >;
+  };
+
+  export type Result = Either<FailedLoginError, Return>;
 }

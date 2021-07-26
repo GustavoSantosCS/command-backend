@@ -5,52 +5,56 @@ import {
   HttpRequest,
   HttpResponse
 } from '@/presentation/protocols';
-import { AppError } from '@/shared/app-error';
-import { Either } from '@/shared/either';
+import { AppError } from '@/shared/errors';
 import { badRequest, ok, serverError } from '@/utils/http';
 import { Validator } from '@/validation/protocols';
 
 export class AddPlayListController implements Controller {
-  constructor(
-    private readonly validate: Validator,
-    private readonly addPlayerUseCase: AddPlayListUseCase
-  ) {}
+  private readonly validator: Validator;
+  private readonly addPlayer: AddPlayListUseCase;
+
+  constructor(validator: Validator, addPlayerUseCase: AddPlayListUseCase) {
+    this.validator = validator;
+    this.addPlayer = addPlayerUseCase;
+  }
 
   async handle(
-    httpRequest: HttpRequest<AddPlayListController.Body>
+    httpRequest: HttpRequest<AddPlayListController.DTO>
   ): Promise<HttpResponse<AddPlayListController.Response>> {
     try {
       const { name, establishmentId, authenticated, musics } = httpRequest.body;
-
-      const validation = this.validate.validate({
+      const validation = this.validator.validate({
         name,
         establishmentId,
         musics
       });
+      if (validation.isLeft()) {
+        return badRequest(validation.value);
+      }
 
-      if (validation.isLeft()) return badRequest(validation.value);
-
-      const result = await this.addPlayerUseCase.addPlayList({
+      const resultAdd = await this.addPlayer.addPlayList({
         name,
         establishmentId,
-        idUser: authenticated.id,
+        userId: authenticated.id,
         musics
       });
-      if (result.isLeft()) return badRequest(result.value);
+      if (resultAdd.isLeft()) {
+        return badRequest(resultAdd.value);
+      }
 
       const playerList: Omit<PlayListModel, 'establishment'> = {
-        id: result.value.id,
-        name: result.value.name,
-        isActive: result.value.isActive,
-        musics: result.value.musics,
-        createdAt: result.value.createdAt,
-        updatedAt: result.value.updatedAt
+        id: resultAdd.value.id,
+        name: resultAdd.value.name,
+        isActive: resultAdd.value.isActive,
+        musics: resultAdd.value.musics,
+        createdAt: resultAdd.value.createdAt,
+        updatedAt: resultAdd.value.updatedAt
       };
 
       return ok(playerList);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('AddPlayListController: => ', error);
+      console.error('AddPlayListController:57 => ', error);
       return serverError();
     }
   }
@@ -58,7 +62,7 @@ export class AddPlayListController implements Controller {
 
 // eslint-disable-next-line no-redeclare
 export namespace AddPlayListController {
-  export type Body = {
+  export type DTO = {
     authenticated: {
       id: string;
     };

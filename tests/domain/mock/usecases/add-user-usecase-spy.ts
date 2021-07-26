@@ -30,7 +30,7 @@ export class AddUserUseCaseSpy implements AddUserUseCase {
     this.parameters = newUser;
 
     if (this.return.isLeft()) {
-      this.return.value.value = newUser.email;
+      this.return.value.data = newUser.email;
     }
 
     return this.return;

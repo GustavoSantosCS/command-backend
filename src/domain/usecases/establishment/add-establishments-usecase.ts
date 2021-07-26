@@ -1,14 +1,9 @@
-import {
-  CATEGORY,
-  EstablishmentImageModel,
-  EstablishmentModel
-} from '@/domain/models';
-import { AppError } from '@/shared/app-error';
-import { Either } from '@/shared/either';
+import { CATEGORY, EstablishmentImageModel } from '@/domain/models';
+import { EstablishmentEntity } from '@/data/entities';
 
 export interface AddEstablishmentUseCase {
   addEstablishment(
-    data: AddEstablishmentUseCase.Params
+    newEstablishment: AddEstablishmentUseCase.Params
   ): AddEstablishmentUseCase.Response;
 }
 
@@ -24,5 +19,16 @@ export namespace AddEstablishmentUseCase {
     establishmentImage: EstablishmentImageModel;
   };
 
-  export type Response = Promise<Either<AppError, EstablishmentModel>>;
+  export type Response = Promise<
+    Omit<
+      EstablishmentEntity,
+      | 'manager'
+      | 'products'
+      | 'playlists'
+      | 'accounts'
+      | 'surveys'
+      | 'musics'
+      | 'deletedAt'
+    >
+  >;
 }

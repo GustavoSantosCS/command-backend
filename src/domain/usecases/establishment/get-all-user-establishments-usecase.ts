@@ -1,17 +1,21 @@
-import { EstablishmentModel } from '@/domain/models';
-import { AppError } from '@/shared/app-error';
-import { Either } from '@/shared/either';
+import { EstablishmentEntity } from '@/data/entities';
 
-export interface GetAlUserEstablishmentsUseCase {
+export interface GetAllUserEstablishmentsUseCase {
   getAllEstablishmentsUser(
     userId: string
-  ): Promise<GetAlUserEstablishmentsUseCase.Response>;
+  ): Promise<GetAllUserEstablishmentsUseCase.Response>;
 }
 
 // eslint-disable-next-line no-redeclare
-export namespace GetAlUserEstablishmentsUseCase {
-  export type Response = Either<
-    AppError,
-    Omit<EstablishmentModel, 'manager'>[]
-  >;
+export namespace GetAllUserEstablishmentsUseCase {
+  export type Response = Omit<
+    EstablishmentEntity,
+    | 'manager'
+    | 'products'
+    | 'playlists'
+    | 'accounts'
+    | 'surveys'
+    | 'musics'
+    | 'deletedAt'
+  >[];
 }

@@ -6,7 +6,7 @@ export class BelongsToArrayValidator implements Validator {
   constructor(
     private readonly fieldName: string,
     private readonly array: any[],
-    private readonly customMessage = null
+    private readonly customMessage: string
   ) {}
 
   validate(value: any): Either<InvalidParamError, true> {
@@ -14,8 +14,6 @@ export class BelongsToArrayValidator implements Validator {
 
     return this.array.includes(fieldValue)
       ? right(true)
-      : left(
-          new InvalidParamError(this.fieldName, fieldValue, this.customMessage)
-        );
+      : left(new InvalidParamError(this.customMessage, this.fieldName));
   }
 }

@@ -8,31 +8,45 @@ import {
 import { badRequest, ok, serverError } from '@/utils/http';
 
 export class GetAllEstablishmentProductsController implements Controller {
-  constructor(
-    private readonly getAllEstablishmentProducts: GetAllEstablishmentProductsUseCase
-  ) {}
+  private readonly getAllEstablishmentProducts: GetAllEstablishmentProductsUseCase;
+
+  constructor(getAllEstablishmentProducts: GetAllEstablishmentProductsUseCase) {
+    this.getAllEstablishmentProducts = getAllEstablishmentProducts;
+  }
 
   async handle(
     httpRequest: HttpRequest<
-      GetAllEstablishmentProductsController.Body,
-      GetAllEstablishmentProductsController.Params
+      GetAllEstablishmentProductsController.DTOBody,
+      GetAllEstablishmentProductsController.DTOParams
     >
-  ): Promise<HttpResponse<GetAllEstablishmentProductsController.Body>> {
+  ): Promise<HttpResponse<GetAllEstablishmentProductsController.DTOBody>> {
     try {
-      const idUser = httpRequest.body.authenticated.id;
-      const idEstablished = httpRequest.params.id;
+      const idEstablishment = httpRequest.params.id;
 
-      const response =
+      const resultGetAll =
         await this.getAllEstablishmentProducts.getAllEstablishmentProducts(
-          idUser,
-          idEstablished
+          idEstablishment
         );
+      if (resultGetAll.isLeft()) {
+        return badRequest(resultGetAll.value);
+      }
 
-      if (response.isLeft()) return badRequest(response.value);
-      return ok(response.value);
+      const { value: productsEntity } = resultGetAll;
+      const products: GetAllEstablishmentProductsController.Response =
+        productsEntity.map(product => ({
+          id: product.id,
+          description: product.description,
+          isAvailable: product.isAvailable,
+          name: product.name,
+          price: product.price,
+          image: product.image,
+          createdAt: product.createdAt,
+          updatedAt: product.updatedAt
+        }));
+      return ok(products);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('GetAllEstablishmentProductsController:35 => ', error);
+      console.error('GetAllEstablishmentProductsController:51 => ', error);
       return serverError();
     }
   }
@@ -40,13 +54,13 @@ export class GetAllEstablishmentProductsController implements Controller {
 
 // eslint-disable-next-line no-redeclare
 export namespace GetAllEstablishmentProductsController {
-  export type Body = {
+  export type DTOBody = {
     authenticated: {
       id: string;
     };
   };
 
-  export type Params = {
+  export type DTOParams = {
     id: string;
   };
 

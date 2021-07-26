@@ -12,7 +12,7 @@ import { UUIDAdapter } from '@/infra/uuid-adapter';
 import {
   AddEstablishmentController,
   GetAllUserEstablishmentsController,
-  GetUserEstablishedByIdController,
+  GetUserEstablishmentByIdController,
   GetAllEstablishmentsController
 } from '@/presentation/controllers/establishment';
 import { Controller } from '@/presentation/protocols';
@@ -30,7 +30,7 @@ export const makeAddEstablishmentController = (): Controller => {
 
   const categoryValidator = ValidatorBuilder.field('category')
     .required('Categoria não informada')
-    .belongsTo([...Object.values(CATEGORY)])
+    .belongsTo([...Object.values(CATEGORY)], 'Valor de Categoria Invalido')
     .build();
 
   const descriptionValidator = ValidatorBuilder.field('description')
@@ -61,5 +61,5 @@ export const makeGetAllUserEstablishmentController = (): Controller => {
 
 export const makeGetUserEstablishmentByIdController = (): Controller => {
   const usecase = new DBGetUserEstablishmentById(repository);
-  return new GetUserEstablishedByIdController(usecase);
+  return new GetUserEstablishmentByIdController(usecase);
 };

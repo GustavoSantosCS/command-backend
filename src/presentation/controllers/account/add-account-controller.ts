@@ -9,28 +9,35 @@ import { badRequest, ok, serverError } from '@/utils/http';
 import { Validator } from '@/validation/protocols';
 
 export class CreateAccountController implements Controller {
+  private readonly validator: Validator;
+  private readonly createAccount: CreateAccountUseCase;
+
   constructor(
-    private readonly validator: Validator,
-    private readonly createAccountUseCase: CreateAccountUseCase
-  ) {}
+    validator: Validator,
+    createAccountUseCase: CreateAccountUseCase
+  ) {
+    this.validator = validator;
+    this.createAccount = createAccountUseCase;
+  }
+
   async handle(
     httpRequest: HttpRequest<CreateAccountController.DTO>
-  ): Promise<HttpResponse<CreateAccountController.Result>> {
+  ): Promise<HttpResponse<CreateAccountController.Response>> {
     try {
       const {
-        authenticated: { id: idUser },
+        authenticated: { id: userId },
         establishmentId
       } = httpRequest.body;
-      const validatorResult = this.validator.validate({
+      const validation = this.validator.validate({
         establishmentId
       });
 
-      if (validatorResult.isLeft()) {
-        return badRequest(validatorResult.value);
+      if (validation.isLeft()) {
+        return badRequest(validation.value);
       }
 
-      const result = await this.createAccountUseCase.create({
-        idUser,
+      const result = await this.createAccount.create({
+        userId,
         establishmentId
       });
 
@@ -65,5 +72,5 @@ export namespace CreateAccountController {
     establishmentId: string;
   };
 
-  export type Result = Omit<AccountModel, 'user' | 'establishment'>;
+  export type Response = Omit<AccountModel, 'user' | 'establishment'>;
 }

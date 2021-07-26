@@ -6,19 +6,13 @@ export class MinimumSizeValidator implements Validator {
   constructor(
     private readonly fieldName: string,
     private readonly minimumSize: number,
-    private readonly customMessage = null
+    private readonly customMessage: string
   ) {}
 
   validate(value: any): Either<MinimumSizeError, true> {
     const fieldValue: string = value[this.fieldName];
     return fieldValue?.length >= this.minimumSize
       ? right(true)
-      : left(
-          new MinimumSizeError(
-            this.fieldName,
-            this.minimumSize,
-            this.customMessage
-          )
-        );
+      : left(new MinimumSizeError(this.customMessage, this.fieldName));
   }
 }

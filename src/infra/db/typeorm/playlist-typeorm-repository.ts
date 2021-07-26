@@ -8,13 +8,13 @@ import {
 } from '@/data/entities';
 import {
   AddPlayListRepository,
-  GetCurrentEstablishedPlaylistRepository
+  GetCurrentEstablishmentPlaylistRepository
 } from '@/data/protocols';
 import { PlayListModel } from '@/domain/models';
 import { TypeORMHelpers } from './typeorm-helper';
 
 export class PlaylistTypeOrmRepository
-  implements AddPlayListRepository, GetCurrentEstablishedPlaylistRepository
+  implements AddPlayListRepository, GetCurrentEstablishmentPlaylistRepository
 {
   async add(
     data: AddPlayListRepository.Params,
@@ -30,18 +30,21 @@ export class PlaylistTypeOrmRepository
         establishmentId
       );
 
-      const playlist = new PlaylistEntity(playlistModel);
+      let playlist = new PlaylistEntity(playlistModel);
       playlist.establishment = establishment;
-      await queryRunner.manager.save(playlist);
-
+      playlist = await queryRunner.manager.save(playlist);
+      playlist.musics = [];
       for await (const playlistMusic of data) {
-        const playlistMusicEntity = new MusicPlaylistEntity(
+        let playlistMusicEntity = new MusicPlaylistEntity(
           playlistMusic.id,
           playlistMusic.music,
           playlistMusic.playlist,
           playlistMusic.position
         );
-        await queryRunner.manager.save(playlistMusicEntity);
+        playlistMusicEntity = await queryRunner.manager.save(
+          playlistMusicEntity
+        );
+        playlist.musics.push(playlistMusicEntity.music);
       }
 
       await queryRunner.commitTransaction();
@@ -50,20 +53,20 @@ export class PlaylistTypeOrmRepository
     } catch (err) {
       console.error('PlaylistTypeOrmRepository:35 => ', err);
       await queryRunner.rollbackTransaction();
+      throw err;
     } finally {
       await queryRunner.release();
     }
-    return null;
   }
 
-  async getEstablishedPlaylist(
+  async getEstablishmentPlaylist(
     establishmentId: string
   ): Promise<PlaylistEntity> {
     const playlistRepo = await TypeORMHelpers.getRepository(PlaylistEntity);
 
     const queryBuilder = playlistRepo
       .createQueryBuilder('playlists')
-      .innerJoinAndSelect(
+      .innerJoin(
         'playlists.establishment',
         'establishments',
         'establishments.id = :establishmentId and playlists.isActive = :ative',
@@ -72,15 +75,6 @@ export class PlaylistTypeOrmRepository
       .innerJoinAndSelect('playlists.musics', 'musics.id');
 
     const playlist = await queryBuilder.getOne();
-
-    playlist.musics = playlist.musics.map(music => {
-      delete music.playlists;
-      delete music.establishment;
-      delete music.createdAt;
-      delete music.updatedAt;
-      delete music.deletedAt;
-      return music;
-    });
 
     return playlist;
   }

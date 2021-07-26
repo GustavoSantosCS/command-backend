@@ -1,28 +1,28 @@
-import { GetEstablishedByIdRepository } from '@/data/protocols';
-import { EstablishmentModel } from '@/domain/models';
-import { GetUserEstablishedByIdUseCase } from '@/domain/usecases';
-import { AppError } from '@/shared/app-error';
-import { Either, left, right } from '@/shared/either';
+import { GetEstablishmentByIdRepository } from '@/data/protocols';
+import { GetUserEstablishmentByIdUseCase } from '@/domain/usecases';
+import { EstablishmentNotFoundError } from '@/domain/errors';
+import { left, right } from '@/shared/either';
 
 export class DBGetUserEstablishmentById
-  implements GetUserEstablishedByIdUseCase
+  implements GetUserEstablishmentByIdUseCase
 {
-  constructor(private readonly repository: GetEstablishedByIdRepository) {}
+  private readonly getEstablishmentByIdRepo: GetEstablishmentByIdRepository;
 
-  async getUserEstablishedById(
-    idUser: string,
-    idEstablished: string
-  ): Promise<Either<AppError, EstablishmentModel>> {
-    const establishmentEntity = await this.repository.getById(idEstablished);
+  constructor(getEstablishmentByIdRepo: GetEstablishmentByIdRepository) {
+    this.getEstablishmentByIdRepo = getEstablishmentByIdRepo;
+  }
 
-    if (
-      !establishmentEntity ||
-      (establishmentEntity && establishmentEntity.manager.id !== idUser)
-    )
-      return left(new AppError('Não foi possível encontrar o estabelecimento'));
+  async getUserEstablishmentById(
+    userId: string,
+    establishmentId: string
+  ): Promise<GetUserEstablishmentByIdUseCase.Response> {
+    const establishment = await this.getEstablishmentByIdRepo.getById(
+      establishmentId
+    );
+    if (establishment?.manager.id !== userId) {
+      return left(new EstablishmentNotFoundError());
+    }
 
-    delete establishmentEntity.manager;
-
-    return right(establishmentEntity as EstablishmentModel);
+    return right(establishment);
   }
 }

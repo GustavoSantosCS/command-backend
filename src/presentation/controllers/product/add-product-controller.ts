@@ -9,27 +9,31 @@ import { badRequest, ok, serverError } from '@/utils/http';
 import { Validator } from '@/validation/protocols';
 
 export class AddProductController implements Controller {
-  constructor(
-    private readonly validator: Validator,
-    private readonly addProductUseCase: AddProductUseCase
-  ) {}
+  private readonly validator: Validator;
+  private readonly addProduct: AddProductUseCase;
+
+  constructor(validator: Validator, addProductUseCase: AddProductUseCase) {
+    this.validator = validator;
+    this.addProduct = addProductUseCase;
+  }
 
   async handle(
-    httpRequest: HttpRequest<AddProductController.Params>
+    httpRequest: HttpRequest<AddProductController.DTO>
   ): Promise<HttpResponse<AddProductController.Response>> {
     try {
       const { body } = httpRequest;
-      const resultValidator = this.validator.validate({
+      const validation = this.validator.validate({
         name: body?.name,
         description: body?.description,
         price: parseFloat(body?.price),
         establishmentId: body?.establishmentId
       });
+      if (validation.isLeft()) {
+        return badRequest(validation.value);
+      }
 
-      if (resultValidator.isLeft()) return badRequest(resultValidator.value);
-
-      const usecaseResponse = await this.addProductUseCase.save({
-        idUser: body.authenticated.id,
+      const resultCreate = await this.addProduct.add({
+        userId: body.authenticated.id,
         name: body.name,
         description: body.description,
         price: parseFloat(body.price),
@@ -37,9 +41,23 @@ export class AddProductController implements Controller {
         productImage: body.productImage
       });
 
-      if (usecaseResponse.isLeft()) return badRequest(usecaseResponse.value);
+      if (resultCreate.isLeft()) {
+        return badRequest(resultCreate.value);
+      }
 
-      return ok(usecaseResponse.value);
+      const { value } = resultCreate;
+      const newProduct: AddProductController.Response = {
+        id: value.id,
+        name: value.name,
+        price: value.price,
+        image: value.image,
+        description: value.description,
+        isAvailable: value.isAvailable,
+        createdAt: value.createdAt,
+        updatedAt: value.updatedAt
+      };
+
+      return ok(newProduct);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('AddProductController:45 => ', error);
@@ -50,7 +68,7 @@ export class AddProductController implements Controller {
 
 // eslint-disable-next-line no-redeclare
 export namespace AddProductController {
-  export type Params = {
+  export type DTO = {
     authenticated: {
       id: string;
     };
@@ -61,5 +79,5 @@ export namespace AddProductController {
     productImage: ImagePersistenceData;
   };
 
-  export type Response = ProductModel;
+  export type Response = Omit<ProductModel, 'establishment'>;
 }

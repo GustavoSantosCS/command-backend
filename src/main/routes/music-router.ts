@@ -3,7 +3,7 @@ import { adapterRoute } from '@/main/adapter/express';
 import { authorization } from '@/main/middleware';
 import {
   makeAddMusicController,
-  makeGetAllEstablishedMusicsController
+  makeGetAllEstablishmentMusicsController
 } from '@/main/factory/music';
 
 export default (router: Router): void => {
@@ -12,6 +12,6 @@ export default (router: Router): void => {
   router.get(
     '/establishment/:id/musics',
     authorization,
-    adapterRoute(makeGetAllEstablishedMusicsController())
+    adapterRoute(makeGetAllEstablishmentMusicsController())
   );
 };

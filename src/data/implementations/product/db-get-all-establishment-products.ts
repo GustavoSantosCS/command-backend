@@ -1,42 +1,37 @@
 import {
-  GetEstablishedByIdRepository,
+  GetEstablishmentByIdRepository,
   GetAllEstablishmentProductsRepository
 } from '@/data/protocols';
-import { ProductModel } from '@/domain/models';
 import { GetAllEstablishmentProductsUseCase } from '@/domain/usecases';
-import { AppError } from '@/shared/app-error';
-import { Either, left, right } from '@/shared/either';
+import { left, right } from '@/shared/either';
+import { EstablishmentNotFoundError } from '@/domain/errors';
 
 export class DBGetAllEstablishmentProducts
   implements GetAllEstablishmentProductsUseCase
 {
+  private readonly getEstablishmentByIdRepo: GetEstablishmentByIdRepository;
+  private readonly getAllEstablishmentProductsRepo: GetAllEstablishmentProductsRepository;
+
   constructor(
-    private readonly establishedRepository: GetEstablishedByIdRepository,
-    private readonly repository: GetAllEstablishmentProductsRepository
-  ) {}
+    getEstablishmentByIdRepo: GetEstablishmentByIdRepository,
+    getAllEstablishmentProductsRepo: GetAllEstablishmentProductsRepository
+  ) {
+    this.getAllEstablishmentProductsRepo = getAllEstablishmentProductsRepo;
+    this.getEstablishmentByIdRepo = getEstablishmentByIdRepo;
+  }
 
   async getAllEstablishmentProducts(
-    idUser: string,
-    idEstablishment: string
-  ): Promise<Either<AppError, Omit<ProductModel, 'establishment'>[]>> {
-    const establishment = await this.establishedRepository.getById(
-      idEstablishment
+    establishmentId: string
+  ): Promise<GetAllEstablishmentProductsUseCase.Result> {
+    const establishment = await this.getEstablishmentByIdRepo.getById(
+      establishmentId
     );
+    if (!establishment) return left(new EstablishmentNotFoundError());
 
-    if (!establishment)
-      return left(new AppError('Não foi possível encontrar o estabelecimento'));
-
-    let products = await this.repository.getAllEstablishmentProducts(
-      idEstablishment
-    );
-
-    products = products.map(product => {
-      // eslint-disable-next-line no-param-reassign
-      delete product.establishment;
-      // eslint-disable-next-line no-param-reassign
-      delete product.deletedAt;
-      return product;
-    });
+    const products =
+      await this.getAllEstablishmentProductsRepo.getAllEstablishmentProducts(
+        establishmentId
+      );
 
     return right(products);
   }

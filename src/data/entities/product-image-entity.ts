@@ -1,5 +1,5 @@
-import { ImagePersistenceData } from '@/domain/models';
 import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { ImagePersistenceData } from '@/domain/models';
 
 @Entity('product_image')
 export class ProductImageEntity {

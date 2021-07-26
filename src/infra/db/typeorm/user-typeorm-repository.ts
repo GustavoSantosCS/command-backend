@@ -9,8 +9,6 @@ import {
 } from '@/data/protocols';
 import { AvatarModel, UserModel } from '@/domain/models';
 
-import { PersistencyError } from '@/infra/errors';
-
 export class UserTypeOrmRepository
   implements
     AddUserRepository,

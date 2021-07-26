@@ -1,51 +1,54 @@
 import { UserModel } from '@/domain/models';
-import {
-  CreateSessionUseCase,
-  GetAuthenticatedUserUseCase
-} from '@/domain/usecases';
-
+import { GetAuthenticatedUserUseCase } from '@/domain/usecases';
 import {
   Controller,
   HttpRequest,
   HttpResponse
 } from '@/presentation/protocols';
-import { badRequest, ok } from '@/utils/http';
+import { badRequest, ok, serverError } from '@/utils/http';
 
 export class GetAuthenticatedUserController implements Controller {
-  constructor(
-    private readonly getAuthenticatedUserUsecase: GetAuthenticatedUserUseCase
-  ) {}
+  private readonly getAuthenticatedUser: GetAuthenticatedUserUseCase;
+  constructor(getAuthenticatedUserUseCase: GetAuthenticatedUserUseCase) {
+    this.getAuthenticatedUser = getAuthenticatedUserUseCase;
+  }
 
   async handle(
-    httpRequest: HttpRequest<GetAuthenticatedUserController.Params>
+    httpRequest: HttpRequest<GetAuthenticatedUserController.DTO>
   ): Promise<HttpResponse<GetAuthenticatedUserController.Response>> {
-    const revalidateUser = await this.getAuthenticatedUserUsecase.getUser(
-      httpRequest.body.authenticated.id
-    );
+    try {
+      const resultRevalidate =
+        await this.getAuthenticatedUser.getAuthenticatedUser(
+          httpRequest.body.authenticated.id
+        );
+      if (resultRevalidate.isLeft()) {
+        return badRequest(resultRevalidate.value);
+      }
 
-    if (revalidateUser.isLeft()) {
-      return badRequest(revalidateUser.value);
+      const { value: user } = resultRevalidate;
+      const result: GetAuthenticatedUserController.Response = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt
+      };
+
+      return ok(result);
+    } catch (error) {
+      return serverError();
     }
-
-    const user: UserModel = revalidateUser.value;
-
-    delete user.id;
-    delete user.password;
-
-    return ok(user);
   }
 }
 
 // eslint-disable-next-line no-redeclare
 export namespace GetAuthenticatedUserController {
-  export type Params = {
+  export type DTO = {
     authenticated: {
       id: string;
     };
   };
 
-  export type Response = {
-    token: string;
-    user: Omit<UserModel, 'id' | 'password'>;
-  };
+  export type Response = Omit<UserModel, 'password' | 'establishments'>;
 }

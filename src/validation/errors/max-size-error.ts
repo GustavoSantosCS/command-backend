@@ -1,11 +1,8 @@
 import { ValidatorError } from './validator-erros';
 
 export class MaxSizeError extends ValidatorError {
-  constructor(paramName: string, maxSize: number, customMessage?: string) {
-    const message =
-      customMessage ||
-      `Parâmetro ${paramName} informado é maior do que ${maxSize}`;
-    super(message);
+  constructor(message: string, filed: string) {
+    super(message, filed);
     this.name = 'MaxSizeError';
   }
 }

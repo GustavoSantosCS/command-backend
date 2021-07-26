@@ -11,42 +11,44 @@ import { Validator } from '@/validation/protocols';
 export class AddMusicController implements Controller {
   constructor(
     private readonly validator: Validator,
-    private readonly addMusicUseCase: AddMusicUseCase
+    private readonly addMusic: AddMusicUseCase
   ) {}
 
   async handle(
-    httpRequest: HttpRequest<AddMusicController.Body, null>
+    httpRequest: HttpRequest<AddMusicController.DTO, null>
   ): Promise<HttpResponse<AddMusicController.Response>> {
     try {
       const { authenticated, name, duration, talent, establishmentId } =
         httpRequest.body;
 
-      const valid = this.validator.validate({
+      const validation = this.validator.validate({
         name,
         duration,
         talent,
         establishmentId
       });
 
-      if (valid.isLeft()) return badRequest(valid.value);
+      if (validation.isLeft()) {
+        return badRequest(validation.value);
+      }
 
-      const result = await this.addMusicUseCase.save({
-        idUser: authenticated.id,
+      const resultAdd = await this.addMusic.add({
+        userId: authenticated.id,
         name,
         duration: parseInt(duration),
         talent,
         establishmentId
       });
 
-      if (result.isLeft()) return badRequest(result.value);
+      if (resultAdd.isLeft()) return badRequest(resultAdd.value);
 
       const music: AddMusicController.Response = {
-        id: result.value.id,
-        name: result.value.name,
-        talent: result.value.talent,
-        duration: result.value.duration,
-        createdAt: result.value.createdAt,
-        updatedAt: result.value.updatedAt
+        id: resultAdd.value.id,
+        name: resultAdd.value.name,
+        talent: resultAdd.value.talent,
+        duration: resultAdd.value.duration,
+        createdAt: resultAdd.value.createdAt,
+        updatedAt: resultAdd.value.updatedAt
       };
       return ok(music);
     } catch (error) {
@@ -59,7 +61,7 @@ export class AddMusicController implements Controller {
 
 // eslint-disable-next-line no-redeclare
 export namespace AddMusicController {
-  export type Body = {
+  export type DTO = {
     authenticated: {
       id: string;
     };
@@ -69,5 +71,5 @@ export namespace AddMusicController {
     establishmentId: string;
   };
 
-  export type Response = Omit<MusicModel, 'establishment'>;
+  export type Response = Omit<MusicModel, 'establishment' | 'playlists'>;
 }

@@ -1,18 +1,32 @@
 import { GetProductByIdRepository } from '@/data/protocols';
-import { ProductModel } from '@/domain/models';
 import { GetProductByIdUseCase } from '@/domain/usecases';
-import { AppError } from '@/shared/app-error';
-import { Either, left, right } from '@/shared/either';
+import { left, right } from '@/shared/either';
+import { ProductNotFoundError } from '@/domain/errors';
 
 export class DBGetProductByID implements GetProductByIdUseCase {
-  constructor(private readonly repository: GetProductByIdRepository) {}
-  async getById(idProduct: string): Promise<Either<AppError, ProductModel>> {
-    const product = await this.repository.getById(idProduct);
+  private readonly getProductByIdRepo: GetProductByIdRepository;
 
-    if (!product) return left(new AppError('Produto Não Encontrado'));
+  constructor(getProductByIdRepo: GetProductByIdRepository) {
+    this.getProductByIdRepo = getProductByIdRepo;
+  }
 
-    delete product.deletedAt;
+  async getById(idProduct: string): Promise<GetProductByIdUseCase.Result> {
+    const product = await this.getProductByIdRepo.getById(idProduct);
 
-    return right(product as ProductModel);
+    if (!product) return left(new ProductNotFoundError());
+
+    const result: GetProductByIdUseCase.Return = {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      isAvailable: product.isAvailable,
+      description: product.description,
+      image: product.image,
+      createdAt: product.createdAt,
+      updatedAt: product.updatedAt,
+      deletedAt: product.deletedAt
+    };
+
+    return right(result);
   }
 }

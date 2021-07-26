@@ -6,7 +6,7 @@ import { makeMockUserEntity } from '@tests/data/mock/entities';
 import { throwError } from '@tests/shared';
 import { UserModel } from '@/domain/models';
 import { SearchUserByEmailRepositorySpy } from '@tests/infra/mock/db/user';
-import { LoginError } from '@/presentation/errors/login-error';
+import { FailedLoginError } from '@/domain/errors';
 // Sub
 class HashComparerSub implements HashComparer {
   async compare(plaitext: string, hash: string): Promise<boolean> {
@@ -66,7 +66,7 @@ describe('Test Unit: DBCreateSession', () => {
 
     const result = await sut.createSession(request);
     expect(result.isLeft()).toBeTruthy();
-    expect(result.value).toEqual(new LoginError(request));
+    expect(result.value).toEqual(new FailedLoginError(request));
   });
 
   it('should call HashComparer with the correct values', async () => {
@@ -84,7 +84,7 @@ describe('Test Unit: DBCreateSession', () => {
 
     const result = await sut.createSession(request);
     expect(result.isLeft()).toBeTruthy();
-    expect(result.value).toEqual(new LoginError(request));
+    expect(result.value).toEqual(new FailedLoginError(request));
   });
 
   it('should throws if HashComparer throws', async () => {
@@ -117,9 +117,9 @@ describe('Test Unit: DBCreateSession', () => {
     const result = await sut.createSession(request);
 
     expect(result.isRight()).toBeTruthy();
-    const { value } = result;
+    const value = result.value as CreateSessionUseCase.RightType;
 
-    expect((value as any).user).toEqual(returnOfUseCase);
-    expect((value as any).token).toEqual((encrypter as EncrypterSub).return);
+    expect(value.user).toEqual(returnOfUseCase);
+    expect(value.token).toEqual((encrypter as EncrypterSub).return);
   });
 });

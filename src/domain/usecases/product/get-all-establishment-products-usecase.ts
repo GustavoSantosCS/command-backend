@@ -1,10 +1,16 @@
-import { ProductModel } from '@/domain/models';
-import { AppError } from '@/shared/app-error';
+import { ProductEntity } from '@/data/entities';
+import { EstablishmentNotFoundError } from '@/domain/errors';
 import { Either } from '@/shared/either';
 
 export interface GetAllEstablishmentProductsUseCase {
   getAllEstablishmentProducts(
-    idUser,
-    idEstablishment
-  ): Promise<Either<AppError, Omit<ProductModel, 'establishment'>[]>>;
+    establishmentId
+  ): Promise<GetAllEstablishmentProductsUseCase.Result>;
+}
+
+// eslint-disable-next-line no-redeclare
+export namespace GetAllEstablishmentProductsUseCase {
+  export type Return = Omit<ProductEntity, 'establishment'>[];
+
+  export type Result = Either<EstablishmentNotFoundError, Return>;
 }

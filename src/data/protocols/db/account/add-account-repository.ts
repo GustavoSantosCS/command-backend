@@ -4,6 +4,6 @@ import { AccountModel } from '@/domain/models';
 export interface AddAccountRepository {
   add(
     account: Omit<AccountModel, 'client'>,
-    idUser: string
+    userId: string
   ): Promise<AccountEntity>;
 }

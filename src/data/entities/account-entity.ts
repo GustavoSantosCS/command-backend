@@ -1,4 +1,3 @@
-import { AccountModel } from '@/domain/models';
 import {
   CreateDateColumn,
   DeleteDateColumn,
@@ -9,12 +8,11 @@ import {
   PrimaryColumn,
   UpdateDateColumn
 } from 'typeorm';
-import {
-  EstablishmentEntity,
-  RequestProductEntity,
-  UserEntity,
-  RequestMusicEntity
-} from '.';
+import { AccountModel } from '@/domain/models';
+import { EstablishmentEntity } from './establishment-entity';
+import { RequestProductEntity } from './request-product-entity';
+import { RequestMusicEntity } from './request-music-entity';
+import { UserEntity } from './user-entity';
 
 @Entity('accounts')
 export class AccountEntity {

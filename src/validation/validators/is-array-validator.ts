@@ -6,7 +6,7 @@ import { Validator } from '../protocols';
 export class IsArrayValidator implements Validator {
   constructor(
     private readonly fieldName: string,
-    private readonly customMessage = null
+    private readonly customMessage: string
   ) {}
 
   validate(value: any): Either<ValidatorError, true> {
@@ -14,12 +14,6 @@ export class IsArrayValidator implements Validator {
 
     return Array.isArray(fieldValue)
       ? right(true)
-      : left(
-          new IsNotArrayError(
-            this.fieldName,
-            value[this.fieldName],
-            this.customMessage
-          )
-        );
+      : left(new IsNotArrayError(this.customMessage, this.fieldName));
   }
 }

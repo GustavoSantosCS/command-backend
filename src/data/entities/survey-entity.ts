@@ -13,9 +13,10 @@ import {
 } from 'typeorm';
 import { EstablishmentEntity } from './establishment-entity';
 import { MusicEntity } from './music-entity';
+import { SurveyMusicEntity } from './survey-music-entity';
 import { VoteEntity } from './vote-entity';
 
-@Entity('survey')
+@Entity('surveys')
 export class SurveyEntity {
   @PrimaryColumn()
   id: string;
@@ -36,7 +37,7 @@ export class SurveyEntity {
   question: string;
 
   @OneToMany(() => VoteEntity, vote => vote.survey)
-  public pollVotes?: VoteEntity[];
+  pollVotes?: VoteEntity[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
@@ -44,6 +45,9 @@ export class SurveyEntity {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  @DeleteDateColumn({ name: 'deleted_at' })
-  deletedAt: Date;
+  @DeleteDateColumn({ name: 'closed_at' })
+  closedAt: Date;
+
+  @OneToMany(() => SurveyMusicEntity, surveyToMusic => surveyToMusic.survey)
+  surveyToMusic?: SurveyMusicEntity[];
 }

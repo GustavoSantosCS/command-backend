@@ -1,22 +1,33 @@
 import { GetUserByIdRepository } from '@/data/protocols';
-import { UserModel } from '@/domain/models';
 import { GetAuthenticatedUserUseCase } from '@/domain/usecases';
-import { UserNotFoundError } from '@/presentation/errors';
-import { Either, left, right } from '@/shared/either';
-// get-authenticated-user-controller
-export class DBGetAuthenticatedUser implements GetAuthenticatedUserUseCase {
-  constructor(private readonly repository: GetUserByIdRepository) {}
+import { UserNotFoundError } from '@/domain/errors';
+import { left, right } from '@/shared/either';
+import { UserEntity } from '@/data/entities';
 
-  async getUser(id: string): Promise<Either<UserNotFoundError, UserModel>> {
-    const user = await this.repository.getUserById(id);
+export class DBGetAuthenticatedUser implements GetAuthenticatedUserUseCase {
+  private readonly getByIdRepo: GetUserByIdRepository;
+
+  constructor(getByIdRepo: GetUserByIdRepository) {
+    this.getByIdRepo = getByIdRepo;
+  }
+
+  async getAuthenticatedUser(
+    userId: string
+  ): Promise<GetAuthenticatedUserUseCase.Result> {
+    const user = await this.getByIdRepo.getUserById(userId);
 
     if (!user) {
       return left(new UserNotFoundError());
     }
 
-    const userModel = user;
-    delete userModel.deletedAt;
-
-    return right(userModel as UserModel);
+    const result: GetAuthenticatedUserUseCase.Return = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      avatar: user.avatar,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt
+    };
+    return right(result);
   }
 }

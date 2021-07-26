@@ -1,9 +1,16 @@
-import { RequestProductModel } from '@/domain/models';
-import { AppError } from '@/shared/app-error';
+import { RequestProductEntity } from '@/data/entities';
+import { AccountNotFoundError } from '@/domain/errors';
 import { Either } from '@/shared/either';
 
 export interface GetAllAccountRequestProductUseCase {
-  getAllAccountRequestProduct(
-    idAccount: string
-  ): Promise<Either<AppError, RequestProductModel[]>>;
+  getAllAccountRequestsProduct(
+    accountId: string
+  ): Promise<GetAllAccountRequestProductUseCase.Result>;
+}
+
+// eslint-disable-next-line no-redeclare
+export namespace GetAllAccountRequestProductUseCase {
+  export type Return = Omit<RequestProductEntity, 'account' | 'closedAt'>[];
+
+  export type Result = Either<AccountNotFoundError, Return>;
 }

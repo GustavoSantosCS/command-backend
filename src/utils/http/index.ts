@@ -1,7 +1,7 @@
 import { HttpResponse } from '@/presentation/protocols';
-import { AppError } from '@/shared/app-error';
+import { AppError } from '@/shared/errors';
 
-export const badRequest = (errors: AppError[] | AppError): HttpResponse => {
+export const badRequest = (errors?: AppError[] | AppError): HttpResponse => {
   // eslint-disable-next-line no-param-reassign
   if (!Array.isArray(errors)) errors = [errors];
   return {
@@ -9,7 +9,7 @@ export const badRequest = (errors: AppError[] | AppError): HttpResponse => {
     body: {
       errors: errors.map(error => ({
         message: error.message,
-        value: error?.value
+        ...error?.data
       }))
     }
   };
@@ -36,7 +36,7 @@ export const serverError = (errors?: AppError[] | AppError): HttpResponse => {
     body: {
       errors: errors.map(error => ({
         message: error.message,
-        value: error?.value
+        ...error?.data
       }))
     }
   };
@@ -50,10 +50,8 @@ export const ok = (data: any): HttpResponse => ({
 export const notAuthorizedErro = (): HttpResponse => ({
   statusCode: 401,
   body: {
-    errors: [
-      {
-        message: 'Not Authorized'
-      }
-    ]
+    error: {
+      message: 'Not Authorized'
+    }
   }
 });

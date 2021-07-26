@@ -8,24 +8,40 @@ import {
 import { badRequest, ok, serverError } from '@/utils/http';
 
 export class GetAllAccountRequestProductController implements Controller {
-  constructor(
-    private readonly getAllAccountRequestProduct: GetAllAccountRequestProductUseCase
-  ) {}
+  private readonly getAllAccountRsP: GetAllAccountRequestProductUseCase;
+
+  constructor(getAllAccountRequestProduct: GetAllAccountRequestProductUseCase) {
+    this.getAllAccountRsP = getAllAccountRequestProduct;
+  }
 
   async handle(
     httpRequest: HttpRequest<
-      GetAllAccountRequestProductController.Body,
-      GetAllAccountRequestProductController.Param
+      GetAllAccountRequestProductController.DTOBody,
+      GetAllAccountRequestProductController.DTOParam
     >
   ): Promise<HttpResponse<GetAllAccountRequestProductController.Result>> {
     try {
-      const { idAccount } = httpRequest.params;
-      const result =
-        await this.getAllAccountRequestProduct.getAllAccountRequestProduct(
-          idAccount
+      const resultGetAll =
+        await this.getAllAccountRsP.getAllAccountRequestsProduct(
+          httpRequest.params.accountId
         );
-      if (result.isLeft()) return badRequest(result.value);
-      return ok(result.value);
+
+      if (resultGetAll.isLeft()) return badRequest(resultGetAll.value);
+
+      const { value } = resultGetAll;
+      const data: GetAllAccountRequestProductController.Result = value.map(
+        request => ({
+          id: request.id,
+          amountOfProduct: request.amountOfProduct,
+          obs: request.obs,
+          product: request.product,
+          total: request.total,
+          createdAt: request.createdAt,
+          updatedAt: request.updatedAt
+        })
+      );
+
+      return ok(data);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('GetAllAccountRequestProductController:40 => ', error);
@@ -36,15 +52,15 @@ export class GetAllAccountRequestProductController implements Controller {
 
 // eslint-disable-next-line no-redeclare
 export namespace GetAllAccountRequestProductController {
-  export type Body = {
+  export type DTOBody = {
     authenticated: {
       id: string;
     };
   };
 
-  export type Param = {
-    idAccount: string;
+  export type DTOParam = {
+    accountId: string;
   };
 
-  export type Result = RequestProductModel[];
+  export type Result = Omit<RequestProductModel, 'account' | 'closedAt'>[];
 }

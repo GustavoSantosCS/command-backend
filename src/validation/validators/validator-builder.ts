@@ -4,11 +4,11 @@ import {
   EmailValidator,
   CompareFieldsValidator,
   MinimumSizeValidator,
-  MaxSizeValidator
+  MaxSizeValidator,
+  BelongsToArrayValidator,
+  TypeValidator,
+  IsArrayValidator
 } from '@/validation/validators';
-import { BelongsToArrayValidator } from './belongs-to-array-validator';
-import { IsArrayValidator } from './is-array-validator';
-import { NumberValidator } from './number-validator';
 
 export class ValidatorBuilder {
   private constructor(
@@ -20,52 +20,61 @@ export class ValidatorBuilder {
     return new ValidatorBuilder(fieldName, []);
   }
 
-  required(customMessage?: string): ValidatorBuilder {
+  required(customMessage: string): ValidatorBuilder {
     this.validators.push(
       new RequiredFieldValidator(this.fieldName, customMessage)
     );
     return this;
   }
 
-  email(customMessage?: string): ValidatorBuilder {
+  email(customMessage: string): ValidatorBuilder {
     this.validators.push(new EmailValidator(this.fieldName, customMessage));
     return this;
   }
 
-  min(minimumSize: number, customMessage?: string): ValidatorBuilder {
+  min(minimumSize: number, customMessage: string): ValidatorBuilder {
     this.validators.push(
       new MinimumSizeValidator(this.fieldName, minimumSize, customMessage)
     );
     return this;
   }
 
-  max(maxSize: number, customMessage?: string): ValidatorBuilder {
+  max(maxSize: number, customMessage: string): ValidatorBuilder {
     this.validators.push(
       new MaxSizeValidator(this.fieldName, maxSize, customMessage)
     );
     return this;
   }
 
-  toEqual(otherFieldName: string, customMessage?: string): ValidatorBuilder {
+  toEqual(otherFieldName: string, customMessage: string): ValidatorBuilder {
     this.validators.push(
       new CompareFieldsValidator(this.fieldName, otherFieldName, customMessage)
     );
     return this;
   }
 
-  isNumber(customMessage?: string): ValidatorBuilder {
-    this.validators.push(new NumberValidator(this.fieldName, customMessage));
-    return this;
-  }
-
-  belongsTo(array: any[], customMessage?: string): ValidatorBuilder {
+  belongsTo(array: any[], customMessage: string): ValidatorBuilder {
     this.validators.push(
       new BelongsToArrayValidator(this.fieldName, array, customMessage)
     );
     return this;
   }
 
-  isArray(customMessage?: string) {
+  isString(customMessage: string): ValidatorBuilder {
+    this.validators.push(
+      new TypeValidator(this.fieldName, customMessage, 'string')
+    );
+    return this;
+  }
+
+  isNumber(customMessage: string): ValidatorBuilder {
+    this.validators.push(
+      new TypeValidator(this.fieldName, customMessage, 'number')
+    );
+    return this;
+  }
+
+  isArray(customMessage: string) {
     this.validators.push(new IsArrayValidator(this.fieldName, customMessage));
     return this;
   }

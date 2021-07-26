@@ -1,38 +1,22 @@
 import { GetAllEstablishmentsUserRepository } from '@/data/protocols';
-import { EstablishmentModel } from '@/domain/models';
-import { GetAlUserEstablishmentsUseCase } from '@/domain/usecases';
-import { left, right } from '@/shared/either';
+import { GetAllUserEstablishmentsUseCase } from '@/domain/usecases';
 
 export class DBGetAllEstablishmentsUser
-  implements GetAlUserEstablishmentsUseCase
+  implements GetAllUserEstablishmentsUseCase
 {
+  private readonly getAllEstablishmentsUserRepo: GetAllEstablishmentsUserRepository;
+
   constructor(
-    private readonly repository: GetAllEstablishmentsUserRepository
-  ) {}
+    getAllEstablishmentsUserRepo: GetAllEstablishmentsUserRepository
+  ) {
+    this.getAllEstablishmentsUserRepo = getAllEstablishmentsUserRepo;
+  }
 
   async getAllEstablishmentsUser(
     userId: string
-  ): Promise<GetAlUserEstablishmentsUseCase.Response> {
-    try {
-      const establishments = await this.repository.getAllEstablishmentsUser(
-        userId
-      );
-
-      const establishmentsModel: Omit<EstablishmentModel, 'manager'>[] =
-        establishments.map(establishment => ({
-          id: establishment.id,
-          name: establishment.name,
-          description: establishment.description,
-          category: establishment.category,
-          isOpen: establishment.isOpen,
-          createdAt: establishment.createdAt,
-          updatedAt: establishment.updatedAt,
-          image: establishment.image
-        }));
-
-      return right(establishmentsModel);
-    } catch (error) {
-      return left(error);
-    }
+  ): Promise<GetAllUserEstablishmentsUseCase.Response> {
+    const establishments =
+      await this.getAllEstablishmentsUserRepo.getAllEstablishmentsUser(userId);
+    return establishments;
   }
 }

@@ -1,5 +1,12 @@
 import { MusicEntity } from '@/data/entities';
 
 export interface GetAllEstablishmentMusicsRepository {
-  getAllEstablishmentMusics(idEstablishment: string): Promise<MusicEntity[]>;
+  getAllEstablishmentMusics(
+    establishmentId: string
+  ): Promise<
+    Omit<
+      MusicEntity,
+      'establishment' | 'playlists' | 'surveys' | 'musicToPlaylist'
+    >[]
+  >;
 }

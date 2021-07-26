@@ -1,24 +1,44 @@
 import {
   GetUserByIdRepository,
+  HashComparer,
   Hasher,
   SearchUserByEmailRepository,
   UpdateUserRepository
 } from '@/data/protocols';
-import { EmailAlreadyUseError } from '@/domain/errors';
+import { EmailAlreadyUseError, IncorrectPasswordError } from '@/domain/errors';
 import { UserModel } from '@/domain/models';
 import { UpdateUserUseCase } from '@/domain/usecases';
 import { left, right } from '@/shared/either';
+import { UserEntity } from '@/data/entities';
 
 export class DBUpdateUser implements UpdateUserUseCase {
+  private readonly getUserByIdRepo: GetUserByIdRepository;
+  private readonly hasher: Hasher;
+  private readonly hashComparer: HashComparer;
+  private readonly searchByEmailRepo: SearchUserByEmailRepository;
+  private readonly updateUserRepo: UpdateUserRepository;
+
   constructor(
-    private readonly getUserByIdRepo: GetUserByIdRepository,
-    private readonly hasher: Hasher,
-    private readonly searchByEmailRepo: SearchUserByEmailRepository,
-    private readonly updateUserRepo: UpdateUserRepository
-  ) {}
+    getUserByIdRepo: GetUserByIdRepository,
+    hasher: Hasher,
+    hashComparer: HashComparer,
+    searchByEmailRepo: SearchUserByEmailRepository,
+    updateUserRepo: UpdateUserRepository
+  ) {
+    this.getUserByIdRepo = getUserByIdRepo;
+    this.hasher = hasher;
+    this.hashComparer = hashComparer;
+    this.searchByEmailRepo = searchByEmailRepo;
+    this.updateUserRepo = updateUserRepo;
+  }
 
   async update(newUser: UserModel): Promise<UpdateUserUseCase.Response> {
     const trackedUser = await this.getUserByIdRepo.getUserById(newUser.id);
+
+    if (
+      !(await this.hashComparer.compare(newUser.password, trackedUser.password))
+    )
+      return left(new IncorrectPasswordError(newUser.password));
 
     if (trackedUser.email !== newUser.email) {
       const foundUser = await this.searchByEmailRepo.searchByEmail(
@@ -38,7 +58,15 @@ export class DBUpdateUser implements UpdateUserUseCase {
 
     const result = await this.updateUserRepo.update(user);
 
-    const userReturn: Omit<UserModel, 'password'> = {
+    const userReturn: Omit<
+      UserEntity,
+      | 'password'
+      | 'establishments'
+      | 'accounts'
+      | 'password'
+      | 'pollVotes'
+      | 'deletedAt'
+    > = {
       id: result.id,
       name: result.name,
       email: result.email,

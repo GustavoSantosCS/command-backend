@@ -11,3 +11,5 @@ export * from './user-entity';
 export * from './survey-entity';
 export * from './music-playlist-entity';
 export * from './product-image-entity';
+export * from './survey-entity';
+export * from './survey-music-entity';

@@ -1,42 +1,46 @@
 import {
   AddAccountRepository,
-  GetEstablishedByIdRepository,
+  GetEstablishmentByIdRepository,
   IDGenerator
 } from '@/data/protocols';
 import { AccountModel } from '@/domain/models';
 import { CreateAccountUseCase } from '@/domain/usecases';
-import { AppError } from '@/shared/app-error';
-import { Either, left, right } from '@/shared/either';
+import { left, right } from '@/shared/either';
+import { EstablishmentNotFoundError } from '@/domain/errors';
 
 export class DBCreateAccount implements CreateAccountUseCase {
+  private readonly idGenerator: IDGenerator;
+  private readonly getEstablishmentByIdRepo: GetEstablishmentByIdRepository;
+  private readonly addAccountRepo: AddAccountRepository;
+
   constructor(
-    private readonly idGenerator: IDGenerator,
-    private readonly establishedRepo: GetEstablishedByIdRepository,
-    private readonly addAccountRepository: AddAccountRepository
-  ) {}
+    idGenerator: IDGenerator,
+    getEstablishmentByIdRepo: GetEstablishmentByIdRepository,
+    addAccountRepo: AddAccountRepository
+  ) {
+    this.idGenerator = idGenerator;
+    this.getEstablishmentByIdRepo = getEstablishmentByIdRepo;
+    this.addAccountRepo = addAccountRepo;
+  }
 
   async create({
     establishmentId,
-    idUser
-  }: CreateAccountUseCase.Params): Promise<Either<AppError, AccountModel>> {
-    const trackedEstablishment = await this.establishedRepo.getById(
+    userId
+  }: CreateAccountUseCase.Params): Promise<CreateAccountUseCase.Result> {
+    const establishment = await this.getEstablishmentByIdRepo.getById(
       establishmentId
     );
 
-    if (!trackedEstablishment)
-      return left(new AppError('Não foi possível encontrar o estabelecimento'));
+    if (!establishment) return left(new EstablishmentNotFoundError());
 
-    const newAccount: Omit<AccountModel, 'client'> = {
+    const accountModel: Omit<AccountModel, 'client'> = {
       id: this.idGenerator.generate(),
-      establishment: trackedEstablishment,
+      establishment,
       requestsMusic: [],
       requestsProduct: []
     };
 
-    const result = await this.addAccountRepository.add(newAccount, idUser);
-
-    delete result.client;
-    delete result.establishment.manager;
-    return right(result as any);
+    const newAccount = await this.addAccountRepo.add(accountModel, userId);
+    return right(newAccount);
   }
 }

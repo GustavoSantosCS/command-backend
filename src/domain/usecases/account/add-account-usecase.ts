@@ -1,16 +1,20 @@
-import { AccountModel } from '@/domain/models';
-import { AppError } from '@/shared/app-error';
 import { Either } from '@/shared/either';
+import { AccountEntity } from '@/data/entities';
+import { EstablishmentNotFoundError } from '@/domain/errors';
 
 export interface CreateAccountUseCase {
   create(
     data: CreateAccountUseCase.Params
-  ): Promise<Either<AppError, AccountModel>>;
+  ): Promise<CreateAccountUseCase.Result>;
 }
 // eslint-disable-next-line no-redeclare
 export namespace CreateAccountUseCase {
   export type Params = {
-    idUser: string;
+    userId: string;
     establishmentId: string;
   };
+
+  export type Return = Omit<AccountEntity, 'closedAt'>;
+
+  export type Result = Either<EstablishmentNotFoundError, Return>;
 }

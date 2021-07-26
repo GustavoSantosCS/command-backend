@@ -61,7 +61,7 @@ export const makerGetProductByIdController = (): Controller => {
   return new GetProductByIdController(usecase);
 };
 
-export const makeGetAllEstablishedProductsController = (): Controller => {
+export const makeGetAllEstablishmentProductsController = (): Controller => {
   const usecase = new DBGetAllEstablishmentProducts(
     establishmentRepository,
     productRepository

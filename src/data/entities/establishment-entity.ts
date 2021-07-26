@@ -38,26 +38,26 @@ export class EstablishmentEntity {
 
   @ManyToOne(() => UserEntity, user => user.establishments)
   @JoinColumn({ name: 'manager' })
-  manager?: UserEntity;
+  manager: UserEntity;
 
   @OneToMany(() => ProductEntity, product => product.establishment)
-  products?: ProductEntity[];
+  products: ProductEntity[];
 
   @OneToMany(() => PlaylistEntity, playlist => playlist.establishment)
-  playlists?: PlaylistEntity[];
+  playlists: PlaylistEntity[];
 
   @OneToMany(() => AccountEntity, account => account.establishment)
-  accounts?: AccountEntity[];
+  accounts: AccountEntity[];
 
   @OneToMany(() => SurveyEntity, survey => survey.establishment)
-  surveys?: SurveyEntity[];
+  surveys: SurveyEntity[];
 
   @OneToOne(() => EstablishmentImageEntity)
   @JoinColumn({ name: 'image' })
   image: EstablishmentImageEntity;
 
   @OneToMany(() => MusicEntity, music => music.establishment)
-  musics?: MusicEntity[];
+  musics: MusicEntity[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

@@ -1,5 +1,5 @@
 import { PlayListModel } from '@/domain/models';
-import { GetCurrentEstablishedPlaylistUseCase } from '@/domain/usecases';
+import { GetCurrentEstablishmentPlaylistUseCase } from '@/domain/usecases';
 import {
   Controller,
   HttpRequest,
@@ -8,18 +8,24 @@ import {
 import { badRequest, ok, serverError } from '@/utils/http';
 import { Validator } from '@/validation/protocols';
 
-export class GetCurrentEstablishedPlaylistController implements Controller {
+export class GetCurrentEstablishmentPlaylistController implements Controller {
+  private readonly validator: Validator;
+  private readonly getCurrentPlaylist: GetCurrentEstablishmentPlaylistUseCase;
+
   constructor(
-    private readonly validator: Validator,
-    private readonly getCurrentPlaylist: GetCurrentEstablishedPlaylistUseCase
-  ) {}
+    validator: Validator,
+    getCurrentPlaylistUseCase: GetCurrentEstablishmentPlaylistUseCase
+  ) {
+    this.validator = validator;
+    this.getCurrentPlaylist = getCurrentPlaylistUseCase;
+  }
 
   async handle(
     httpRequest: HttpRequest<
-      any,
-      GetCurrentEstablishedPlaylistController.Params
+      GetCurrentEstablishmentPlaylistController.DTOBody,
+      GetCurrentEstablishmentPlaylistController.DTOParam
     >
-  ): Promise<HttpResponse<GetCurrentEstablishedPlaylistController.Response>> {
+  ): Promise<HttpResponse<GetCurrentEstablishmentPlaylistController.Response>> {
     try {
       const { establishmentId } = httpRequest.params;
       const userId = httpRequest.body.authenticated.id;
@@ -27,13 +33,17 @@ export class GetCurrentEstablishedPlaylistController implements Controller {
       const validation = this.validator.validate({
         establishmentId
       });
+      if (validation.isLeft()) {
+        return badRequest(validation.value);
+      }
 
-      if (validation.isLeft()) return badRequest(validation.value);
       const result = await this.getCurrentPlaylist.getCurrentPlaylist(
         userId,
         establishmentId
       );
-      if (result.isLeft()) return badRequest(result.value);
+      if (result.isLeft()) {
+        return badRequest(result.value);
+      }
 
       const playerList: Omit<PlayListModel, 'establishment'> = {
         id: result.value.id,
@@ -47,18 +57,21 @@ export class GetCurrentEstablishedPlaylistController implements Controller {
       return ok(playerList);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('GetCurrentEstablishedPlaylistUseCase:50 => ', error);
+      console.error('GetCurrentEstablishmentPlaylistUseCase:60 => ', error);
       return serverError();
     }
   }
 }
 
 // eslint-disable-next-line no-redeclare
-export namespace GetCurrentEstablishedPlaylistController {
-  export type Params = {
+export namespace GetCurrentEstablishmentPlaylistController {
+  export type DTOBody = {
     authenticated: {
       id: string;
     };
+  };
+
+  export type DTOParam = {
     establishmentId: string;
   };
 

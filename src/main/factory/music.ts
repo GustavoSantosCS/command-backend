@@ -11,7 +11,7 @@ import { Controller } from '@/presentation/protocols';
 import { Validator } from '@/validation/protocols';
 import { ValidationComposite, ValidatorBuilder } from '@/validation/validators';
 
-const repoEstablished = new EstablishmentTypeOrmRepository();
+const repoEstablishment = new EstablishmentTypeOrmRepository();
 const repoMusic = new MusicTypeOrmRepository();
 
 export const makeAddMusicController = (): Controller => {
@@ -41,12 +41,16 @@ export const makeAddMusicController = (): Controller => {
     ...establishmentIdValidator
   ]);
 
-  const usecase = new DBAddMusic(new UUIDAdapter(), repoEstablished, repoMusic);
+  const usecase = new DBAddMusic(
+    new UUIDAdapter(),
+    repoEstablishment,
+    repoMusic
+  );
 
   return new AddMusicController(validator, usecase);
 };
 
-export const makeGetAllEstablishedMusicsController = (): Controller => {
-  const usecase = new DBGetAllEstablishmentMusics(repoEstablished, repoMusic);
+export const makeGetAllEstablishmentMusicsController = (): Controller => {
+  const usecase = new DBGetAllEstablishmentMusics(repoEstablishment, repoMusic);
   return new GetAllEstablishmentMusicsController(usecase);
 };

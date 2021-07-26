@@ -8,21 +8,23 @@ import {
 import { ok, serverError } from '@/utils/http';
 
 export class GetAllEstablishmentsController implements Controller {
-  constructor(
-    private readonly getAllEstablishmentsUseCase: GetAllEstablishmentsUseCase
-  ) {}
+  private readonly getAllEstablishments: GetAllEstablishmentsUseCase;
+
+  constructor(getAllEstablishmentsUseCase: GetAllEstablishmentsUseCase) {
+    this.getAllEstablishments = getAllEstablishmentsUseCase;
+  }
 
   async handle(
     httpRequest: HttpRequest
   ): Promise<HttpResponse<GetAllEstablishmentsController.Response>> {
     try {
-      const response =
-        await this.getAllEstablishmentsUseCase.getAllEstablishments();
+      const establishments =
+        await this.getAllEstablishments.getAllEstablishments();
 
-      return ok(response.value);
+      return ok(establishments);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('GetAllEstablishmentsController:25 => ', error);
+      console.error('GetAllEstablishmentsController:27 => ', error);
       return serverError(error);
     }
   }
@@ -30,7 +32,5 @@ export class GetAllEstablishmentsController implements Controller {
 
 // eslint-disable-next-line no-redeclare
 export namespace GetAllEstablishmentsController {
-  export type Response = {
-    establishments: Omit<EstablishmentModel, 'manager'>[];
-  };
+  export type Response = Omit<EstablishmentModel, 'manager'>[];
 }

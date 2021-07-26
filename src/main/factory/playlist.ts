@@ -1,6 +1,6 @@
 import {
   DBAddPlayList,
-  DBGetCurrentEstablishedPlaylist
+  DBGetCurrentEstablishmentPlaylist
 } from '@/data/implementations/playlist';
 import { EstablishmentTypeOrmRepository } from '@/infra/db/typeorm';
 import { MusicTypeOrmRepository } from '@/infra/db/typeorm/music-typeorm-repository';
@@ -8,13 +8,13 @@ import { PlaylistTypeOrmRepository } from '@/infra/db/typeorm/playlist-typeorm-r
 import { UUIDAdapter } from '@/infra/uuid-adapter';
 import {
   AddPlayListController,
-  GetCurrentEstablishedPlaylistController
+  GetCurrentEstablishmentPlaylistController
 } from '@/presentation/controllers/playlist';
 import { Controller } from '@/presentation/protocols';
 import { Validator } from '@/validation/protocols';
 import { ValidationComposite, ValidatorBuilder } from '@/validation/validators';
 
-const repoEstablished = new EstablishmentTypeOrmRepository();
+const repoEstablishment = new EstablishmentTypeOrmRepository();
 const repoPlayList = new PlaylistTypeOrmRepository();
 const repoMusic = new MusicTypeOrmRepository();
 
@@ -30,7 +30,7 @@ export const makeAddPlaylistController = (): Controller => {
 
   const musicsValidator = ValidatorBuilder.field('musics')
     .required('Musicas não informadas')
-    .isArray()
+    .isArray('Musicas informada de forma incorreta')
     .build();
 
   const validator: Validator = new ValidationComposite([
@@ -41,7 +41,7 @@ export const makeAddPlaylistController = (): Controller => {
 
   const usecase = new DBAddPlayList(
     new UUIDAdapter(),
-    repoEstablished,
+    repoEstablishment,
     repoPlayList,
     repoMusic
   );
@@ -49,7 +49,7 @@ export const makeAddPlaylistController = (): Controller => {
   return new AddPlayListController(validator, usecase);
 };
 
-export const makeGetCurrentEstablishedPlaylistController = (): Controller => {
+export const makeGetCurrentEstablishmentPlaylistController = (): Controller => {
   const establishmentIdValidator = ValidatorBuilder.field('establishmentId')
     .required('Estabelecimento não informado')
     .build();
@@ -58,10 +58,10 @@ export const makeGetCurrentEstablishedPlaylistController = (): Controller => {
     ...establishmentIdValidator
   ]);
 
-  const usecase = new DBGetCurrentEstablishedPlaylist(
-    repoEstablished,
+  const usecase = new DBGetCurrentEstablishmentPlaylist(
+    repoEstablishment,
     repoPlayList
   );
 
-  return new GetCurrentEstablishedPlaylistController(validator, usecase);
+  return new GetCurrentEstablishmentPlaylistController(validator, usecase);
 };

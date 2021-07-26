@@ -7,12 +7,12 @@ import {
 
 export default (router: Router): void => {
   router.post(
-    '/account/:idAccount/request/product',
+    '/account/:accountId/request/product',
     adapterRoute(makeCreateRequestProductController())
   );
 
   router.get(
-    '/account/:idAccount/request/product',
+    '/account/:accountId/request/product',
     adapterRoute(makeGetAllRequestProductController())
   );
 };

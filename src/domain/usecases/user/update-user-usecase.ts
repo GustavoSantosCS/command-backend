@@ -1,4 +1,5 @@
-import { PersistencyError } from '@/infra/errors';
+import { UserEntity } from '@/data/entities';
+import { IncorrectPasswordError } from '@/domain/errors';
 import { UserModel } from '@/domain/models';
 import { Either } from '@/shared/either';
 
@@ -11,6 +12,16 @@ export interface UpdateUserUseCase {
 // eslint-disable-next-line no-redeclare
 export namespace UpdateUserUseCase {
   export type Params = UserModel;
-
-  export type Response = Either<PersistencyError, Omit<UserModel, 'password'>>;
+  export type Response = Either<
+    IncorrectPasswordError,
+    Omit<
+      UserEntity,
+      | 'password'
+      | 'establishments'
+      | 'accounts'
+      | 'password'
+      | 'pollVotes'
+      | 'deletedAt'
+    >
+  >;
 }
