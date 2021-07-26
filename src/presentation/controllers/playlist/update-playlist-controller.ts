@@ -38,14 +38,6 @@ export class UpdatePlaylistController implements Controller {
         return badRequest(validation.value);
       }
 
-      console.log('ola', {
-        userId: authenticated.id,
-        id,
-        active,
-        name,
-        establishmentId
-      });
-
       const resultUseCase = await this.updatePlayList.updatePlaylist({
         userId: authenticated.id,
         id,
