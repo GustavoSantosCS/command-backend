@@ -46,21 +46,29 @@ export class DBUpdateMusicsOfPlaylist implements UpdateMusicsOfPlaylistUseCase {
       return left(new PlaylistNotFoundError());
     }
 
-    const playlistMusics: MusicPlaylistEntity[] = [];
-    for await (const music of musics) {
-      const trackedMusic = await this.getMusicByIdRepo.getById(music.id);
-      if (!trackedMusic || trackedMusic?.establishment.id !== establishmentId)
-        return left(new MusicNotFoundError());
+    const musicsTrack = await Promise.all(
+      musics.map(async m => {
+        const trackedMusic = await this.getMusicByIdRepo.getById(m.id);
+        if (!trackedMusic || trackedMusic?.establishment.id !== establishmentId)
+          return null;
 
-      playlistMusics.push(
+        return trackedMusic;
+      })
+    );
+
+    if (musicsTrack.some(m => !m)) {
+      return left(new MusicNotFoundError());
+    }
+
+    const playlistMusics: MusicPlaylistEntity[] = musicsTrack.map(
+      (music, position) =>
         new MusicPlaylistEntity(
           this.idGenerator.generate(),
-          trackedMusic,
+          music,
           playlist,
-          music.position
+          position + 1
         )
-      );
-    }
+    );
 
     const resultUsecase = await this.updateMusicsRepo.updateMusicsOfPlaylist(
       playlist,
@@ -71,6 +79,7 @@ export class DBUpdateMusicsOfPlaylist implements UpdateMusicsOfPlaylistUseCase {
       id: resultUsecase.id,
       musicToPlaylist: resultUsecase.musicToPlaylist,
       name: resultUsecase.name,
+      currentMusic: resultUsecase.currentMusic,
       isActive: resultUsecase.isActive,
       createdAt: resultUsecase.createdAt,
       updatedAt: resultUsecase.updatedAt

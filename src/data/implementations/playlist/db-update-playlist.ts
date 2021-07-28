@@ -34,8 +34,6 @@ export class DBUpdatePlaylist implements UpdatePlaylistUseCase {
       includeEstablishmentAndManager: true
     });
 
-    console.log('playlist', playlist);
-
     if (
       !playlist ||
       playlist?.establishment.id !== establishmentId ||
@@ -60,6 +58,7 @@ export class DBUpdatePlaylist implements UpdatePlaylistUseCase {
       id: resultUseCase.id,
       name: resultUseCase.name,
       isActive: resultUseCase.isActive,
+      currentMusic: resultUseCase.currentMusic,
       createdAt: resultUseCase.createdAt,
       updatedAt: resultUseCase.updatedAt
     };

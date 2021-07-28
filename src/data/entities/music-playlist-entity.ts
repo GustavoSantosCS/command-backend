@@ -11,9 +11,6 @@ export class MusicPlaylistEntity {
   position: number;
 
   @Column()
-  alreadyTouched: boolean;
-
-  @Column()
   isPlay: boolean;
 
   @ManyToOne(() => MusicEntity, music => music.musicToPlaylist)
@@ -35,6 +32,5 @@ export class MusicPlaylistEntity {
     this.music = music;
     this.playlist = playlist;
     this.isPlay = false;
-    this.alreadyTouched = false;
   }
 }

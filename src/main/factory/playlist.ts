@@ -1,6 +1,10 @@
 import {
   DBAddPlayList,
   DBGetCurrentEstablishmentPlaylist,
+  DBNextMusicOfPlaylist,
+  DBPreviousMusicOfPlaylist,
+  DBStartMusicOfPlaylist,
+  DBStopMusicOfPlaylist,
   DBUpdateMusicsOfPlaylist,
   DBUpdatePlaylist
 } from '@/data/implementations/playlist';
@@ -13,6 +17,10 @@ import { UUIDAdapter } from '@/infra/uuid-adapter';
 import {
   AddPlayListController,
   GetCurrentEstablishmentPlaylistController,
+  NextPlaylistMusicController,
+  PreviousPlaylistMusicController,
+  StartPlaylistMusicController,
+  StopPlaylistMusicController,
   UpdateMusicsOfPlaylistController,
   UpdatePlaylistController
 } from '@/presentation/controllers/playlist';
@@ -109,7 +117,7 @@ export const makeUpdatePlaylistController = (): Controller => {
 };
 
 export const makeUpdateMusicsOfPlaylistController = (): Controller => {
-  const idValidator = ValidatorBuilder.field('playlistId')
+  const idValidator = ValidatorBuilder.field('id')
     .required('Identificador da Playlist não informado')
     .build();
 
@@ -135,4 +143,76 @@ export const makeUpdateMusicsOfPlaylistController = (): Controller => {
     idGenerator
   );
   return new UpdateMusicsOfPlaylistController(validator, usecase);
+};
+
+export const makeNextMusicPlaylistController = (): Controller => {
+  const idValidator = ValidatorBuilder.field('playlistId')
+    .required('Identificador da Playlist não informado')
+    .build();
+
+  const establishmentIdValidator = ValidatorBuilder.field('establishmentId')
+    .required('Estabelecimento não informado')
+    .build();
+
+  const validator: Validator = new ValidationComposite([
+    ...idValidator,
+    ...establishmentIdValidator
+  ]);
+
+  const usecase = new DBNextMusicOfPlaylist(repoPlayList, repoPlayList);
+  return new NextPlaylistMusicController(validator, usecase);
+};
+
+export const makePreviousMusicPlaylistController = (): Controller => {
+  const idValidator = ValidatorBuilder.field('playlistId')
+    .required('Identificador da Playlist não informado')
+    .build();
+
+  const establishmentIdValidator = ValidatorBuilder.field('establishmentId')
+    .required('Estabelecimento não informado')
+    .build();
+
+  const validator: Validator = new ValidationComposite([
+    ...idValidator,
+    ...establishmentIdValidator
+  ]);
+
+  const usecase = new DBPreviousMusicOfPlaylist(repoPlayList, repoPlayList);
+  return new PreviousPlaylistMusicController(validator, usecase);
+};
+
+export const makeStartMusicPlaylistController = (): Controller => {
+  const idValidator = ValidatorBuilder.field('playlistId')
+    .required('Identificador da Playlist não informado')
+    .build();
+
+  const establishmentIdValidator = ValidatorBuilder.field('establishmentId')
+    .required('Estabelecimento não informado')
+    .build();
+
+  const validator: Validator = new ValidationComposite([
+    ...idValidator,
+    ...establishmentIdValidator
+  ]);
+
+  const usecase = new DBStartMusicOfPlaylist(repoPlayList, repoPlayList);
+  return new StartPlaylistMusicController(validator, usecase);
+};
+
+export const makeStopMusicPlaylistController = (): Controller => {
+  const idValidator = ValidatorBuilder.field('playlistId')
+    .required('Identificador da Playlist não informado')
+    .build();
+
+  const establishmentIdValidator = ValidatorBuilder.field('establishmentId')
+    .required('Estabelecimento não informado')
+    .build();
+
+  const validator: Validator = new ValidationComposite([
+    ...idValidator,
+    ...establishmentIdValidator
+  ]);
+
+  const usecase = new DBStopMusicOfPlaylist(repoPlayList, repoPlayList);
+  return new StopPlaylistMusicController(validator, usecase);
 };

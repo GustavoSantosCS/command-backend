@@ -1,5 +1,4 @@
 import { PlaylistEntity } from '@/data/entities';
-import { PlayListModel } from '@/domain/models';
 import { UpdateMusicsOfPlaylistUseCase } from '@/domain/usecases';
 import {
   Controller,
@@ -7,6 +6,7 @@ import {
   HttpResponse
 } from '@/presentation/protocols';
 import { badRequest, ok, serverError } from '@/utils/http';
+import { IsNotTypeError, MissingParamError } from '@/validation/errors';
 import { Validator } from '@/validation/protocols';
 
 export class UpdateMusicsOfPlaylistController implements Controller {
@@ -28,22 +28,35 @@ export class UpdateMusicsOfPlaylistController implements Controller {
     >
   ): Promise<UpdateMusicsOfPlaylistController.Response> {
     try {
-      const { authenticated, musics, establishmentId } = httpRequest.body;
-      const { playlistId } = httpRequest.params;
+      const { id, authenticated, musics, establishmentId } = httpRequest.body;
+
       const validation = this.validate.validate({
         userId: authenticated.id,
         musics,
-        playlistId,
+        id,
         establishmentId
       });
       if (validation.isLeft()) {
         return badRequest(validation.value);
       }
+      if (musics.length === 0) {
+        return badRequest(
+          new MissingParamError('Musicas Não informadas', 'musics')
+        );
+      }
+      if (musics.some(m => !m.id)) {
+        return badRequest(
+          new IsNotTypeError(
+            'Musicas informada em formatação incorreta',
+            'musics'
+          )
+        );
+      }
 
       const resultUseCase = await this.updatePlaylist.updateMusicsOfPlaylist({
         userId: authenticated.id,
         musics,
-        playlistId,
+        playlistId: id,
         establishmentId
       });
       if (resultUseCase.isLeft()) {
@@ -55,6 +68,7 @@ export class UpdateMusicsOfPlaylistController implements Controller {
         id: playlist.id,
         name: playlist.name,
         musicToPlaylist: playlist.musicToPlaylist,
+        currentMusic: playlist.currentMusic,
         isActive: playlist.isActive,
         createdAt: playlist.createdAt,
         updatedAt: playlist.updatedAt
@@ -74,13 +88,12 @@ export namespace UpdateMusicsOfPlaylistController {
     authenticated: {
       id: string;
     };
+    id: string;
     musics: { id: string; position: number }[];
     establishmentId: string;
   };
 
-  export type Param = {
-    playlistId: string;
-  };
+  export type Param = null;
 
   export type Return = Omit<PlaylistEntity, 'establishment' | 'musics'>;
   export type Response = HttpResponse<Return>;

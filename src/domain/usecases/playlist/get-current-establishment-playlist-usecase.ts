@@ -1,6 +1,9 @@
 import { PlaylistEntity } from '@/data/entities';
 import { Either } from '@/shared/either';
-import { EstablishmentNotFoundError } from '@/domain/errors';
+import {
+  EstablishmentNotFoundError,
+  EstablishmentNotHavePlaylistError
+} from '@/domain/errors';
 
 export interface GetCurrentEstablishmentPlaylistUseCase {
   getCurrentPlaylist(
@@ -13,5 +16,8 @@ export interface GetCurrentEstablishmentPlaylistUseCase {
 export namespace GetCurrentEstablishmentPlaylistUseCase {
   export type Result = Omit<PlaylistEntity, 'establishment' | 'musics'>;
 
-  export type Response = Either<EstablishmentNotFoundError, Result>;
+  export type Response = Either<
+    EstablishmentNotFoundError | EstablishmentNotHavePlaylistError,
+    Result
+  >;
 }

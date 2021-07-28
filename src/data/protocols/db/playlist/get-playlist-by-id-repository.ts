@@ -13,7 +13,8 @@ export namespace GetPlaylistByIdRepository {
     includeEstablishment?: boolean;
     includeEstablishmentAndManager?: boolean;
     includeMusics?: boolean;
-    justPlaylist?: boolean;
+    includeCurrentMusic?: boolean;
+    includeMusicToPlaylist?: boolean;
   };
   export type Result = PlaylistEntity;
 }

@@ -35,8 +35,7 @@ export class CreateProductImageTable1625019640290
         columnNames: ['image'], // Coluna pai da Tabela pai
         referencedTableName: this.tableName, // Tabela referenciada
         referencedColumnNames: ['persistentName'], // Coluna referenciada
-        name: 'product_image_fk', // Nome da ForeignKey
-        onDelete: 'CASCADE'
+        name: 'product_image_fk' // Nome da ForeignKey
       })
     );
   }

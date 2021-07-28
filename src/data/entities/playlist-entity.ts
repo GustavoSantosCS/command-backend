@@ -50,7 +50,7 @@ export class PlaylistEntity {
   )
   musicToPlaylist!: MusicPlaylistEntity[];
 
-  constructor(playlistModel: PlayListModel) {
-    Object.assign(this, playlistModel);
-  }
+  @ManyToOne(() => MusicPlaylistEntity)
+  @JoinColumn({ name: 'current_music_id' })
+  currentMusic!: MusicPlaylistEntity;
 }

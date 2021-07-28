@@ -21,15 +21,13 @@ export class CreateRequestMusic1625813513694 implements MigrationInterface {
             columnNames: ['account_id'],
             referencedColumnNames: ['id'],
             referencedTableName: 'accounts',
-            name: 'requests-product_account_fk', // Nome da ForeignKey
-            onDelete: 'CASCADE'
+            name: 'requests-product_account_fk' // Nome da ForeignKey
           },
           {
             columnNames: ['music_id'],
             referencedTableName: 'musics',
             referencedColumnNames: ['id'],
-            name: 'requests-music_music_fk', // Nome da ForeignKey
-            onDelete: 'CASCADE'
+            name: 'requests-music_music_fk' // Nome da ForeignKey
           }
         ]
       })

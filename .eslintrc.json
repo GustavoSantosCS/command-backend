@@ -23,6 +23,7 @@
     "import/extensions": "off",
     "max-classes-per-file": "off",
     "no-use-before-define": "off",
+    "prefer-destructuring": "off",
     "object-curly-newline": [
       "error",
       {

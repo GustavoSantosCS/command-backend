@@ -20,8 +20,7 @@ export class CreateSurveyTable1626846767252 implements MigrationInterface {
             columnNames: ['establishment_id'],
             referencedColumnNames: ['id'],
             referencedTableName: 'establishments',
-            name: 'establishment_survey_fk',
-            onDelete: 'CASCADE'
+            name: 'establishment_survey_fk'
           }
         ]
       })

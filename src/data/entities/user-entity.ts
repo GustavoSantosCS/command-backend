@@ -29,7 +29,7 @@ export class UserEntity {
   @Column()
   password: string;
 
-  @OneToOne(() => AvatarEntity, avatar => avatar.user, { onDelete: 'CASCADE' })
+  @OneToOne(() => AvatarEntity, avatar => avatar.user)
   @JoinColumn({ name: 'avatar' })
   avatar?: AvatarEntity;
 

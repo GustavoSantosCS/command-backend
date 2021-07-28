@@ -1,20 +1,13 @@
-import { MusicEntity, PlaylistEntity } from '@/data/entities';
-import { PlayListModel } from '@/domain/models';
+import { MusicPlaylistEntity, PlaylistEntity } from '@/data/entities';
 
 export interface AddPlayListRepository {
   add(
-    data: AddPlayListRepository.Params,
-    establishmentId: string,
-    playlist: PlayListModel
-  ): Promise<Omit<PlaylistEntity, 'establishment' | 'musicToPlaylist'>>;
+    playlist: PlaylistEntity,
+    newMusics: MusicPlaylistEntity[]
+  ): Promise<AddPlayListRepository.Result>;
 }
 
 // eslint-disable-next-line no-redeclare
 export namespace AddPlayListRepository {
-  export type Params = {
-    id: string;
-    position: number;
-    music: MusicEntity;
-    playlist: PlaylistEntity;
-  }[];
+  export type Result = Omit<PlaylistEntity, 'establishment' | 'musics'>;
 }

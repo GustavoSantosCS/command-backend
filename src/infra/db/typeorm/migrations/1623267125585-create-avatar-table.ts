@@ -36,7 +36,6 @@ export class CreateAvatarTable1623267125585 implements MigrationInterface {
         columnNames: ['avatar'],
         referencedColumnNames: ['persistentName'],
         referencedTableName: 'avatars',
-        onDelete: 'CASCADE',
         name: 'user_avatar_fk'
       })
     );

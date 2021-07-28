@@ -49,6 +49,7 @@ export class GetCurrentEstablishmentPlaylistController implements Controller {
         id: result.value.id,
         name: result.value.name,
         isActive: result.value.isActive,
+        currentMusic: result.value.currentMusic,
         musicToPlaylist: result.value.musicToPlaylist,
         createdAt: result.value.createdAt,
         updatedAt: result.value.updatedAt

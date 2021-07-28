@@ -24,7 +24,6 @@ export class CreateEstablishmentTable1624885040938
             columnNames: ['manager'],
             referencedTableName: 'users',
             referencedColumnNames: ['id'],
-            onDelete: 'CASCADE',
             name: 'establishments_user_fk'
           }
         ]

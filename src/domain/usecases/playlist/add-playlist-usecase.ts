@@ -20,10 +20,7 @@ export namespace AddPlayListUseCase {
     musics: { id: string; position: number }[];
   };
 
-  export type Return = Omit<
-    PlaylistEntity,
-    'establishment' | 'musicToPlaylist'
-  >;
+  export type Return = Omit<PlaylistEntity, 'establishment' | 'musics'>;
 
   export type Result = Promise<
     Either<EstablishmentNotFoundError | MusicNotFoundError, Return>

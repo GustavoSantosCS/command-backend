@@ -17,15 +17,13 @@ export class CreateMusicTable1626846779793 implements MigrationInterface {
             columnNames: ['idSurvey'],
             referencedColumnNames: ['id'],
             referencedTableName: 'surveys',
-            name: 'survey_music_fk',
-            onDelete: 'CASCADE'
+            name: 'survey_music_fk'
           },
           {
             columnNames: ['idMusic'],
             referencedColumnNames: ['id'],
             referencedTableName: 'musics',
-            name: 'music_survey_fk',
-            onDelete: 'CASCADE'
+            name: 'music_survey_fk'
           }
         ]
       })

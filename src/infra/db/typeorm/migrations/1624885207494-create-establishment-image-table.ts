@@ -34,8 +34,7 @@ export class CreateEstablishmentImage1624885207494
         columnNames: ['image'], // Coluna pai da Tabela pai
         referencedTableName: this.tableName, // Tabela referenciada
         referencedColumnNames: ['persistentName'], // Coluna referenciada
-        name: 'establishment_image_fk', // Nome da ForeignKey
-        onDelete: 'CASCADE'
+        name: 'establishment_image_fk' // Nome da ForeignKey
       })
     );
   }

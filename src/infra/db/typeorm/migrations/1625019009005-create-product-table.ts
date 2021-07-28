@@ -22,8 +22,7 @@ export class CreateProductTable1625019009005 implements MigrationInterface {
             columnNames: ['establishment_id'], // Coluna pai da Tabela pai
             referencedTableName: 'establishments', // Tabela referenciada
             referencedColumnNames: ['id'], // Coluna referenciada
-            name: 'establishment_product_fk', // Nome da ForeignKey
-            onDelete: 'CASCADE'
+            name: 'establishment_product_fk' // Nome da ForeignKey
           }
         ]
       })

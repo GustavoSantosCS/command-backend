@@ -26,15 +26,13 @@ export class CreateRequestProduct1625813513294 implements MigrationInterface {
             columnNames: ['account_id'],
             referencedColumnNames: ['id'],
             referencedTableName: 'accounts',
-            name: 'requests-product_account_fk', // Nome da ForeignKey
-            onDelete: 'CASCADE'
+            name: 'requests-product_account_fk' // Nome da ForeignKey
           },
           {
             columnNames: ['product_id'],
             referencedTableName: 'products',
             referencedColumnNames: ['id'],
-            name: 'requests-product_product_fk', // Nome da ForeignKey
-            onDelete: 'CASCADE'
+            name: 'requests-product_product_fk' // Nome da ForeignKey
           }
         ]
       })

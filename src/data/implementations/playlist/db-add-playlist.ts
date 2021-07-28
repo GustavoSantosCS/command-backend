@@ -12,7 +12,11 @@ import {
   EstablishmentNotFoundError,
   MusicNotFoundError
 } from '@/domain/errors';
-import { EstablishmentEntity } from '@/data/entities';
+import {
+  EstablishmentEntity,
+  MusicPlaylistEntity,
+  PlaylistEntity
+} from '@/data/entities';
 
 export class DBAddPlayList implements AddPlayListUseCase {
   private readonly idGenerator: IDGenerator;
@@ -41,53 +45,42 @@ export class DBAddPlayList implements AddPlayListUseCase {
     const establishment = await this.getEstablishmentByIdRepo.getById(
       establishmentId
     );
-    if (!establishment) return left(new EstablishmentNotFoundError());
 
-    if (!this.isOwner(establishment as EstablishmentEntity, userId))
+    if (!establishment || establishment?.manager.id !== userId)
       return left(new EstablishmentNotFoundError());
 
-    const playlist = {
-      id: this.idGenerator.generate(),
-      name,
-      isActive: false,
-      establishment
-    };
+    const playlist = new PlaylistEntity();
+    playlist.id = this.idGenerator.generate();
+    playlist.name = name;
+    playlist.isActive = false;
+    playlist.establishment = establishment as EstablishmentEntity;
 
-    const playlistMusics = [];
-    for await (const music of musics) {
-      const trackedMusic = await this.getMusicByIdRepo.getById(music.id);
-      if (!trackedMusic) return left(new MusicNotFoundError());
+    const musicsTrack = await Promise.all(
+      musics.map(async m => {
+        const trackedMusic = await this.getMusicByIdRepo.getById(m.id);
+        if (!trackedMusic || trackedMusic?.establishment.id !== establishmentId)
+          return null;
 
-      if (!this.isOwner(trackedMusic.establishment, userId))
-        return left(new MusicNotFoundError());
-
-      playlistMusics.push({
-        id: this.idGenerator.generate(),
-        position: music.position,
-        music: trackedMusic,
-        playlist
-      });
-    }
-
-    const result = await this.addPlayListRepo.add(
-      playlistMusics,
-      establishmentId,
-      playlist
+        return trackedMusic;
+      })
     );
 
-    result.musics = result.musics.map(music => {
-      delete music.establishment;
-      delete music.createdAt;
-      delete music.updatedAt;
-      delete music.deletedAt;
-      return music;
-    });
+    if (musicsTrack.some(m => !m)) {
+      return left(new MusicNotFoundError());
+    }
+
+    const playlistMusics: MusicPlaylistEntity[] = musicsTrack.map(
+      (music, position) =>
+        new MusicPlaylistEntity(
+          this.idGenerator.generate(),
+          music,
+          playlist,
+          position + 1
+        )
+    );
+
+    const result = await this.addPlayListRepo.add(playlist, playlistMusics);
 
     return right(result);
-  }
-
-  private isOwner(establishment: EstablishmentEntity, userId: string): boolean {
-    const { manager } = establishment;
-    return manager.id === userId;
   }
 }

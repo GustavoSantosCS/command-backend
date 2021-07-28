@@ -27,8 +27,7 @@ export class CreateMusicTable1625035984711 implements MigrationInterface {
             columnNames: ['establishment_id'],
             referencedColumnNames: ['id'],
             referencedTableName: 'establishments',
-            name: 'establishment_playlist_fk', // Nome da ForeignKey
-            onDelete: 'CASCADE'
+            name: 'establishment_playlist_fk' // Nome da ForeignKey
           }
         ]
       })

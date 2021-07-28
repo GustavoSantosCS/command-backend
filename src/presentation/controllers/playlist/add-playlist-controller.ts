@@ -1,12 +1,12 @@
-import { PlayListModel } from '@/domain/models';
+import { PlaylistEntity } from '@/data/entities';
 import { AddPlayListUseCase } from '@/domain/usecases';
 import {
   Controller,
   HttpRequest,
   HttpResponse
 } from '@/presentation/protocols';
-import { AppError } from '@/shared/errors';
 import { badRequest, ok, serverError } from '@/utils/http';
+import { IsNotTypeError, MissingParamError } from '@/validation/errors';
 import { Validator } from '@/validation/protocols';
 
 export class AddPlayListController implements Controller {
@@ -31,7 +31,19 @@ export class AddPlayListController implements Controller {
       if (validation.isLeft()) {
         return badRequest(validation.value);
       }
-
+      if (musics.length === 0) {
+        return badRequest(
+          new MissingParamError('Musicas Não informadas', 'musics')
+        );
+      }
+      if (musics.some(m => !m.id)) {
+        return badRequest(
+          new IsNotTypeError(
+            'Musicas informada em formatação incorreta',
+            'musics'
+          )
+        );
+      }
       const resultAdd = await this.addPlayer.addPlayList({
         name,
         establishmentId,
@@ -43,11 +55,12 @@ export class AddPlayListController implements Controller {
         return badRequest(resultAdd.value);
       }
 
-      const playerList: Omit<PlayListModel, 'establishment'> = {
+      const playerList: AddPlayListController.Response = {
         id: resultAdd.value.id,
         name: resultAdd.value.name,
         isActive: resultAdd.value.isActive,
-        musics: resultAdd.value.musics,
+        currentMusic: resultAdd.value.currentMusic,
+        musicToPlaylist: resultAdd.value.musicToPlaylist,
         createdAt: resultAdd.value.createdAt,
         updatedAt: resultAdd.value.updatedAt
       };
@@ -72,5 +85,5 @@ export namespace AddPlayListController {
     establishmentId: string;
   };
 
-  export type Response = Omit<PlayListModel, 'establishment'>;
+  export type Response = Omit<PlaylistEntity, 'establishment' | 'musics'>;
 }

@@ -13,7 +13,7 @@ export class AvatarEntity {
   @Column()
   target: string;
 
-  @OneToOne(() => UserEntity, user => user.avatar, { onDelete: 'CASCADE' })
+  @OneToOne(() => UserEntity, user => user.avatar)
   user?: UserEntity;
 
   constructor(avatar: AvatarModel) {

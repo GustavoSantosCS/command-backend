@@ -4,7 +4,10 @@ import {
 } from '@/data/protocols';
 import { GetCurrentEstablishmentPlaylistUseCase } from '@/domain/usecases';
 import { left, right } from '@/shared/either';
-import { EstablishmentNotFoundError } from '@/domain/errors';
+import {
+  EstablishmentNotFoundError,
+  EstablishmentNotHavePlaylistError
+} from '@/domain/errors';
 
 export class DBGetCurrentEstablishmentPlaylist
   implements GetCurrentEstablishmentPlaylistUseCase
@@ -36,10 +39,13 @@ export class DBGetCurrentEstablishmentPlaylist
         establishmentId
       );
 
+    if (!currentPlaylist) return left(new EstablishmentNotHavePlaylistError());
+
     const result: GetCurrentEstablishmentPlaylistUseCase.Result = {
       id: currentPlaylist.id,
       name: currentPlaylist.name,
       musicToPlaylist: currentPlaylist.musicToPlaylist,
+      currentMusic: currentPlaylist.currentMusic,
       isActive: currentPlaylist.isActive,
       createdAt: currentPlaylist.createdAt,
       updatedAt: currentPlaylist.updatedAt

@@ -19,15 +19,13 @@ export class CreateAccountTable1625813026993 implements MigrationInterface {
             columnNames: ['establishment_id'],
             referencedColumnNames: ['id'],
             referencedTableName: 'establishments',
-            name: 'account_establishment_fk', // Nome da ForeignKey
-            onDelete: 'CASCADE'
+            name: 'account_establishment_fk' // Nome da ForeignKey
           },
           {
             columnNames: ['client_id'],
             referencedTableName: 'users',
             referencedColumnNames: ['id'],
-            name: 'account_users_fk', // Nome da ForeignKey
-            onDelete: 'CASCADE'
+            name: 'account_users_fk' // Nome da ForeignKey
           }
         ]
       })

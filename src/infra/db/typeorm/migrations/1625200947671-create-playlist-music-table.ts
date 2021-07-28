@@ -1,4 +1,10 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import {
+  MigrationInterface,
+  QueryRunner,
+  Table,
+  TableColumn,
+  TableForeignKey
+} from 'typeorm';
 
 export class CreatePlaylistMusicTable1625200947671
   implements MigrationInterface
@@ -13,7 +19,6 @@ export class CreatePlaylistMusicTable1625200947671
           { name: 'idPlaylist', type: 'uuid' },
           { name: 'idMusic', type: 'uuid' },
           { name: 'position', type: 'int' },
-          { name: 'alreadyTouched', type: 'boolean' },
           { name: 'isPlay', type: 'boolean' }
         ],
         foreignKeys: [
@@ -21,17 +26,34 @@ export class CreatePlaylistMusicTable1625200947671
             columnNames: ['idPlaylist'],
             referencedColumnNames: ['id'],
             referencedTableName: 'playlists',
-            name: 'playlists_music_fk',
-            onDelete: 'CASCADE'
+            name: 'playlists_music_fk'
           },
           {
             columnNames: ['idMusic'],
             referencedColumnNames: ['id'],
             referencedTableName: 'musics',
-            name: 'music_playlists_fk',
-            onDelete: 'CASCADE'
+            name: 'music_playlists_fk'
           }
         ]
+      })
+    );
+
+    await queryRunner.addColumn(
+      'playlists',
+      new TableColumn({
+        name: 'current_music_id',
+        type: 'uuid',
+        isNullable: true
+      })
+    );
+
+    await queryRunner.createForeignKey(
+      'playlists',
+      new TableForeignKey({
+        columnNames: ['current_music_id'],
+        referencedTableName: 'playlist_music',
+        referencedColumnNames: ['id'],
+        name: 'current_music_playlist_fk'
       })
     );
   }
@@ -47,10 +69,17 @@ export class CreatePlaylistMusicTable1625200947671
     const foreignKey2 = table.foreignKeys.find(
       fk => fk.columnNames.indexOf('music_playlist_fk') !== -1
     );
+
+    // Remove Chave Estrangeria 2
+    const foreignKey3 = table.foreignKeys.find(
+      fk => fk.columnNames.indexOf('current_music_playlist_fk') !== -1
+    );
     await queryRunner.dropForeignKeys(this.tableName, [
       foreignKey1,
-      foreignKey2
+      foreignKey2,
+      foreignKey3
     ]);
+    await queryRunner.dropColumn('playlists', 'current_music_id');
 
     await queryRunner.dropTable(this.tableName);
   }
