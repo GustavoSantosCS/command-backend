@@ -52,7 +52,6 @@ export class AddSurveyController implements Controller {
   }
 }
 
-// create namespaces for the controllers
 // eslint-disable-next-line no-redeclare
 export namespace AddSurveyController {
   export type DTO = {

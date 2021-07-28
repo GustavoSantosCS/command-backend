@@ -24,7 +24,6 @@ export default (router: Router): void => {
   );
   router.put('/user', authorization, adapterRoute(makeUpdateUserController()));
   router.post('/user', adapterRoute(makeAddUserController()));
-
   router.get(
     '/user/accounts',
     authorization,

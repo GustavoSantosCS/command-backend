@@ -9,13 +9,20 @@ import {
 } from '@/data/entities';
 import {
   AddSurveyRepository,
-  GetAllEstablishmentSurveyRepository
+  CloseSurveyRepository,
+  GetAllEstablishmentSurveyRepository,
+  GetSurveyByIdRepository
 } from '@/data/protocols';
 import { SurveyModel } from '@/domain/models';
+import { QueryBuilder } from 'typeorm';
 import { TypeORMHelpers } from './typeorm-helper';
 
 export class SurveyTypeOrmRepository
-  implements AddSurveyRepository, GetAllEstablishmentSurveyRepository
+  implements
+    AddSurveyRepository,
+    GetAllEstablishmentSurveyRepository,
+    GetSurveyByIdRepository,
+    CloseSurveyRepository
 {
   async addSurvey(survey: SurveyModel): Promise<SurveyEntity> {
     const queryRunner = await TypeORMHelpers.createQueryRunner();
@@ -42,8 +49,6 @@ export class SurveyTypeOrmRepository
       delete surveyEntity.establishment;
       return surveyEntity;
     } catch (err) {
-      // eslint-disable-next-line no-console
-      console.error('SurveyTypeOrmRepository:49 => ', err);
       await queryRunner.rollbackTransaction();
       throw err;
     } finally {
@@ -75,6 +80,85 @@ export class SurveyTypeOrmRepository
       console.error(error);
 
       return [];
+    }
+  }
+
+  async getById(
+    surveyId: string,
+    strategy?: GetSurveyByIdRepository.Strategy
+  ): Promise<SurveyEntity> {
+    const surveyRepo = await TypeORMHelpers.getRepository(SurveyEntity);
+    if (!strategy) {
+      return surveyRepo.findOne(surveyId);
+    }
+
+    let queryBuilder = surveyRepo.createQueryBuilder('surveys');
+    if (
+      strategy.includeEstablishment ||
+      strategy.includeEstablishmentAndManager
+    ) {
+      queryBuilder = queryBuilder.innerJoinAndSelect(
+        'surveys.establishment',
+        'establishments'
+      );
+
+      if (strategy.includeEstablishmentAndManager) {
+        queryBuilder = queryBuilder.innerJoinAndSelect(
+          'establishments.manager',
+          'users'
+        );
+      }
+    }
+
+    if (strategy.includeVotes) {
+      queryBuilder = queryBuilder.leftJoinAndSelect(
+        'surveys.pollVotes',
+        'votes'
+      );
+    }
+
+    if (strategy.includeMusics) {
+      queryBuilder = queryBuilder.leftJoinAndSelect('surveys.musics', 'musics');
+    }
+
+    if (strategy.includeSurveyToMusic) {
+      queryBuilder = queryBuilder.innerJoinAndSelect(
+        'surveys.surveyToMusic',
+        'survey_music'
+      );
+    }
+
+    return queryBuilder.where('surveys.id = :surveyId', { surveyId }).getOne();
+  }
+
+  async remove(
+    survey: SurveyEntity,
+    softDelete: boolean
+  ): Promise<SurveyEntity> {
+    const queryRunner = await TypeORMHelpers.createQueryRunner();
+
+    await queryRunner.startTransaction();
+
+    try {
+      if (softDelete) {
+        await queryRunner.manager.softRemove(survey);
+      } else {
+        const { surveyToMusic } = await this.getById(survey.id, {
+          includeSurveyToMusic: true
+        });
+
+        await Promise.all(
+          surveyToMusic.map(stm => queryRunner.manager.remove(stm))
+        );
+        await queryRunner.manager.remove(survey);
+      }
+      await queryRunner.commitTransaction();
+      return survey;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
     }
   }
 }

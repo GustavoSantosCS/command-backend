@@ -1,18 +1,29 @@
 import {
   DBAddSurvey,
   DBGetMusicById,
-  DBGetUserEstablishmentById
+  DBGetUserEstablishmentById,
+  DBGetAllEstablishmentSurvey,
+  DBCloseSurvey
 } from '@/data/implementations';
-import { DBGetAllEstablishmentSurvey } from '@/data/implementations/survey/db-get-all-establishment-survey';
-import { EstablishmentTypeOrmRepository } from '@/infra/db/typeorm';
-import { MusicTypeOrmRepository } from '@/infra/db/typeorm/music-typeorm-repository';
-import { SurveyTypeOrmRepository } from '@/infra/db/typeorm/survey-typeorm-repository';
+import {
+  EstablishmentTypeOrmRepository,
+  MusicTypeOrmRepository,
+  SurveyTypeOrmRepository
+} from '@/infra/db/typeorm';
 import { UUIDAdapter } from '@/infra/uuid-adapter';
-import { GetAllEstablishmentSurveyController } from '@/presentation/controllers/survey';
-import { AddSurveyController } from '@/presentation/controllers/survey/add-survey-controller';
+import {
+  CloseSurveyController,
+  GetAllEstablishmentSurveyController,
+  AddSurveyController
+} from '@/presentation/controllers/survey';
+import { Controller } from '@/presentation/protocols';
 import { ValidationComposite, ValidatorBuilder } from '@/validation/validators';
 
-export const makeAddSurveyController = () => {
+const establishmentRepo = new EstablishmentTypeOrmRepository();
+const musicRepo = new MusicTypeOrmRepository();
+const surveyRepo = new SurveyTypeOrmRepository();
+
+export const makeAddSurveyController = (): Controller => {
   const questionValidator = ValidatorBuilder.field('question')
     .required('Questão não informada')
     .isString('Questão deve ser uma string')
@@ -36,18 +47,23 @@ export const makeAddSurveyController = () => {
   ]);
 
   const usecase = new DBAddSurvey(
-    new DBGetUserEstablishmentById(new EstablishmentTypeOrmRepository()),
-    new DBGetMusicById(new MusicTypeOrmRepository()),
-    new SurveyTypeOrmRepository(),
+    new DBGetUserEstablishmentById(establishmentRepo),
+    new DBGetMusicById(musicRepo),
+    surveyRepo,
     new UUIDAdapter()
   );
   return new AddSurveyController(validator, usecase);
 };
 
-export const makeGetAllEstablishmentSurveyController = () => {
+export const makeGetAllEstablishmentSurveyController = (): Controller => {
   const usecase = new DBGetAllEstablishmentSurvey(
-    new EstablishmentTypeOrmRepository(),
-    new SurveyTypeOrmRepository()
+    establishmentRepo,
+    surveyRepo
   );
   return new GetAllEstablishmentSurveyController(usecase);
+};
+
+export const makeCloseSurveyController = (): Controller => {
+  const usecase = new DBCloseSurvey(surveyRepo, surveyRepo);
+  return new CloseSurveyController(usecase);
 };

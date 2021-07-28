@@ -9,4 +9,5 @@ export * from './music-not-found-error';
 export * from './playlist-is-not-active-error';
 export * from './playlist-not-found-error';
 export * from './product-not-found-error';
+export * from './survey-not-found-error';
 export * from './user-not-found-error';
