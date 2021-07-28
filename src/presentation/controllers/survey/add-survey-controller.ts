@@ -60,7 +60,7 @@ export namespace AddSurveyController {
       id: string;
     };
     question: string;
-    musics: { id: string; position: number }[];
+    musics: { id: string }[];
     establishmentId: string;
   };
 

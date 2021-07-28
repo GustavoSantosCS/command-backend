@@ -17,7 +17,7 @@ export namespace AddPlayListUseCase {
     name: string;
     establishmentId: string;
     userId: string;
-    musics: { id: string; position: number }[];
+    musics: { id: string }[];
   };
 
   export type Return = Omit<PlaylistEntity, 'establishment' | 'musics'>;

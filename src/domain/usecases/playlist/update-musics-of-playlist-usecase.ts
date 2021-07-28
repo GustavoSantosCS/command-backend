@@ -14,7 +14,7 @@ export namespace UpdateMusicsOfPlaylistUseCase {
     userId: string;
     playlistId: string;
     establishmentId: string;
-    musics: { id: string; position: number }[];
+    musics: { id: string }[];
   };
 
   export type Return = Omit<PlaylistEntity, 'establishment' | 'musics'>;

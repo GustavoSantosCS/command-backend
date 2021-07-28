@@ -89,7 +89,7 @@ export namespace UpdateMusicsOfPlaylistController {
       id: string;
     };
     id: string;
-    musics: { id: string; position: number }[];
+    musics: { id: string }[];
     establishmentId: string;
   };
 
