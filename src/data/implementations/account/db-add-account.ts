@@ -1,25 +1,29 @@
 import {
   AddAccountRepository,
   GetEstablishmentByIdRepository,
+  GetUserByIdRepository,
   IDGenerator
 } from '@/data/protocols';
-import { AccountModel } from '@/domain/models';
 import { CreateAccountUseCase } from '@/domain/usecases';
 import { left, right } from '@/shared/either';
 import { EstablishmentNotFoundError } from '@/domain/errors';
+import { AccountEntity } from '@/data/entities';
 
 export class DBCreateAccount implements CreateAccountUseCase {
   private readonly idGenerator: IDGenerator;
-  private readonly getEstablishmentByIdRepo: GetEstablishmentByIdRepository;
+  private readonly getEstablishmentRepo: GetEstablishmentByIdRepository;
+  private readonly getUserRepo: GetUserByIdRepository;
   private readonly addAccountRepo: AddAccountRepository;
 
   constructor(
     idGenerator: IDGenerator,
     getEstablishmentByIdRepo: GetEstablishmentByIdRepository,
+    getUserRepo: GetUserByIdRepository,
     addAccountRepo: AddAccountRepository
   ) {
     this.idGenerator = idGenerator;
-    this.getEstablishmentByIdRepo = getEstablishmentByIdRepo;
+    this.getEstablishmentRepo = getEstablishmentByIdRepo;
+    this.getUserRepo = getUserRepo;
     this.addAccountRepo = addAccountRepo;
   }
 
@@ -27,20 +31,21 @@ export class DBCreateAccount implements CreateAccountUseCase {
     establishmentId,
     userId
   }: CreateAccountUseCase.Params): Promise<CreateAccountUseCase.Result> {
-    const establishment = await this.getEstablishmentByIdRepo.getById(
+    const establishmentRepo = await this.getEstablishmentRepo.getById(
       establishmentId
     );
+    if (!establishmentRepo) return left(new EstablishmentNotFoundError());
 
-    if (!establishment) return left(new EstablishmentNotFoundError());
+    const userRepo = await this.getUserRepo.getById(userId);
 
-    const accountModel: Omit<AccountModel, 'client'> = {
-      id: this.idGenerator.generate(),
-      establishment,
-      requestsMusic: [],
-      requestsProduct: []
-    };
+    const newAccount = new AccountEntity();
+    newAccount.id = this.idGenerator.generate();
+    newAccount.client = userRepo;
+    newAccount.establishment = establishmentRepo;
+    newAccount.requestsMusic = [];
+    newAccount.requestsProduct = [];
 
-    const newAccount = await this.addAccountRepo.add(accountModel, userId);
-    return right(newAccount);
+    const accountRepo = await this.addAccountRepo.add(newAccount);
+    return right(accountRepo);
   }
 }

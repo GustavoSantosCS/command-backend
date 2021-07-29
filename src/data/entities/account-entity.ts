@@ -8,7 +8,6 @@ import {
   PrimaryColumn,
   UpdateDateColumn
 } from 'typeorm';
-import { AccountModel } from '@/domain/models';
 import { EstablishmentEntity } from './establishment-entity';
 import { RequestProductEntity } from './request-product-entity';
 import { RequestMusicEntity } from './request-music-entity';
@@ -44,8 +43,4 @@ export class AccountEntity {
 
   @DeleteDateColumn({ name: 'closed_at' })
   closedAt: Date;
-
-  constructor(accountModel: AccountModel) {
-    Object.assign(this, accountModel);
-  }
 }

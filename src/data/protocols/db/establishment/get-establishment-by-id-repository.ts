@@ -8,8 +8,5 @@ export interface GetEstablishmentByIdRepository {
 
 // eslint-disable-next-line no-redeclare
 export namespace GetEstablishmentByIdRepository {
-  export type Result = Omit<
-    EstablishmentEntity,
-    'products' | 'playlists' | 'accounts' | 'surveys' | 'musics'
-  >;
+  export type Result = EstablishmentEntity;
 }

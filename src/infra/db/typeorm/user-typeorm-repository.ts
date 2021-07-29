@@ -60,7 +60,7 @@ export class UserTypeOrmRepository
     return resultAvatar;
   }
 
-  async getUserById(id: string): Promise<UserEntity> {
+  async getById(id: string): Promise<UserEntity> {
     const repository = await TypeORMHelpers.getRepository(UserEntity);
     const userEntity = await repository.findOne(id, {
       relations: ['avatar']

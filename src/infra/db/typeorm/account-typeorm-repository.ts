@@ -1,10 +1,9 @@
-import { AccountEntity, UserEntity } from '@/data/entities';
+import { AccountEntity } from '@/data/entities';
 import {
   AddAccountRepository,
   GetAccountByIdRepository,
   GetAllUserAccountRepository
 } from '@/data/protocols';
-import { AccountModel } from '@/domain/models';
 import { TypeORMHelpers } from './typeorm-helper';
 
 export class AccountTypeOrmRepository
@@ -13,29 +12,17 @@ export class AccountTypeOrmRepository
     GetAccountByIdRepository,
     GetAllUserAccountRepository
 {
-  async add(
-    account: Omit<AccountModel, 'client'>,
-    userId: string
-  ): Promise<AccountEntity> {
+  async add(account: AccountEntity): Promise<AccountEntity> {
     const queryRunner = await TypeORMHelpers.createQueryRunner();
     try {
       await queryRunner.startTransaction();
-      const userFound = await queryRunner.manager.findOne(UserEntity, userId);
 
-      let newAccount = new AccountEntity(account as AccountModel);
-      newAccount.client = userFound;
-      newAccount = await queryRunner.manager.save(newAccount);
-
-      await queryRunner.manager.save(userFound);
+      await queryRunner.manager.save(account);
       await queryRunner.commitTransaction();
 
-      delete newAccount.establishment.manager;
-      delete newAccount.establishment.image;
-
-      return newAccount;
+      return account;
     } catch (err) {
       // eslint-disable-next-line no-console
-      console.error('AccountTypeOrmRepository:31 => ', err);
       await queryRunner.rollbackTransaction();
       throw err;
     } finally {
@@ -52,14 +39,12 @@ export class AccountTypeOrmRepository
 
   async getAllUserAccount(
     userId: string
-  ): Promise<
-    Omit<AccountEntity, 'user' | 'requestsProduct' | 'requestsMusic'>[]
-  > {
+  ): Promise<Omit<AccountEntity, 'requestsProduct' | 'requestsMusic'>[]> {
     const repo = await TypeORMHelpers.getRepository(AccountEntity);
     const query = repo
       .createQueryBuilder('accounts')
-      .innerJoin('accounts.client', 'users')
-      .innerJoinAndSelect('accounts.establishment', 'establishments')
+      .innerJoinAndSelect('accounts.client', 'users')
+      .innerJoin('accounts.establishment', 'establishments')
       .where('users.id = :userId', { userId });
     const accounts = await query.getMany();
     return accounts;

@@ -6,7 +6,12 @@ import {
 import { Controller } from '@/presentation/protocols';
 import { Validator } from '@/validation/protocols';
 import { ValidationComposite, ValidatorBuilder } from '@/validation/validators';
-import { accountRepo, establishmentRepo, idGenerator } from '@/main/singletons';
+import {
+  accountRepo,
+  establishmentRepo,
+  idGenerator,
+  userRepo
+} from '@/main/singletons';
 
 export const makeCreateAccountController = (): Controller => {
   const establishmentIdValidator = ValidatorBuilder.field('establishmentId')
@@ -20,6 +25,7 @@ export const makeCreateAccountController = (): Controller => {
   const usecase = new DBCreateAccount(
     idGenerator,
     establishmentRepo,
+    userRepo,
     accountRepo
   );
 

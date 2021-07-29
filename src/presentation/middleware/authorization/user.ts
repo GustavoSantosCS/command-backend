@@ -32,9 +32,7 @@ export class UserAuthorizationMiddleware implements Middleware {
           return notAuthorizedErro();
         }
 
-        const user = await this.repository.getUserById(
-          payload.body.id as string
-        );
+        const user = await this.repository.getById(payload.body.id as string);
 
         if (!user) {
           return notAuthorizedErro();

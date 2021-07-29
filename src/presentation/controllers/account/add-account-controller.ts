@@ -1,4 +1,4 @@
-import { AccountModel } from '@/domain/models';
+import { AccountEntity } from '@/data/entities';
 import { CreateAccountUseCase } from '@/domain/usecases';
 import {
   Controller,
@@ -45,7 +45,7 @@ export class CreateAccountController implements Controller {
         return badRequest(result.value);
       }
 
-      const newAccount: Omit<AccountModel, 'client'> = {
+      const newAccount: CreateAccountController.Response = {
         id: result.value.id,
         requestsMusic: [],
         requestsProduct: [],
@@ -57,8 +57,8 @@ export class CreateAccountController implements Controller {
       return ok(newAccount);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('CreateAccountController:52 => ', error);
-      return serverError(error);
+      console.error(error);
+      return serverError();
     }
   }
 }
@@ -72,5 +72,5 @@ export namespace CreateAccountController {
     establishmentId: string;
   };
 
-  export type Response = Omit<AccountModel, 'user' | 'establishment'>;
+  export type Response = Omit<AccountEntity, 'client' | 'closedAt'>;
 }

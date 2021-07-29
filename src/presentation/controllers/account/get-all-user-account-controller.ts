@@ -1,4 +1,4 @@
-import { AccountModel } from '@/domain/models';
+import { AccountEntity } from '@/data/entities';
 import { GetAllUserAccountUseCase } from '@/domain/usecases';
 import {
   Controller,
@@ -23,7 +23,7 @@ export class GetAllUserAccountController implements Controller {
       return ok(accounts);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('GetAllUserAccountController:38 => ', error);
+      console.error(error);
       return serverError(error);
     }
   }
@@ -38,7 +38,7 @@ export namespace GetUserAccountController {
   };
 
   export type Response = Omit<
-    AccountModel,
-    'user' | 'requestsProduct' | 'requestsMusic'
+    AccountEntity,
+    'client' | 'requestsProduct' | 'requestsMusic'
   >[];
 }

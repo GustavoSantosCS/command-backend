@@ -14,7 +14,7 @@ export class DBGetAuthenticatedUser implements GetAuthenticatedUserUseCase {
   async getAuthenticatedUser(
     userId: string
   ): Promise<GetAuthenticatedUserUseCase.Result> {
-    const user = await this.getByIdRepo.getUserById(userId);
+    const user = await this.getByIdRepo.getById(userId);
 
     if (!user) {
       return left(new UserNotFoundError());

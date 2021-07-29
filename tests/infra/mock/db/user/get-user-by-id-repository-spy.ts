@@ -12,7 +12,7 @@ export class GetUserByIdRepositorySpy implements GetUserByIdRepository {
     this.error = new Error('any_message');
   }
 
-  async getUserById(
+  async getById(
     id: GetUserByIdRepository.Params
   ): Promise<GetUserByIdRepository.Result> {
     this.calls += 1;

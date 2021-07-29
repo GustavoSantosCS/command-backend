@@ -25,7 +25,7 @@ export class DBUserAvatar implements UpdateUserAvatarUseCase {
     user,
     avatar
   }: UpdateUserAvatarUseCase.Params): Promise<UpdateUserAvatarUseCase.Response> {
-    const userEntity = await this.getUserByIdRepo.getUserById(user.id);
+    const userEntity = await this.getUserByIdRepo.getById(user.id);
 
     if (userEntity.avatar) {
       await this.unlinkAvatar.removeAvatar(userEntity.avatar);

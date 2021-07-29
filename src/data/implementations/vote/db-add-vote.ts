@@ -64,7 +64,7 @@ export class DBAddVote implements AddVoteUseCase {
     if (clientVoted) return left(new ClientAlreadyVotedError(surveyRepo));
     // Validations End
 
-    const clientRepo = await this.getUserIdRepo.getUserById(userId);
+    const clientRepo = await this.getUserIdRepo.getById(userId);
 
     // Created the VoteEntity
     const vote = new VoteEntity();

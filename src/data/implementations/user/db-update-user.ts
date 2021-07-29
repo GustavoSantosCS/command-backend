@@ -33,7 +33,7 @@ export class DBUpdateUser implements UpdateUserUseCase {
   }
 
   async update(newUser: UserModel): Promise<UpdateUserUseCase.Response> {
-    const trackedUser = await this.getUserByIdRepo.getUserById(newUser.id);
+    const trackedUser = await this.getUserByIdRepo.getById(newUser.id);
 
     if (
       !(await this.hashComparer.compare(newUser.password, trackedUser.password))

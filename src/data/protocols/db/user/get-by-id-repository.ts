@@ -1,7 +1,7 @@
 import { UserEntity } from '@/data/entities';
 
 export interface GetUserByIdRepository {
-  getUserById(
+  getById(
     id: GetUserByIdRepository.Params
   ): Promise<GetUserByIdRepository.Result>;
 }
