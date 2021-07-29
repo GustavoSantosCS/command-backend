@@ -47,6 +47,10 @@ export class SurveyTypeOrmRepository
       await queryRunner.commitTransaction();
 
       delete surveyEntity.establishment;
+      surveyEntity.musics = surveyEntity.musics.map(music => {
+        delete music.establishment;
+        return music;
+      });
       return surveyEntity;
     } catch (err) {
       await queryRunner.rollbackTransaction();
@@ -117,18 +121,28 @@ export class SurveyTypeOrmRepository
       );
     }
 
-    if (strategy.includeMusics) {
-      queryBuilder = queryBuilder.leftJoinAndSelect('surveys.musics', 'musics');
-    }
-
     if (strategy.includeSurveyToMusic) {
-      queryBuilder = queryBuilder.innerJoinAndSelect(
-        'surveys.surveyToMusic',
-        'survey_music'
-      );
+      queryBuilder = queryBuilder
+        .innerJoinAndSelect('surveys.surveyToMusic', 'survey_music')
+        .innerJoinAndSelect('survey_music.music', 'musics');
     }
 
-    return queryBuilder.where('surveys.id = :surveyId', { surveyId }).getOne();
+    const survey = await queryBuilder
+      .where('surveys.id = :surveyId', { surveyId })
+      .getOne();
+
+    if (strategy.includeMusics) {
+      const { musics } = await surveyRepo
+        .createQueryBuilder('surveys')
+        .leftJoinAndSelect('surveys.musics', 'musics')
+        .where('surveys.id = :surveyId', { surveyId })
+        .getOne();
+
+      Object.assign(survey, { musics });
+    }
+
+    delete survey.closedAt;
+    return survey;
   }
 
   async remove(

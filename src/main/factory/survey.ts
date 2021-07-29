@@ -3,7 +3,8 @@ import {
   DBGetMusicById,
   DBGetUserEstablishmentById,
   DBGetAllEstablishmentSurvey,
-  DBCloseSurvey
+  DBCloseSurvey,
+  DBGetSurveyById
 } from '@/data/implementations';
 import {
   EstablishmentTypeOrmRepository,
@@ -14,7 +15,8 @@ import { UUIDAdapter } from '@/infra/uuid-adapter';
 import {
   CloseSurveyController,
   GetAllEstablishmentSurveyController,
-  AddSurveyController
+  AddSurveyController,
+  GetSurveyByIdController
 } from '@/presentation/controllers/survey';
 import { Controller } from '@/presentation/protocols';
 import { ValidationComposite, ValidatorBuilder } from '@/validation/validators';
@@ -66,4 +68,10 @@ export const makeGetAllEstablishmentSurveyController = (): Controller => {
 export const makeCloseSurveyController = (): Controller => {
   const usecase = new DBCloseSurvey(surveyRepo, surveyRepo);
   return new CloseSurveyController(usecase);
+};
+
+export const makeGetSurveyByIdController = (): Controller => {
+  const usecase = new DBGetSurveyById(surveyRepo);
+
+  return new GetSurveyByIdController(usecase);
 };
