@@ -10,20 +10,20 @@ export class DbGetAllAccountRequestProduct
   implements GetAllAccountRequestProductUseCase
 {
   private readonly getAllRepo: GetAllAccountRequestProductRepository;
-  private readonly getByIdRepo: GetAccountByIdRepository;
+  private readonly getAccountRepo: GetAccountByIdRepository;
 
   constructor(
     getAllRepo: GetAllAccountRequestProductRepository,
     getByIdRepo: GetAccountByIdRepository
   ) {
-    this.getByIdRepo = getByIdRepo;
+    this.getAccountRepo = getByIdRepo;
     this.getAllRepo = getAllRepo;
   }
 
   async getAllAccountRequestsProduct(
     accountId: string
   ): Promise<GetAllAccountRequestProductUseCase.Result> {
-    const account = await this.getByIdRepo.getById(accountId);
+    const account = await this.getAccountRepo.getById(accountId);
     if (!account) return left(new AccountNotFoundError());
 
     const requestsProduct = await this.getAllRepo.getAllAccountRequestsProduct(

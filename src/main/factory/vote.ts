@@ -1,20 +1,8 @@
 import { DBAddVote } from '@/data/implementations';
-import { IDGenerator } from '@/data/protocols';
-import {
-  MusicTypeOrmRepository,
-  SurveyTypeOrmRepository,
-  UserTypeOrmRepository,
-  VoteTypeOrmRepository
-} from '@/infra/db/typeorm';
-import { UUIDAdapter } from '@/infra/uuid-adapter';
 import { AddVoteController } from '@/presentation/controllers/vote';
 import { Controller } from '@/presentation/protocols';
 import { ValidationComposite, ValidatorBuilder } from '@/validation/validators';
-
-const surveyRepo = new SurveyTypeOrmRepository();
-const userRepo = new UserTypeOrmRepository();
-const voteRepo = new VoteTypeOrmRepository();
-const idGenerator: IDGenerator = new UUIDAdapter();
+import { idGenerator, surveyRepo, userRepo, voteRepo } from '@/main/singletons';
 
 export const makeAddVoteController = (): Controller => {
   const usecase = new DBAddVote(surveyRepo, userRepo, voteRepo, idGenerator);

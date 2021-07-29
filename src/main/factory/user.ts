@@ -1,12 +1,9 @@
-import { UserTypeOrmRepository } from '@/infra/db/typeorm';
-import { BcryptAdapter } from '@/infra/cryptography';
 import {
   DBGetAuthenticatedUser,
   DBUpdateUser,
   DBUserAvatar,
   DBAddUser
 } from '@/data/implementations';
-import { HashComparer, Hasher, IDGenerator } from '@/data/protocols';
 import { Validator } from '@/validation/protocols';
 import { ValidatorBuilder, ValidationComposite } from '@/validation/validators';
 import { Controller } from '@/presentation/protocols';
@@ -16,15 +13,8 @@ import {
   UpdateUserController,
   UpdateUserAvatarController
 } from '@/presentation/controllers/user';
+import { hasher, idGenerator, unlinkAvatar, userRepo } from '@/main/singletons';
 
-import { UnlinkAvatarDisc } from '@/infra/unlink-avatar';
-import { UUIDAdapter } from '@/infra/uuid-adapter';
-
-const salt = 12;
-const repository = new UserTypeOrmRepository();
-const idGenerator: IDGenerator = new UUIDAdapter();
-const hasher: Hasher = new BcryptAdapter(salt);
-const comparatorHasher: HashComparer = new BcryptAdapter(salt);
 export const makeAddUserController = (): Controller => {
   const nameValidator = ValidatorBuilder.field('name')
     .required('Nome não informado')
@@ -53,7 +43,7 @@ export const makeAddUserController = (): Controller => {
     ...confirmPasswordValidator
   ]);
 
-  const addUseCase = new DBAddUser(idGenerator, hasher, repository, repository);
+  const addUseCase = new DBAddUser(idGenerator, hasher, userRepo, userRepo);
   return new AddUserController(validator, addUseCase);
 };
 
@@ -78,25 +68,24 @@ export const makeUpdateUserController = (): Controller => {
   ]);
 
   const updateUseCase = new DBUpdateUser(
-    repository,
+    userRepo,
     hasher,
-    comparatorHasher,
-    repository,
-    repository
+    hasher,
+    userRepo,
+    userRepo
   );
 
   return new UpdateUserController(validator, updateUseCase);
 };
 
 export const makeGetAuthenticatedUserController = (): Controller => {
-  const usecase = new DBGetAuthenticatedUser(new UserTypeOrmRepository());
+  const usecase = new DBGetAuthenticatedUser(userRepo);
 
   return new GetAuthenticatedUserController(usecase);
 };
 
 export const makerAddAvatarController = (): Controller => {
-  const unlinkAvatar = new UnlinkAvatarDisc();
-  const usecase = new DBUserAvatar(repository, unlinkAvatar, repository);
+  const usecase = new DBUserAvatar(userRepo, unlinkAvatar, userRepo);
 
   return new UpdateUserAvatarController(usecase);
 };

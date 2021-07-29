@@ -58,7 +58,6 @@ export class RequestProductTypeOrmRepository
     const requestProductRepo = await TypeORMHelpers.getRepository(
       RequestProductEntity
     );
-    await new Promise(resolve => setTimeout(resolve, 15000));
     const userRequestProduct = await requestProductRepo
       .createQueryBuilder('requests_product')
       .innerJoin('requests_product.account', 'accounts')

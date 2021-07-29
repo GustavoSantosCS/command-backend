@@ -7,7 +7,7 @@ import {
 
 export default (router: Router): void => {
   router.post(
-    '/account/:accountId/request/product',
+    '/request/product',
     adapterRoute(makeCreateRequestProductController())
   );
 

@@ -1,12 +1,12 @@
 import { DBCreateAccount, DBGetAllUserAccount } from '@/data/implementations';
-import { EstablishmentTypeOrmRepository } from '@/infra/db/typeorm';
-import { AccountTypeOrmRepository } from '@/infra/db/typeorm/account-typeorm-repository';
-import { UUIDAdapter } from '@/infra/uuid-adapter';
-import { CreateAccountController } from '@/presentation/controllers/account/add-account-controller';
-import { GetAllUserAccountController } from '@/presentation/controllers/account/get-all-user-account-controller';
+import {
+  CreateAccountController,
+  GetAllUserAccountController
+} from '@/presentation/controllers/account';
 import { Controller } from '@/presentation/protocols';
 import { Validator } from '@/validation/protocols';
 import { ValidationComposite, ValidatorBuilder } from '@/validation/validators';
+import { accountRepo, establishmentRepo, idGenerator } from '@/main/singletons';
 
 export const makeCreateAccountController = (): Controller => {
   const establishmentIdValidator = ValidatorBuilder.field('establishmentId')
@@ -18,15 +18,15 @@ export const makeCreateAccountController = (): Controller => {
   ]);
 
   const usecase = new DBCreateAccount(
-    new UUIDAdapter(),
-    new EstablishmentTypeOrmRepository(),
-    new AccountTypeOrmRepository()
+    idGenerator,
+    establishmentRepo,
+    accountRepo
   );
 
   return new CreateAccountController(validator, usecase);
 };
 
 export const makeGetAllUserAccountController = (): Controller => {
-  const usecase = new DBGetAllUserAccount(new AccountTypeOrmRepository());
+  const usecase = new DBGetAllUserAccount(accountRepo);
   return new GetAllUserAccountController(usecase);
 };

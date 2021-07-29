@@ -9,12 +9,6 @@ import {
   DBUpdatePlaylist
 } from '@/data/implementations/playlist';
 import {
-  EstablishmentTypeOrmRepository,
-  MusicTypeOrmRepository,
-  PlaylistTypeOrmRepository
-} from '@/infra/db/typeorm';
-import { UUIDAdapter } from '@/infra/uuid-adapter';
-import {
   AddPlayListController,
   GetCurrentEstablishmentPlaylistController,
   NextPlaylistMusicController,
@@ -24,15 +18,15 @@ import {
   UpdateMusicsOfPlaylistController,
   UpdatePlaylistController
 } from '@/presentation/controllers/playlist';
-
 import { Controller } from '@/presentation/protocols';
 import { Validator } from '@/validation/protocols';
 import { ValidationComposite, ValidatorBuilder } from '@/validation/validators';
-
-const repoEstablishment = new EstablishmentTypeOrmRepository();
-const repoPlayList = new PlaylistTypeOrmRepository();
-const repoMusic = new MusicTypeOrmRepository();
-const idGenerator = new UUIDAdapter();
+import {
+  establishmentRepo,
+  idGenerator,
+  musicRepo,
+  playlistRepo
+} from '@/main/singletons';
 
 export const makeAddPlaylistController = (): Controller => {
   const nameValidator = ValidatorBuilder.field('name')
@@ -57,9 +51,9 @@ export const makeAddPlaylistController = (): Controller => {
 
   const usecase = new DBAddPlayList(
     idGenerator,
-    repoEstablishment,
-    repoPlayList,
-    repoMusic
+    establishmentRepo,
+    playlistRepo,
+    musicRepo
   );
 
   return new AddPlayListController(validator, usecase);
@@ -75,8 +69,8 @@ export const makeGetCurrentEstablishmentPlaylistController = (): Controller => {
   ]);
 
   const usecase = new DBGetCurrentEstablishmentPlaylist(
-    repoEstablishment,
-    repoPlayList
+    establishmentRepo,
+    playlistRepo
   );
 
   return new GetCurrentEstablishmentPlaylistController(validator, usecase);
@@ -109,9 +103,9 @@ export const makeUpdatePlaylistController = (): Controller => {
   ]);
 
   const usecase = new DBUpdatePlaylist(
-    repoPlayList,
-    repoPlayList,
-    repoPlayList
+    playlistRepo,
+    playlistRepo,
+    playlistRepo
   );
   return new UpdatePlaylistController(validator, usecase);
 };
@@ -137,9 +131,9 @@ export const makeUpdateMusicsOfPlaylistController = (): Controller => {
   ]);
 
   const usecase = new DBUpdateMusicsOfPlaylist(
-    repoPlayList,
-    repoPlayList,
-    repoMusic,
+    playlistRepo,
+    playlistRepo,
+    musicRepo,
     idGenerator
   );
   return new UpdateMusicsOfPlaylistController(validator, usecase);
@@ -159,7 +153,7 @@ export const makeNextMusicPlaylistController = (): Controller => {
     ...establishmentIdValidator
   ]);
 
-  const usecase = new DBNextMusicOfPlaylist(repoPlayList, repoPlayList);
+  const usecase = new DBNextMusicOfPlaylist(playlistRepo, playlistRepo);
   return new NextPlaylistMusicController(validator, usecase);
 };
 
@@ -177,7 +171,7 @@ export const makePreviousMusicPlaylistController = (): Controller => {
     ...establishmentIdValidator
   ]);
 
-  const usecase = new DBPreviousMusicOfPlaylist(repoPlayList, repoPlayList);
+  const usecase = new DBPreviousMusicOfPlaylist(playlistRepo, playlistRepo);
   return new PreviousPlaylistMusicController(validator, usecase);
 };
 
@@ -195,7 +189,7 @@ export const makeStartMusicPlaylistController = (): Controller => {
     ...establishmentIdValidator
   ]);
 
-  const usecase = new DBStartMusicOfPlaylist(repoPlayList, repoPlayList);
+  const usecase = new DBStartMusicOfPlaylist(playlistRepo, playlistRepo);
   return new StartPlaylistMusicController(validator, usecase);
 };
 
@@ -213,6 +207,6 @@ export const makeStopMusicPlaylistController = (): Controller => {
     ...establishmentIdValidator
   ]);
 
-  const usecase = new DBStopMusicOfPlaylist(repoPlayList, repoPlayList);
+  const usecase = new DBStopMusicOfPlaylist(playlistRepo, playlistRepo);
   return new StopPlaylistMusicController(validator, usecase);
 };

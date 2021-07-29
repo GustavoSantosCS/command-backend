@@ -46,6 +46,7 @@ export class AccountTypeOrmRepository
   async getById(accountId: string): Promise<GetAccountByIdRepository.Result> {
     const repository = await TypeORMHelpers.getRepository(AccountEntity);
     const accountFound = await repository.findOne(accountId);
+
     return accountFound;
   }
 

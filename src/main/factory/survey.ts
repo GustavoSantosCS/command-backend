@@ -7,12 +7,6 @@ import {
   DBGetSurveyById
 } from '@/data/implementations';
 import {
-  EstablishmentTypeOrmRepository,
-  MusicTypeOrmRepository,
-  SurveyTypeOrmRepository
-} from '@/infra/db/typeorm';
-import { UUIDAdapter } from '@/infra/uuid-adapter';
-import {
   CloseSurveyController,
   GetAllEstablishmentSurveyController,
   AddSurveyController,
@@ -20,10 +14,12 @@ import {
 } from '@/presentation/controllers/survey';
 import { Controller } from '@/presentation/protocols';
 import { ValidationComposite, ValidatorBuilder } from '@/validation/validators';
-
-const establishmentRepo = new EstablishmentTypeOrmRepository();
-const musicRepo = new MusicTypeOrmRepository();
-const surveyRepo = new SurveyTypeOrmRepository();
+import {
+  establishmentRepo,
+  idGenerator,
+  musicRepo,
+  surveyRepo
+} from '@/main/singletons';
 
 export const makeAddSurveyController = (): Controller => {
   const questionValidator = ValidatorBuilder.field('question')
@@ -52,7 +48,7 @@ export const makeAddSurveyController = (): Controller => {
     new DBGetUserEstablishmentById(establishmentRepo),
     new DBGetMusicById(musicRepo),
     surveyRepo,
-    new UUIDAdapter()
+    idGenerator
   );
   return new AddSurveyController(validator, usecase);
 };
@@ -72,6 +68,5 @@ export const makeCloseSurveyController = (): Controller => {
 
 export const makeGetSurveyByIdController = (): Controller => {
   const usecase = new DBGetSurveyById(surveyRepo);
-
   return new GetSurveyByIdController(usecase);
 };

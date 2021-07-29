@@ -8,7 +8,6 @@ import {
 import { avatarMulter } from '@/presentation/middleware';
 import { adapterRoute } from '@/main/adapter/express';
 import { authorization } from '@/main/middleware';
-import { makeGetAllUserAccountController } from '../factory/account';
 
 export default (router: Router): void => {
   router.post(
@@ -24,9 +23,4 @@ export default (router: Router): void => {
   );
   router.put('/user', authorization, adapterRoute(makeUpdateUserController()));
   router.post('/user', adapterRoute(makeAddUserController()));
-  router.get(
-    '/user/accounts',
-    authorization,
-    adapterRoute(makeGetAllUserAccountController())
-  );
 };

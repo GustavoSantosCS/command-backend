@@ -4,11 +4,7 @@ import {
   DBGetAllEstablishmentsUser,
   DBGetUserEstablishmentById
 } from '@/data/implementations';
-
-import { IDGenerator } from '@/data/protocols';
 import { CATEGORY } from '@/domain/models';
-import { EstablishmentTypeOrmRepository } from '@/infra/db/typeorm';
-import { UUIDAdapter } from '@/infra/uuid-adapter';
 import {
   AddEstablishmentController,
   GetAllUserEstablishmentsController,
@@ -18,9 +14,7 @@ import {
 import { Controller } from '@/presentation/protocols';
 import { Validator } from '@/validation/protocols';
 import { ValidationComposite, ValidatorBuilder } from '@/validation/validators';
-
-const repository = new EstablishmentTypeOrmRepository();
-const idGenerator: IDGenerator = new UUIDAdapter();
+import { idGenerator, establishmentRepo } from '@/main/singletons';
 
 export const makeAddEstablishmentController = (): Controller => {
   const nameValidator = ValidatorBuilder.field('name')
@@ -43,23 +37,21 @@ export const makeAddEstablishmentController = (): Controller => {
     ...categoryValidator,
     ...descriptionValidator
   ]);
-
-  const usecase = new DBAddEstablishment(idGenerator, repository);
-
+  const usecase = new DBAddEstablishment(idGenerator, establishmentRepo);
   return new AddEstablishmentController(validator, usecase);
 };
 
 export const makeGetAllEstablishmentController = (): Controller => {
-  const usecase = new DBGetAllEstablishments(repository);
+  const usecase = new DBGetAllEstablishments(establishmentRepo);
   return new GetAllEstablishmentsController(usecase);
 };
 
 export const makeGetAllUserEstablishmentController = (): Controller => {
-  const usecase = new DBGetAllEstablishmentsUser(repository);
+  const usecase = new DBGetAllEstablishmentsUser(establishmentRepo);
   return new GetAllUserEstablishmentsController(usecase);
 };
 
 export const makeGetUserEstablishmentByIdController = (): Controller => {
-  const usecase = new DBGetUserEstablishmentById(repository);
+  const usecase = new DBGetUserEstablishmentById(establishmentRepo);
   return new GetUserEstablishmentByIdController(usecase);
 };

@@ -27,13 +27,13 @@ export class CreateRequestProductController implements Controller {
     >
   ): Promise<HttpResponse<CreateRequestProductController.Response>> {
     try {
-      const { body, params } = httpRequest;
+      const { body } = httpRequest;
       const resultValidator = this.validator.validate({
         productId: body.productId,
         obs: body.obs,
         total: parseFloat(body.total),
         amountOfProduct: parseInt(body.amountOfProduct),
-        accountId: params.accountId
+        accountId: body.accountId
       });
 
       if (resultValidator.isLeft()) {
@@ -43,7 +43,7 @@ export class CreateRequestProductController implements Controller {
       const resultCreate = await this.createRequestProduct.createRequestProduct(
         {
           productId: body?.productId,
-          accountId: params.accountId,
+          accountId: body.accountId,
           obs: body?.obs,
           total: parseFloat(body?.total),
           amountOfProduct: parseInt(body?.amountOfProduct)
@@ -68,7 +68,7 @@ export class CreateRequestProductController implements Controller {
       return ok(newRequestProduct);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('CreateRequestProductController:71 => ', error);
+      console.error(error);
       return serverError();
     }
   }
@@ -84,11 +84,10 @@ export namespace CreateRequestProductController {
     obs: string;
     total: string;
     amountOfProduct: string;
-  };
-
-  export type DTOParam = {
     accountId: string;
   };
+
+  export type DTOParam = null;
 
   export type Response = Omit<RequestProductModel, 'account' | 'closedAt'>;
 }

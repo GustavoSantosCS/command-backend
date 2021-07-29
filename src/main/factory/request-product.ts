@@ -3,18 +3,17 @@ import {
   DbGetAllAccountRequestProduct
 } from '@/data/implementations';
 import {
-  EstablishmentTypeOrmRepository,
-  ProductTypeOrmRepository,
-  RequestProductTypeOrmRepository
-} from '@/infra/db/typeorm';
-import { AccountTypeOrmRepository } from '@/infra/db/typeorm/account-typeorm-repository';
-import { UUIDAdapter } from '@/infra/uuid-adapter';
-import { CreateRequestProductController } from '@/presentation/controllers/request-product';
-import { GetAllAccountRequestProductController } from '@/presentation/controllers/request-product/get-all-account-request-product-controller';
+  CreateRequestProductController,
+  GetAllAccountRequestProductController
+} from '@/presentation/controllers/request-product';
 import { Controller } from '@/presentation/protocols';
 import { ValidationComposite, ValidatorBuilder } from '@/validation/validators';
-
-const requestProductRepository = new RequestProductTypeOrmRepository();
+import {
+  accountRepo,
+  idGenerator,
+  productRepo,
+  requestProductRepo
+} from '@/main/singletons';
 
 export const makeCreateRequestProductController = (): Controller => {
   const productValidator = ValidatorBuilder.field('productId')
@@ -48,10 +47,10 @@ export const makeCreateRequestProductController = (): Controller => {
   ]);
 
   const usecase = new DBCreateRequestProduct(
-    new UUIDAdapter(),
-    new AccountTypeOrmRepository(),
-    new ProductTypeOrmRepository(),
-    requestProductRepository
+    idGenerator,
+    accountRepo,
+    productRepo,
+    requestProductRepo
   );
 
   return new CreateRequestProductController(validator, usecase);
@@ -59,8 +58,8 @@ export const makeCreateRequestProductController = (): Controller => {
 
 export const makeGetAllRequestProductController = (): Controller => {
   const usecase = new DbGetAllAccountRequestProduct(
-    requestProductRepository,
-    new AccountTypeOrmRepository()
+    requestProductRepo,
+    accountRepo
   );
   return new GetAllAccountRequestProductController(usecase);
 };

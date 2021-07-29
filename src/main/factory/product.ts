@@ -4,11 +4,6 @@ import {
   DBGetProductByID
 } from '@/data/implementations';
 import {
-  EstablishmentTypeOrmRepository,
-  ProductTypeOrmRepository
-} from '@/infra/db/typeorm';
-import { UUIDAdapter } from '@/infra/uuid-adapter';
-import {
   AddProductController,
   GetProductByIdController,
   GetAllEstablishmentProductsController
@@ -16,16 +11,10 @@ import {
 import { Controller } from '@/presentation/protocols';
 import { Validator } from '@/validation/protocols';
 import { ValidationComposite, ValidatorBuilder } from '@/validation/validators';
-
-const establishmentRepository = new EstablishmentTypeOrmRepository();
-const productRepository = new ProductTypeOrmRepository();
+import { establishmentRepo, idGenerator, productRepo } from '@/main/singletons';
 
 export const makeAddProductController = (): Controller => {
-  const usecase = new DBAddProduct(
-    new UUIDAdapter(),
-    establishmentRepository,
-    productRepository
-  );
+  const usecase = new DBAddProduct(idGenerator, establishmentRepo, productRepo);
 
   const nameValidator = ValidatorBuilder.field('name')
     .required('Nome não informado')
@@ -57,14 +46,14 @@ export const makeAddProductController = (): Controller => {
 };
 
 export const makerGetProductByIdController = (): Controller => {
-  const usecase = new DBGetProductByID(productRepository);
+  const usecase = new DBGetProductByID(productRepo);
   return new GetProductByIdController(usecase);
 };
 
 export const makeGetAllEstablishmentProductsController = (): Controller => {
   const usecase = new DBGetAllEstablishmentProducts(
-    establishmentRepository,
-    productRepository
+    establishmentRepo,
+    productRepo
   );
   return new GetAllEstablishmentProductsController(usecase);
 };
