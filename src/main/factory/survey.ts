@@ -45,8 +45,8 @@ export const makeAddSurveyController = (): Controller => {
   ]);
 
   const usecase = new DBAddSurvey(
-    new DBGetUserEstablishmentById(establishmentRepo),
-    new DBGetMusicById(musicRepo),
+    establishmentRepo,
+    musicRepo,
     surveyRepo,
     idGenerator
   );

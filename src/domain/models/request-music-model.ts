@@ -1,9 +1,9 @@
-import { AccountModel } from './account-model';
+import { AccountEntity } from '@/data/entities';
 import { MusicModel } from './music-model';
 
 export type RequestMusicModel = {
   id: string;
   music: MusicModel;
-  account: AccountModel;
+  account: AccountEntity;
   createdAt: Date;
 };

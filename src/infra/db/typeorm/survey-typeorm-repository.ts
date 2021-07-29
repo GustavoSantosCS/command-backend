@@ -1,20 +1,13 @@
 /* eslint-disable no-console */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-param-reassign */
-import {
-  EstablishmentEntity,
-  MusicEntity,
-  SurveyEntity,
-  SurveyMusicEntity
-} from '@/data/entities';
+import { SurveyEntity } from '@/data/entities';
 import {
   AddSurveyRepository,
   CloseSurveyRepository,
   GetAllEstablishmentSurveyRepository,
   GetSurveyByIdRepository
 } from '@/data/protocols';
-import { SurveyModel } from '@/domain/models';
-import { IsNull, Not } from 'typeorm';
 import { TypeORMHelpers } from './typeorm-helper';
 
 export class SurveyTypeOrmRepository
@@ -24,34 +17,26 @@ export class SurveyTypeOrmRepository
     GetSurveyByIdRepository,
     CloseSurveyRepository
 {
-  async addSurvey(survey: SurveyModel): Promise<SurveyEntity> {
+  async addSurvey(survey: SurveyEntity): Promise<SurveyEntity> {
     const queryRunner = await TypeORMHelpers.createQueryRunner();
     await queryRunner.startTransaction();
 
     try {
-      let surveyEntity = new SurveyEntity();
-      surveyEntity.id = survey.id;
-      surveyEntity.question = survey.question;
-      surveyEntity.establishment = survey.establishment as EstablishmentEntity;
-      surveyEntity = await queryRunner.manager.save(surveyEntity);
-      surveyEntity.musics = [];
-      for await (const choice of survey.choices) {
-        let surveyMusicEntity = new SurveyMusicEntity();
-        surveyMusicEntity.id = choice.id;
-        surveyMusicEntity.music = choice.music as MusicEntity;
-        surveyMusicEntity.survey = surveyEntity;
-        surveyMusicEntity.position = choice.position;
-        surveyMusicEntity = await queryRunner.manager.save(surveyMusicEntity);
-        surveyEntity.musics.push(surveyMusicEntity.music);
-      }
+      await queryRunner.manager.save(survey);
+      await Promise.all(
+        survey.surveyToMusic.map(sm => queryRunner.manager.save(sm))
+      );
       await queryRunner.commitTransaction();
 
-      delete surveyEntity.establishment;
-      surveyEntity.musics = surveyEntity.musics.map(music => {
-        delete music.establishment;
-        return music;
+      survey.surveyToMusic = survey.surveyToMusic.map(sm => {
+        delete sm.survey;
+        delete sm.music.establishment;
+        return sm;
       });
-      return surveyEntity;
+
+      delete survey.establishment.manager;
+      delete survey.establishment.image;
+      return survey;
     } catch (err) {
       await queryRunner.rollbackTransaction();
       throw err;
@@ -155,6 +140,10 @@ export class SurveyTypeOrmRepository
       if (includeClose) votesQueryBuilder = votesQueryBuilder.withDeleted();
       const surveyAndVotes = await votesQueryBuilder.getOne();
       Object.assign(survey, { pollVotes: surveyAndVotes?.pollVotes || [] });
+      survey.pollVotes = survey?.pollVotes.map(s => {
+        delete s.client.password;
+        return s;
+      });
     }
 
     return survey;

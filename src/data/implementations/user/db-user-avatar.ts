@@ -1,3 +1,4 @@
+import { AvatarEntity } from '@/data/entities';
 import {
   GetUserByIdRepository,
   UnlinkAvatar,
@@ -22,19 +23,23 @@ export class DBUserAvatar implements UpdateUserAvatarUseCase {
   }
 
   async saveAvatar({
-    user,
+    userId,
     avatar
   }: UpdateUserAvatarUseCase.Params): Promise<UpdateUserAvatarUseCase.Response> {
-    const userEntity = await this.getUserByIdRepo.getById(user.id);
+    const userRepo = await this.getUserByIdRepo.getById(userId);
+    const oldAvatar = { ...userRepo.avatar };
 
-    if (userEntity.avatar) {
-      await this.unlinkAvatar.removeAvatar(userEntity.avatar);
+    const newAvatar = new AvatarEntity();
+    newAvatar.originalName = avatar.originalName;
+    newAvatar.persistentName = avatar.persistentName;
+    newAvatar.target = avatar.target;
+    newAvatar.user = userRepo;
+
+    const result = await this.avatarRepo.saveAvatar(newAvatar);
+
+    if (oldAvatar) {
+      await this.unlinkAvatar.removeAvatar(oldAvatar);
     }
-
-    const result = await this.avatarRepo.saveInfoAvatar({
-      user: { id: user.id },
-      avatar
-    });
 
     return right(result);
   }

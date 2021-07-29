@@ -1,4 +1,4 @@
-import { SurveyModel } from '@/domain/models';
+import { SurveyEntity } from '@/data/entities';
 import { GetSurveyByIdUseCase } from '@/domain/usecases';
 import {
   Controller,
@@ -46,5 +46,5 @@ export namespace GetSurveyByIdController {
     surveyId: string;
   };
 
-  export type Response = HttpResponse<SurveyModel>;
+  export type Response = HttpResponse<SurveyEntity>;
 }

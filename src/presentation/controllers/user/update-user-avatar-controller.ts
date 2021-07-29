@@ -1,4 +1,4 @@
-import { AvatarModel } from '@/domain/models';
+import { AvatarEntity } from '@/data/entities';
 import { UpdateUserAvatarUseCase } from '@/domain/usecases';
 import {
   Controller,
@@ -21,7 +21,7 @@ export class UpdateUserAvatarController implements Controller {
     try {
       const resultUpdateUserAvatar = await this.updateUserAvatar.saveAvatar({
         avatar,
-        user: { id: authenticated.id }
+        userId: authenticated.id
       });
       if (resultUpdateUserAvatar.isLeft()) {
         return serverError(resultUpdateUserAvatar.value);
@@ -46,11 +46,11 @@ export class UpdateUserAvatarController implements Controller {
 // eslint-disable-next-line no-redeclare
 export namespace UpdateUserAvatarController {
   export type DTO = {
-    avatar: AvatarModel;
     authenticated: {
       id: string;
     };
+    avatar: Omit<AvatarEntity, 'user'>;
   };
 
-  export type Response = AvatarModel;
+  export type Response = Omit<AvatarEntity, 'user'>;
 }

@@ -7,7 +7,7 @@ import {
   GetUserByIdRepository,
   UpdateUserRepository
 } from '@/data/protocols';
-import { AvatarModel, UserModel } from '@/domain/models';
+import { UserModel } from '@/domain/models';
 
 export class UserTypeOrmRepository
   implements
@@ -35,29 +35,33 @@ export class UserTypeOrmRepository
     return result;
   }
 
-  async saveInfoAvatar({
-    user,
-    avatar
-  }: {
-    user: { id: string };
-    avatar: AvatarModel;
-  }): Promise<AvatarEntity> {
-    const userRepo = await TypeORMHelpers.getRepository(UserEntity);
-    const avatarEntity = new AvatarEntity(avatar);
+  async saveAvatar(avatar: AvatarEntity): Promise<AvatarEntity> {
+    const queryRunner = await TypeORMHelpers.createQueryRunner();
+    await queryRunner.startTransaction();
 
-    const userEntity = await userRepo.findOne(user.id, {
-      relations: ['avatar']
-    });
-    const oldAvatar = userEntity.avatar;
-    userEntity.avatar = avatarEntity;
+    try {
+      const userEntity = await queryRunner.manager.findOne(
+        UserEntity,
+        avatar.user.id,
+        { relations: ['avatar'] }
+      );
 
-    const avatarRepo = await TypeORMHelpers.getRepository(AvatarEntity);
-    const resultAvatar = await avatarRepo.save(avatarEntity);
-    if (oldAvatar) await avatarRepo.remove(oldAvatar);
+      const oldAvatar = userEntity.avatar;
+      userEntity.avatar = avatar;
 
-    await userRepo.save(userEntity);
+      const avatarEntity = await queryRunner.manager.save(avatar);
+      if (oldAvatar) await queryRunner.manager.remove(oldAvatar);
 
-    return resultAvatar;
+      await queryRunner.manager.save(userEntity);
+      await queryRunner.commitTransaction();
+
+      return avatarEntity;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   async getById(id: string): Promise<UserEntity> {

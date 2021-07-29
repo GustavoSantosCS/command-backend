@@ -1,28 +1,36 @@
-import { EstablishmentEntity, MusicEntity } from '@/data/entities';
-import { IDGenerator, AddSurveyRepository } from '@/data/protocols';
-import { MusicNotFoundError } from '@/domain/errors';
-import { SurveyModel } from '@/domain/models';
 import {
-  GetUserEstablishmentByIdUseCase,
-  GetMusicByIdUseCase,
-  AddSurveyUseCase
-} from '@/domain/usecases';
+  EstablishmentEntity,
+  MusicEntity,
+  SurveyEntity,
+  SurveyMusicEntity
+} from '@/data/entities';
+import {
+  IDGenerator,
+  AddSurveyRepository,
+  GetEstablishmentByIdRepository,
+  GetMusicByIdRepository
+} from '@/data/protocols';
+import {
+  EstablishmentNotFoundError,
+  MusicNotFoundError
+} from '@/domain/errors';
+import { AddSurveyUseCase } from '@/domain/usecases';
 import { left, right } from '@/shared/either';
 
 export class DBAddSurvey implements AddSurveyUseCase {
-  private readonly getEstablishmentById: GetUserEstablishmentByIdUseCase;
-  private readonly getMusicById: GetMusicByIdUseCase;
+  private readonly getEstablishment: GetEstablishmentByIdRepository;
+  private readonly getMusic: GetMusicByIdRepository;
   private readonly addSurveyRepo: AddSurveyRepository;
   private readonly idGenerator: IDGenerator;
 
   constructor(
-    getEstablishmentById: GetUserEstablishmentByIdUseCase,
-    getMusicById: GetMusicByIdUseCase,
+    getEstablishment: GetEstablishmentByIdRepository,
+    getMusic: GetMusicByIdRepository,
     addSurveyRepo: AddSurveyRepository,
     idGenerator: IDGenerator
   ) {
-    this.getEstablishmentById = getEstablishmentById;
-    this.getMusicById = getMusicById;
+    this.getEstablishment = getEstablishment;
+    this.getMusic = getMusic;
     this.addSurveyRepo = addSurveyRepo;
     this.idGenerator = idGenerator;
   }
@@ -33,38 +41,37 @@ export class DBAddSurvey implements AddSurveyUseCase {
     musics,
     question
   }: AddSurveyUseCase.Param): Promise<AddSurveyUseCase.Result> {
-    const establishment =
-      await this.getEstablishmentById.getUserEstablishmentById(
-        userId,
-        establishmentId
-      );
-    if (establishment.isLeft()) {
-      return left(establishment.value);
-    }
+    const establishmentRepo = await this.getEstablishment.getById(
+      establishmentId
+    );
+
+    if (!establishmentRepo || establishmentRepo?.manager.id !== userId)
+      return left(new EstablishmentNotFoundError());
 
     const musicsResult = await Promise.all(
-      musics.map(musicId => this.getMusicById.getMusicById(musicId))
+      musics.map(musicId => this.getMusic.getById(musicId))
     );
-    if (musicsResult.some(music => music.isLeft())) {
+
+    if (musicsResult.some(music => !music)) {
       return left(
-        musicsResult
-          .filter(music => music.isLeft())
-          .map(music => music.value) as MusicNotFoundError[]
+        musicsResult.filter(music => !music).map(() => new MusicNotFoundError())
       );
     }
 
-    const survey: SurveyModel = {
-      id: this.idGenerator.generate(),
-      establishment: establishment.value as EstablishmentEntity,
-      question,
-      choices: musicsResult.map(({ value }, index) => ({
-        id: this.idGenerator.generate(),
-        music: value as MusicEntity,
-        votes: 0,
-        position: index + 1
-      }))
-    };
-    const result = await this.addSurveyRepo.addSurvey(survey);
+    const newSurvey = new SurveyEntity();
+    newSurvey.id = this.idGenerator.generate();
+    newSurvey.establishment = establishmentRepo;
+    newSurvey.surveyToMusic = musicsResult.map((m, i) => {
+      const surveyToMusic = new SurveyMusicEntity();
+      surveyToMusic.id = this.idGenerator.generate();
+      surveyToMusic.music = m;
+      surveyToMusic.position = i + 1;
+      surveyToMusic.survey = newSurvey;
+      return surveyToMusic;
+    });
+    newSurvey.question = question;
+
+    const result = await this.addSurveyRepo.addSurvey(newSurvey);
 
     return right(result);
   }

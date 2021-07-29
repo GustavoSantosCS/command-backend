@@ -1,5 +1,5 @@
 import { AvatarEntity } from '@/data/entities';
-import { AvatarModel } from '@/domain/models';
+
 import { Either } from '@/shared/either';
 
 export interface UpdateUserAvatarUseCase {
@@ -11,10 +11,8 @@ export interface UpdateUserAvatarUseCase {
 // eslint-disable-next-line no-redeclare
 export namespace UpdateUserAvatarUseCase {
   export type Params = {
-    user: {
-      id: string;
-    };
-    avatar: AvatarModel;
+    userId: string;
+    avatar: Omit<AvatarEntity, 'user'>;
   };
 
   export type Response = Either<undefined, AvatarEntity>;

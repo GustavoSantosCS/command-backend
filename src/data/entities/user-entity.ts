@@ -49,7 +49,7 @@ export class UserEntity {
   updatedAt: Date;
 
   @DeleteDateColumn({ name: 'deleted_at' })
-  deletedAt: Date;
+  deletedAt?: Date;
 
   constructor(user: UserModel) {
     Object.assign(this, user);

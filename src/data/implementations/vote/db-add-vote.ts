@@ -27,7 +27,6 @@ export class DBAddVote implements AddVoteUseCase {
     idGenerator: IDGenerator
   ) {
     this.getSurveyIdRepo = getSurveyIdRepo;
-
     this.getUserIdRepo = getUserIdRepo;
     this.saveVoteRepo = saveVoteRepo;
     this.idGenerator = idGenerator;

@@ -1,5 +1,3 @@
-export * from './account-model';
-export * from './avatar-model';
 export * from './establishment-image-model';
 export * from './establishment-model';
 export * from './image-model';
@@ -10,4 +8,3 @@ export * from './product-model';
 export * from './request-music-model';
 export * from './request-product-model';
 export * from './user-model';
-export * from './survey-model';

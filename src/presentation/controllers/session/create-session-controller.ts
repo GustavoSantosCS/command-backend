@@ -1,4 +1,4 @@
-import { UserModel } from '@/domain/models';
+import { UserEntity } from '@/data/entities';
 import { CreateSessionUseCase } from '@/domain/usecases';
 import {
   Controller,
@@ -36,18 +36,8 @@ export class CreateSessionController implements Controller {
       }
 
       const { token, user } = resultCreateSession.value;
-      const session: CreateSessionController.Response = {
-        token,
-        user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          avatar: user.avatar,
-          createdAt: user.createdAt,
-          updatedAt: user.updatedAt
-        }
-      };
-      return ok(session);
+
+      return ok({ token, user });
     } catch (error) {
       return serverError(error);
     }
@@ -63,6 +53,9 @@ export namespace CreateSessionController {
 
   export type Response = {
     token: string;
-    user: Omit<UserModel, 'password' | 'establishments'>;
+    user: Omit<
+      UserEntity,
+      'password' | 'establishments' | 'accounts' | 'pollVotes'
+    >;
   };
 }

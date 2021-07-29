@@ -22,19 +22,19 @@ export class DBCloseSurvey implements CloseSurveyUseCase {
     surveyId: string,
     userId: string
   ): Promise<CloseSurveyUseCase.Result> {
-    const trackedSurvey = await this.getSurveyByIdRepo.getById(surveyId, {
+    const surveyRepo = await this.getSurveyByIdRepo.getById(surveyId, {
       includeEstablishmentAndManager: true,
       includeVotes: true
     });
 
-    if (!trackedSurvey || trackedSurvey?.establishment.manager.id !== userId) {
+    if (!surveyRepo || surveyRepo?.establishment.manager.id !== userId) {
       return left(new SurveyNotFoundError());
     }
 
-    const { pollVotes } = trackedSurvey;
+    const { pollVotes } = surveyRepo;
 
     const closeSurvey = await this.closeSurveyRepo.remove(
-      trackedSurvey,
+      surveyRepo,
       pollVotes?.length !== 0
     );
 

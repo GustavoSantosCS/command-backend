@@ -1,5 +1,5 @@
-import { AvatarModel } from '@/domain/models';
+import { AvatarEntity } from '../entities';
 
 export interface UnlinkAvatar {
-  removeAvatar(oldAvatar: AvatarModel): Promise<void>;
+  removeAvatar(oldAvatar: AvatarEntity): Promise<void>;
 }

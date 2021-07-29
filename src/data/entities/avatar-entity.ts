@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryColumn, OneToOne } from 'typeorm';
-import { AvatarModel } from '@/domain/models';
+
 import { UserEntity } from './user-entity';
 
 @Entity('avatars')
@@ -14,9 +14,5 @@ export class AvatarEntity {
   target: string;
 
   @OneToOne(() => UserEntity, user => user.avatar)
-  user?: UserEntity;
-
-  constructor(avatar: AvatarModel) {
-    Object.assign(this, avatar);
-  }
+  user: UserEntity;
 }

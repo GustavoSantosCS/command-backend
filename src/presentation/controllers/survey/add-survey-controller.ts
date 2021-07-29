@@ -1,11 +1,10 @@
-import { MusicEntity, SurveyEntity } from '@/data/entities';
+import { SurveyEntity } from '@/data/entities';
 import { AddSurveyUseCase } from '@/domain/usecases/survey';
 import {
   Controller,
   HttpRequest,
   HttpResponse
 } from '@/presentation/protocols';
-import { AppError } from '@/shared/errors';
 import { badRequest, ok, serverError } from '@/utils/http';
 import { Validator } from '@/validation/protocols';
 
