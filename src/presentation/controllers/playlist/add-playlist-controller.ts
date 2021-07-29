@@ -36,14 +36,7 @@ export class AddPlayListController implements Controller {
           new MissingParamError('Musicas Não informadas', 'musics')
         );
       }
-      if (musics.some(m => !m.id)) {
-        return badRequest(
-          new IsNotTypeError(
-            'Musicas informada em formatação incorreta',
-            'musics'
-          )
-        );
-      }
+
       const resultAdd = await this.addPlayer.addPlayList({
         name,
         establishmentId,
@@ -80,7 +73,7 @@ export namespace AddPlayListController {
     authenticated: {
       id: string;
     };
-    musics: { id: string }[];
+    musics: string[];
     name: string;
     establishmentId: string;
   };

@@ -13,7 +13,7 @@ export interface AddSurveyUseCase {
 export namespace AddSurveyUseCase {
   export interface Param {
     question: string;
-    musics: { id: string }[];
+    musics: string[];
     userId: string;
     establishmentId: string;
   }

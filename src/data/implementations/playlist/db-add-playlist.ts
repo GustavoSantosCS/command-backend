@@ -56,8 +56,8 @@ export class DBAddPlayList implements AddPlayListUseCase {
     playlist.establishment = establishment as EstablishmentEntity;
 
     const musicsTrack = await Promise.all(
-      musics.map(async m => {
-        const trackedMusic = await this.getMusicByIdRepo.getById(m.id);
+      musics.map(async musicId => {
+        const trackedMusic = await this.getMusicByIdRepo.getById(musicId);
         if (!trackedMusic || trackedMusic?.establishment.id !== establishmentId)
           return null;
 

@@ -43,7 +43,7 @@ export class DBAddSurvey implements AddSurveyUseCase {
     }
 
     const musicsResult = await Promise.all(
-      musics.map(music => this.getMusicById.getMusicById(music.id))
+      musics.map(musicId => this.getMusicById.getMusicById(musicId))
     );
     if (musicsResult.some(music => music.isLeft())) {
       return left(

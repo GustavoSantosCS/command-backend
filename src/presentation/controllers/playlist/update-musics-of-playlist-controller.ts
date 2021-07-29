@@ -44,14 +44,6 @@ export class UpdateMusicsOfPlaylistController implements Controller {
           new MissingParamError('Musicas Não informadas', 'musics')
         );
       }
-      if (musics.some(m => !m.id)) {
-        return badRequest(
-          new IsNotTypeError(
-            'Musicas informada em formatação incorreta',
-            'musics'
-          )
-        );
-      }
 
       const resultUseCase = await this.updatePlaylist.updateMusicsOfPlaylist({
         userId: authenticated.id,
@@ -89,7 +81,7 @@ export namespace UpdateMusicsOfPlaylistController {
       id: string;
     };
     id: string;
-    musics: { id: string }[];
+    musics: string[];
     establishmentId: string;
   };
 
