@@ -63,13 +63,13 @@ export class MusicTypeOrmRepository
   }
 
   async getById(musicId: string): Promise<MusicEntity> {
-    const productRepo = await TypeORMHelpers.getRepository(MusicEntity);
-    const productsEntity = await productRepo
+    const musicRepo = await TypeORMHelpers.getRepository(MusicEntity);
+    const musicEntity = await musicRepo
       .createQueryBuilder('musics')
       .innerJoinAndSelect('musics.establishment', 'establishments')
       .innerJoinAndSelect('establishments.manager', 'users')
       .where('musics.id = :musicId', { musicId })
       .getOne();
-    return productsEntity;
+    return musicEntity;
   }
 }

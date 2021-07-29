@@ -1,10 +1,8 @@
 import { UserTypeOrmRepository } from '@/infra/db/typeorm';
 import { BcryptAdapter } from '@/infra/cryptography';
-import { JwtAdapter } from '@/infra/cryptography/jwt-adapter';
 import {
   DBGetAuthenticatedUser,
   DBUpdateUser,
-  DBCreateSession,
   DBUserAvatar,
   DBAddUser
 } from '@/data/implementations';

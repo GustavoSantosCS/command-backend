@@ -89,11 +89,14 @@ export class SurveyTypeOrmRepository
 
   async getById(
     surveyId: string,
-    strategy?: GetSurveyByIdRepository.Strategy
+    strategy?: GetSurveyByIdRepository.Strategy,
+    includeClose?: boolean
   ): Promise<SurveyEntity> {
     const surveyRepo = await TypeORMHelpers.getRepository(SurveyEntity);
     if (!strategy) {
-      return surveyRepo.findOne(surveyId);
+      return surveyRepo.findOne(surveyId, {
+        withDeleted: includeClose
+      });
     }
 
     let queryBuilder = surveyRepo.createQueryBuilder('surveys');
@@ -115,16 +118,19 @@ export class SurveyTypeOrmRepository
     }
 
     if (strategy.includeVotes) {
-      queryBuilder = queryBuilder.leftJoinAndSelect(
-        'surveys.pollVotes',
-        'votes'
-      );
+      queryBuilder = queryBuilder
+        .leftJoinAndSelect('surveys.pollVotes', 'votes')
+        .innerJoinAndSelect('votes.client', 'users');
     }
 
     if (strategy.includeSurveyToMusic) {
       queryBuilder = queryBuilder
         .innerJoinAndSelect('surveys.surveyToMusic', 'survey_music')
         .innerJoinAndSelect('survey_music.music', 'musics');
+    }
+
+    if (includeClose) {
+      queryBuilder = queryBuilder.withDeleted();
     }
 
     const survey = await queryBuilder

@@ -6,3 +6,4 @@ export * from './playlist';
 export * from './account';
 export * from './request-product';
 export * from './survey';
+export * from './vote';

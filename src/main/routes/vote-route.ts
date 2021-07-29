@@ -4,15 +4,5 @@ import { makeAddVoteController } from '../factory/vote';
 import { authorization } from '../middleware';
 
 export default (router: Router): void => {
-  router.post(
-    '/survey/:surveyId/vote',
-    authorization,
-    adapterRoute(makeAddVoteController())
-  );
-
-  router.get(
-    '/survey/:surveyId/user/vote',
-    authorization,
-    adapterRoute(makeGetUserVoteController())
-  );
+  router.post('/votes', authorization, adapterRoute(makeAddVoteController()));
 };

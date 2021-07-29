@@ -3,7 +3,8 @@ import { SurveyEntity } from '@/data/entities';
 export interface GetSurveyByIdRepository {
   getById(
     surveyId: string,
-    strategy?: GetSurveyByIdRepository.Strategy
+    strategy?: GetSurveyByIdRepository.Strategy,
+    includeClose?: boolean
   ): Promise<SurveyEntity>;
 }
 

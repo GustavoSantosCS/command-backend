@@ -15,15 +15,15 @@ export class VoteEntity {
   id: string;
 
   @ManyToOne(() => MusicEntity)
-  @JoinColumn({ name: 'id_chosen_music' })
+  @JoinColumn({ name: 'music_id' })
   chosenMusic?: MusicEntity;
 
   @ManyToOne(() => SurveyEntity, survey => survey.pollVotes)
-  @JoinColumn({ name: 'id_survey' })
+  @JoinColumn({ name: 'survey_id' })
   survey?: SurveyEntity;
 
   @ManyToOne(() => UserEntity, user => user.pollVotes)
-  @JoinColumn({ name: 'id_client' })
+  @JoinColumn({ name: 'client_id' })
   client?: UserEntity;
 
   @CreateDateColumn({ name: 'created_at' })

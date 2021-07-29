@@ -1,4 +1,5 @@
 export * from './account-not-found-error';
+export * from './client-already-voted-error';
 export * from './email-already-use-error';
 export * from './establishment-not-found-error';
 export * from './establishment-not-have-playlist-error';
@@ -9,5 +10,6 @@ export * from './music-not-found-error';
 export * from './playlist-is-not-active-error';
 export * from './playlist-not-found-error';
 export * from './product-not-found-error';
+export * from './survey-close-error';
 export * from './survey-not-found-error';
 export * from './user-not-found-error';

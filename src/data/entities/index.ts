@@ -13,3 +13,4 @@ export * from './music-playlist-entity';
 export * from './product-image-entity';
 export * from './survey-entity';
 export * from './survey-music-entity';
+export * from './vote-entity';
