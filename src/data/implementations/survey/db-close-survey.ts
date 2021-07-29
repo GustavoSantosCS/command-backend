@@ -23,8 +23,8 @@ export class DBCloseSurvey implements CloseSurveyUseCase {
     userId: string
   ): Promise<CloseSurveyUseCase.Result> {
     const trackedSurvey = await this.getSurveyByIdRepo.getById(surveyId, {
-      includeEstablishmentAndManager: true
-      // includeVotes: true // TODO: modificar quando for adiciona o suporte ao votos
+      includeEstablishmentAndManager: true,
+      includeVotes: true
     });
 
     if (!trackedSurvey || trackedSurvey?.establishment.manager.id !== userId) {
@@ -35,7 +35,7 @@ export class DBCloseSurvey implements CloseSurveyUseCase {
 
     const closeSurvey = await this.closeSurveyRepo.remove(
       trackedSurvey,
-      pollVotes?.length === 0
+      pollVotes?.length !== 0
     );
 
     return closeSurvey ? right(closeSurvey) : left(new SurveyNotFoundError());

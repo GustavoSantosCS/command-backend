@@ -14,7 +14,7 @@ import {
   GetSurveyByIdRepository
 } from '@/data/protocols';
 import { SurveyModel } from '@/domain/models';
-import { QueryBuilder } from 'typeorm';
+import { IsNull, Not } from 'typeorm';
 import { TypeORMHelpers } from './typeorm-helper';
 
 export class SurveyTypeOrmRepository
@@ -117,37 +117,46 @@ export class SurveyTypeOrmRepository
       }
     }
 
-    if (strategy.includeVotes) {
-      queryBuilder = queryBuilder
-        .leftJoinAndSelect('surveys.pollVotes', 'votes')
-        .innerJoinAndSelect('votes.client', 'users');
-    }
-
     if (strategy.includeSurveyToMusic) {
       queryBuilder = queryBuilder
         .innerJoinAndSelect('surveys.surveyToMusic', 'survey_music')
         .innerJoinAndSelect('survey_music.music', 'musics');
     }
 
+    queryBuilder = queryBuilder.where('surveys.id = :surveyId', { surveyId });
+
     if (includeClose) {
       queryBuilder = queryBuilder.withDeleted();
     }
 
-    const survey = await queryBuilder
-      .where('surveys.id = :surveyId', { surveyId })
-      .getOne();
+    const survey = await queryBuilder.getOne();
+
+    if (!survey) return null;
 
     if (strategy.includeMusics) {
-      const { musics } = await surveyRepo
+      let musicQueryBuilder = surveyRepo
         .createQueryBuilder('surveys')
-        .leftJoinAndSelect('surveys.musics', 'musics')
-        .where('surveys.id = :surveyId', { surveyId })
-        .getOne();
+        .innerJoinAndSelect('surveys.musics', 'musics')
+        .where('surveys.id = :surveyId', { surveyId });
 
-      Object.assign(survey, { musics });
+      if (includeClose) musicQueryBuilder = musicQueryBuilder.withDeleted();
+      const surveyAndMusics = await musicQueryBuilder.getOne();
+
+      Object.assign(survey, { musics: surveyAndMusics.musics || [] });
     }
 
-    delete survey.closedAt;
+    if (strategy.includeVotes) {
+      let votesQueryBuilder = surveyRepo
+        .createQueryBuilder('surveys')
+        .leftJoinAndSelect('surveys.pollVotes', 'votes')
+        .innerJoinAndSelect('votes.client', 'users')
+        .where('surveys.id = :surveyId', { surveyId });
+
+      if (includeClose) votesQueryBuilder = votesQueryBuilder.withDeleted();
+      const surveyAndVotes = await votesQueryBuilder.getOne();
+      Object.assign(survey, { pollVotes: surveyAndVotes?.pollVotes || [] });
+    }
+
     return survey;
   }
 
@@ -158,7 +167,6 @@ export class SurveyTypeOrmRepository
     const queryRunner = await TypeORMHelpers.createQueryRunner();
 
     await queryRunner.startTransaction();
-
     try {
       if (softDelete) {
         await queryRunner.manager.softRemove(survey);

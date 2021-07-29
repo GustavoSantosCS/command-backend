@@ -21,12 +21,8 @@ export class GetSurveyByIdController implements Controller {
     >
   ): Promise<GetSurveyByIdController.Response> {
     try {
-      const { id: userId } = httpRequest.body.authenticated;
       const { surveyId } = httpRequest.params;
-      const result = await this.getSurveyById.getSurveyById({
-        userId,
-        surveyId
-      });
+      const result = await this.getSurveyById.getSurveyById(surveyId);
       if (result.isLeft()) {
         return badRequest(result.value);
       }

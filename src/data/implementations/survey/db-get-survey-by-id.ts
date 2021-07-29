@@ -10,21 +10,19 @@ export class DBGetSurveyById implements GetSurveyByIdUseCase {
     this.getSurveyByIdRepo = getSurveyByIdRepo;
   }
 
-  async getSurveyById({
-    surveyId,
-    userId
-  }: GetSurveyByIdUseCase.Param): Promise<GetSurveyByIdUseCase.Result> {
-    const trackedSurvey = await this.getSurveyByIdRepo.getById(surveyId, {
-      includeEstablishmentAndManager: true,
-      includeSurveyToMusic: true
-      // includeVotes: true // TODO: modificar quando for adiciona o suporte ao votos
-    });
+  async getSurveyById(surveyId: string): Promise<GetSurveyByIdUseCase.Result> {
+    const trackedSurvey = await this.getSurveyByIdRepo.getById(
+      surveyId,
+      {
+        includeSurveyToMusic: true,
+        includeVotes: true
+      },
+      true
+    );
 
-    if (!trackedSurvey || trackedSurvey?.establishment.manager.id !== userId) {
+    if (!trackedSurvey) {
       return left(new SurveyNotFoundError());
     }
-
-    delete trackedSurvey.establishment;
 
     return right(trackedSurvey);
   }
