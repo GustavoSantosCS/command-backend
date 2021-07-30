@@ -1,10 +1,10 @@
-import { EstablishmentModel } from './establishment-model';
+import { EstablishmentEntity } from '@/data/entities';
 import { MusicModel } from './music-model';
 
 export type PlayListModel = {
   id: string;
   name: string;
-  establishment: EstablishmentModel;
+  establishment: EstablishmentEntity;
   isActive: boolean;
   musics?: MusicModel[];
   createdAt?: Date;

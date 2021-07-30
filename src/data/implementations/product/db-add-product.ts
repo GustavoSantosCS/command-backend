@@ -34,7 +34,7 @@ export class DBAddProduct implements AddProductUseCase {
       establishmentId
     );
 
-    if (!establishment || establishment?.manager.id !== userId)
+    if (establishment?.manager.id !== userId)
       return left(new EstablishmentNotFoundError());
 
     const product = await this.addProductRepo.save(

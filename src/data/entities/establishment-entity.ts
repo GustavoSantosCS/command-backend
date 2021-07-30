@@ -10,7 +10,6 @@ import {
   ManyToOne,
   OneToMany
 } from 'typeorm';
-import { EstablishmentModel } from '@/domain/models';
 import { EstablishmentImageEntity } from './establishment-image-entity';
 import { UserEntity } from './user-entity';
 import { ProductEntity } from './product-entity';
@@ -67,8 +66,4 @@ export class EstablishmentEntity {
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: Date;
-
-  constructor(establishment: EstablishmentModel) {
-    Object.assign(this, establishment);
-  }
 }

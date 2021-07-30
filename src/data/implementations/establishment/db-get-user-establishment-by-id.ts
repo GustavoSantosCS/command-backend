@@ -19,6 +19,7 @@ export class DBGetUserEstablishmentById
     const establishment = await this.getEstablishmentByIdRepo.getById(
       establishmentId
     );
+
     if (establishment?.manager.id !== userId) {
       return left(new EstablishmentNotFoundError());
     }

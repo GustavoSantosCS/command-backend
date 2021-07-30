@@ -1,4 +1,4 @@
-import { EstablishmentModel } from '@/domain/models';
+import { EstablishmentEntity } from '@/data/entities';
 import { GetAllUserEstablishmentsUseCase } from '@/domain/usecases';
 import {
   Controller,
@@ -40,5 +40,5 @@ export namespace GetAllUserEstablishmentsController {
     };
   };
 
-  export type Response = Omit<EstablishmentModel, 'manager'>[];
+  export type Response = Omit<EstablishmentEntity, 'manager'>[];
 }

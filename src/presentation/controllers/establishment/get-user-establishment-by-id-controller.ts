@@ -1,36 +1,39 @@
-import { EstablishmentModel } from '@/domain/models';
+import { EstablishmentEntity } from '@/data/entities';
+import { EstablishmentNotFoundError } from '@/domain/errors';
 import { GetUserEstablishmentByIdUseCase } from '@/domain/usecases';
 import {
   Controller,
   HttpRequest,
   HttpResponse
 } from '@/presentation/protocols';
-import { AppError } from '@/shared/errors';
 import { badRequest, ok, serverError } from '@/utils/http';
 
 export class GetUserEstablishmentByIdController implements Controller {
-  constructor(
-    private readonly getUserEstablishmentByIdUsecase: GetUserEstablishmentByIdUseCase
-  ) {}
+  private readonly getUserEstablishment: GetUserEstablishmentByIdUseCase;
+
+  constructor(getUserEstablishment: GetUserEstablishmentByIdUseCase) {
+    this.getUserEstablishment = getUserEstablishment;
+  }
 
   async handle(
-    httpRequest: HttpRequest<GetUserEstablishmentByIdController.DTO>
+    httpRequest: HttpRequest<
+      GetUserEstablishmentByIdController.DTO,
+      GetUserEstablishmentByIdController.Param
+    >
   ): Promise<HttpResponse<GetUserEstablishmentByIdController.Response>> {
     try {
       const { id: userId } = httpRequest.body.authenticated;
-      const { id: idEstablishment } = httpRequest.params;
-      const response =
-        await this.getUserEstablishmentByIdUsecase.getUserEstablishmentById(
-          userId,
-          idEstablishment
-        );
+      const { idEstablishment } = httpRequest.params;
+
+      const response = await this.getUserEstablishment.getUserEstablishmentById(
+        userId,
+        idEstablishment
+      );
 
       if (response.isLeft())
-        return badRequest(
-          new AppError('Não foi possível encontro o estabelecimento')
-        );
+        return badRequest(new EstablishmentNotFoundError());
 
-      const establishment: Omit<EstablishmentModel, 'manager'> = {
+      const establishment: GetUserEstablishmentByIdController.Return = {
         id: response.value.id,
         name: response.value.name,
         description: response.value.description,
@@ -58,5 +61,20 @@ export namespace GetUserEstablishmentByIdController {
     };
   };
 
-  export type Response = Omit<EstablishmentModel, 'manager'>;
+  export type Param = {
+    idEstablishment: string;
+  };
+
+  export type Return = Omit<
+    EstablishmentEntity,
+    | 'manager'
+    | 'products'
+    | 'playlists'
+    | 'accounts'
+    | 'surveys'
+    | 'musics'
+    | 'deletedAt'
+  >;
+
+  export type Response = Return;
 }

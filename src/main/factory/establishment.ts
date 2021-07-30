@@ -14,7 +14,7 @@ import {
 import { Controller } from '@/presentation/protocols';
 import { Validator } from '@/validation/protocols';
 import { ValidationComposite, ValidatorBuilder } from '@/validation/validators';
-import { idGenerator, establishmentRepo } from '@/main/singletons';
+import { idGenerator, establishmentRepo, userRepo } from '@/main/singletons';
 
 export const makeAddEstablishmentController = (): Controller => {
   const nameValidator = ValidatorBuilder.field('name')
@@ -37,7 +37,11 @@ export const makeAddEstablishmentController = (): Controller => {
     ...categoryValidator,
     ...descriptionValidator
   ]);
-  const usecase = new DBAddEstablishment(idGenerator, establishmentRepo);
+  const usecase = new DBAddEstablishment(
+    idGenerator,
+    userRepo,
+    establishmentRepo
+  );
   return new AddEstablishmentController(validator, usecase);
 };
 

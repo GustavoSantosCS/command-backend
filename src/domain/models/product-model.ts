@@ -1,4 +1,4 @@
-import { EstablishmentModel } from './establishment-model';
+import { EstablishmentEntity } from '@/data/entities';
 import { ImagePersistenceData } from './image-model';
 
 export type ProductModel = {
@@ -8,7 +8,7 @@ export type ProductModel = {
   isAvailable: boolean;
   price: number;
   image: ImagePersistenceData;
-  establishment: EstablishmentModel;
+  establishment: EstablishmentEntity;
   createdAt?: Date;
   updatedAt?: Date;
 };

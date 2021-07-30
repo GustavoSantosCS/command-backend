@@ -1,5 +1,4 @@
-import { AvatarEntity } from '@/data/entities';
-import { EstablishmentModel } from './establishment-model';
+import { AvatarEntity, EstablishmentEntity } from '@/data/entities';
 
 export type UserModel = {
   id?: string;
@@ -7,7 +6,7 @@ export type UserModel = {
   email: string;
   password: string;
   avatar?: AvatarEntity;
-  establishments?: EstablishmentModel[];
+  establishments?: EstablishmentEntity[];
   createdAt?: Date;
   updatedAt?: Date;
 };

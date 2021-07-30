@@ -1,5 +1,4 @@
 import { Entity, Column, PrimaryColumn } from 'typeorm';
-import { EstablishmentImageModel } from '@/domain/models';
 
 @Entity('establishment_image')
 export class EstablishmentImageEntity {
@@ -11,8 +10,4 @@ export class EstablishmentImageEntity {
 
   @Column()
   target: string;
-
-  constructor(establishmentImage: EstablishmentImageModel) {
-    Object.assign(this, establishmentImage);
-  }
 }

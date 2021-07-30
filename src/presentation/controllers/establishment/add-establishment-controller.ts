@@ -1,8 +1,5 @@
-import {
-  EstablishmentImageModel,
-  CATEGORY,
-  EstablishmentModel
-} from '@/domain/models';
+import { EstablishmentEntity, EstablishmentImageEntity } from '@/data/entities';
+import { CATEGORY } from '@/domain/models';
 
 import { AddEstablishmentUseCase } from '@/domain/usecases';
 import {
@@ -67,8 +64,8 @@ export namespace AddEstablishmentController {
     name: string;
     category: CATEGORY;
     description: string;
-    establishmentImage: EstablishmentImageModel;
+    establishmentImage: EstablishmentImageEntity;
   };
 
-  export type Response = Omit<EstablishmentModel, 'manager'>;
+  export type Response = Omit<EstablishmentEntity, 'manager'>;
 }

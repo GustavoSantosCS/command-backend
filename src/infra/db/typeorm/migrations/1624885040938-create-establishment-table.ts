@@ -13,7 +13,7 @@ export class CreateEstablishmentTable1624885040938
           { name: 'name', type: 'varchar' },
           { name: 'category', type: 'varchar' },
           { name: 'description', type: 'varchar' },
-          { name: 'isOpen', type: 'boolean' },
+          { name: 'isOpen', type: 'boolean', default: false },
           { name: 'created_at', type: 'timestamp', default: 'now()' },
           { name: 'updated_at', type: 'timestamp', default: 'now()' },
           { name: 'deleted_at', type: 'timestamp', isNullable: true },

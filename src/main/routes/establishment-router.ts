@@ -18,7 +18,7 @@ export default (router: Router): void => {
   );
 
   router.get(
-    '/establishment/:id',
+    '/establishment/:idEstablishment',
     authorization,
     adapterRoute(makeGetUserEstablishmentByIdController())
   );

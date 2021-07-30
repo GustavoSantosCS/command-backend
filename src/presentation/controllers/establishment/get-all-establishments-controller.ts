@@ -1,4 +1,4 @@
-import { EstablishmentModel } from '@/domain/models';
+import { EstablishmentEntity } from '@/data/entities';
 import { GetAllEstablishmentsUseCase } from '@/domain/usecases';
 import {
   Controller,
@@ -15,7 +15,7 @@ export class GetAllEstablishmentsController implements Controller {
   }
 
   async handle(
-    httpRequest: HttpRequest
+    httpRequest: HttpRequest<null, null>
   ): Promise<HttpResponse<GetAllEstablishmentsController.Response>> {
     try {
       const establishments =
@@ -32,5 +32,5 @@ export class GetAllEstablishmentsController implements Controller {
 
 // eslint-disable-next-line no-redeclare
 export namespace GetAllEstablishmentsController {
-  export type Response = Omit<EstablishmentModel, 'manager'>[];
+  export type Response = Omit<EstablishmentEntity, 'manager'>[];
 }

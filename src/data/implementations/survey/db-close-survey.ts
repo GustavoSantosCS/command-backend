@@ -27,7 +27,7 @@ export class DBCloseSurvey implements CloseSurveyUseCase {
       includeVotes: true
     });
 
-    if (!surveyRepo || surveyRepo?.establishment.manager.id !== userId) {
+    if (surveyRepo?.establishment.manager.id !== userId) {
       return left(new SurveyNotFoundError());
     }
 

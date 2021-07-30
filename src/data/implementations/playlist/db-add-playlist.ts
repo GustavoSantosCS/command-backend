@@ -46,7 +46,7 @@ export class DBAddPlayList implements AddPlayListUseCase {
       establishmentId
     );
 
-    if (!establishment || establishment?.manager.id !== userId)
+    if (establishment?.manager.id !== userId)
       return left(new EstablishmentNotFoundError());
 
     const playlist = new PlaylistEntity();

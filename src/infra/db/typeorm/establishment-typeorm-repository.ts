@@ -1,15 +1,11 @@
-import {
-  EstablishmentEntity,
-  EstablishmentImageEntity,
-  UserEntity
-} from '@/data/entities';
+/* eslint-disable no-param-reassign */
+import { EstablishmentEntity } from '@/data/entities';
 import {
   AddEstablishmentRepository,
   GetAllEstablishmentsUserRepository,
   GetEstablishmentByIdRepository,
   GetAllEstablishmentsRepository
 } from '@/data/protocols';
-import { EstablishmentModel } from '@/domain/models';
 import { TypeORMHelpers } from './typeorm-helper';
 
 export class EstablishmentTypeOrmRepository
@@ -20,34 +16,21 @@ export class EstablishmentTypeOrmRepository
     GetAllEstablishmentsRepository
 {
   async save(
-    userId: string,
-    establishmentModel: EstablishmentModel
+    establishment: EstablishmentEntity
   ): Promise<AddEstablishmentRepository.Result> {
     const queryRunner = await TypeORMHelpers.createQueryRunner();
     await queryRunner.startTransaction();
-    try {
-      const userEntity = await queryRunner.manager.findOne(UserEntity, userId);
-      let imageEntity = new EstablishmentImageEntity(establishmentModel.image);
 
-      imageEntity = await queryRunner.manager.save(imageEntity);
-      let establishmentEntity = new EstablishmentEntity(establishmentModel);
-      establishmentEntity.image = imageEntity;
-      establishmentEntity.manager = userEntity;
-      establishmentEntity = await queryRunner.manager.save(establishmentEntity);
+    try {
+      const imageRepo = await queryRunner.manager.save(establishment.image);
+      establishment.image = imageRepo;
+
+      const establishmentRepo = await queryRunner.manager.save(establishment);
 
       await queryRunner.commitTransaction();
-
-      delete establishmentEntity.manager;
-      delete establishmentEntity.products;
-      delete establishmentEntity.playlists;
-      delete establishmentEntity.accounts;
-      delete establishmentEntity.surveys;
-      delete establishmentEntity.musics;
-      delete establishmentEntity.deletedAt;
-      return establishmentEntity;
+      return establishmentRepo;
     } catch (err) {
       // eslint-disable-next-line no-console
-      console.error('EstablishmentTypeOrmRepository:31 => ', err);
       await queryRunner.rollbackTransaction();
       throw err;
     } finally {

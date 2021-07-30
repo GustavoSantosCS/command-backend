@@ -1,37 +1,48 @@
-import { IDGenerator, AddEstablishmentRepository } from '@/data/protocols';
-import { EstablishmentModel } from '@/domain/models';
+import { EstablishmentEntity, EstablishmentImageEntity } from '@/data/entities';
+import {
+  IDGenerator,
+  AddEstablishmentRepository,
+  GetUserByIdRepository
+} from '@/data/protocols';
 import { AddEstablishmentUseCase } from '@/domain/usecases';
 
 export class DBAddEstablishment implements AddEstablishmentUseCase {
   private readonly idGenerator: IDGenerator;
-  private readonly addEstablishmentRepository: AddEstablishmentRepository;
+  private readonly getUserRepo: GetUserByIdRepository;
+  private readonly saveEstablishmentRepo: AddEstablishmentRepository;
 
   constructor(
     idGenerator: IDGenerator,
-    addEstablishmentRepository: AddEstablishmentRepository
+    getUserRepo: GetUserByIdRepository,
+    saveEstablishmentRepo: AddEstablishmentRepository
   ) {
     this.idGenerator = idGenerator;
-    this.addEstablishmentRepository = addEstablishmentRepository;
+    this.getUserRepo = getUserRepo;
+    this.saveEstablishmentRepo = saveEstablishmentRepo;
   }
 
   async addEstablishment({
     userId,
     establishment,
     establishmentImage
-  }: AddEstablishmentUseCase.Params): AddEstablishmentUseCase.Response {
-    const establishmentModel: EstablishmentModel = {
-      id: this.idGenerator.generate(),
-      name: establishment.name,
-      category: establishment.category,
-      description: establishment.description,
-      isOpen: true,
-      image: establishmentImage
-    };
+  }: AddEstablishmentUseCase.Params): Promise<AddEstablishmentUseCase.Response> {
+    const userRepo = await this.getUserRepo.getById(userId);
 
-    const establishmentEntity = await this.addEstablishmentRepository.save(
-      userId,
-      establishmentModel
+    const newEstablishment = new EstablishmentEntity();
+    newEstablishment.id = this.idGenerator.generate();
+    newEstablishment.name = establishment.name;
+    newEstablishment.description = establishment.description;
+    newEstablishment.manager = userRepo;
+    newEstablishment.category = establishment.category;
+    newEstablishment.isOpen = false;
+    const image = new EstablishmentImageEntity();
+    Object.assign(image, establishmentImage);
+    newEstablishment.image = image;
+
+    const establishmentEntity = await this.saveEstablishmentRepo.save(
+      newEstablishment
     );
+    delete establishmentEntity.manager;
 
     return establishmentEntity;
   }

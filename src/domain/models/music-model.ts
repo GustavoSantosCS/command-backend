@@ -1,4 +1,4 @@
-import { EstablishmentModel } from './establishment-model';
+import { EstablishmentEntity } from '@/data/entities';
 import { PlayListModel } from './playlist-model';
 
 export type MusicModel = {
@@ -6,7 +6,7 @@ export type MusicModel = {
   name: string;
   talent: string;
   duration: number;
-  establishment?: EstablishmentModel;
+  establishment?: EstablishmentEntity;
   playlists?: PlayListModel[];
   createdAt?: Date;
   updatedAt?: Date;
