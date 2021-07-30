@@ -1,7 +1,7 @@
 import { PlaylistEntity } from '@/data/entities';
 
 export interface UpdatePlaylistRepository {
-  updatePlaylist(
+  update(
     newDatePlaylist: PlaylistEntity
   ): Promise<UpdatePlaylistRepository.Result>;
 }

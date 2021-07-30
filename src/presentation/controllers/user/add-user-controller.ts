@@ -27,7 +27,7 @@ export class AddUserController implements Controller {
       }
 
       const { name, email, password } = httpRequest.body;
-      const resultAddUser = await this.addUser.add({
+      const resultAddUser = await this.addUser.save({
         name,
         email: email.toLowerCase(),
         password

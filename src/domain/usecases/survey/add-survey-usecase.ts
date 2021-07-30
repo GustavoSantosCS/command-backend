@@ -6,7 +6,7 @@ import {
 import { Either } from '@/shared/either';
 
 export interface AddSurveyUseCase {
-  addSurvey(data: AddSurveyUseCase.Param): Promise<AddSurveyUseCase.Result>;
+  add(data: AddSurveyUseCase.Param): Promise<AddSurveyUseCase.Result>;
 }
 
 // eslint-disable-next-line no-redeclare

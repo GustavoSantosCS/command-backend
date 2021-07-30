@@ -16,8 +16,8 @@ export class GetProductByIdController implements Controller {
 
   async handle(
     httpRequest: HttpRequest<
-      GetProductByIdController.DTOBody,
-      GetProductByIdController.DTOParams
+      GetProductByIdController.DTO,
+      GetProductByIdController.Params
     >
   ): Promise<HttpResponse<GetProductByIdController.Response>> {
     try {
@@ -48,13 +48,13 @@ export class GetProductByIdController implements Controller {
 
 // eslint-disable-next-line no-redeclare
 export namespace GetProductByIdController {
-  export type DTOBody = {
+  export type DTO = {
     authenticated: {
       id: string;
     };
   };
 
-  export type DTOParams = {
+  export type Params = {
     id: string;
   };
 

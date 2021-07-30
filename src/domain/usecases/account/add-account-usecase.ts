@@ -3,9 +3,7 @@ import { AccountEntity } from '@/data/entities';
 import { EstablishmentNotFoundError } from '@/domain/errors';
 
 export interface CreateAccountUseCase {
-  create(
-    data: CreateAccountUseCase.Params
-  ): Promise<CreateAccountUseCase.Result>;
+  add(data: CreateAccountUseCase.Params): Promise<CreateAccountUseCase.Result>;
 }
 // eslint-disable-next-line no-redeclare
 export namespace CreateAccountUseCase {

@@ -16,8 +16,8 @@ export class GetAllAccountRequestProductController implements Controller {
 
   async handle(
     httpRequest: HttpRequest<
-      GetAllAccountRequestProductController.DTOBody,
-      GetAllAccountRequestProductController.DTOParam
+      GetAllAccountRequestProductController.DTO,
+      GetAllAccountRequestProductController.Param
     >
   ): Promise<HttpResponse<GetAllAccountRequestProductController.Result>> {
     try {
@@ -55,13 +55,13 @@ export class GetAllAccountRequestProductController implements Controller {
 
 // eslint-disable-next-line no-redeclare
 export namespace GetAllAccountRequestProductController {
-  export type DTOBody = {
+  export type DTO = {
     authenticated: {
       id: string;
     };
   };
 
-  export type DTOParam = {
+  export type Param = {
     accountId: string;
   };
 

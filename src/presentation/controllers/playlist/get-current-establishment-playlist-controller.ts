@@ -22,8 +22,8 @@ export class GetCurrentEstablishmentPlaylistController implements Controller {
 
   async handle(
     httpRequest: HttpRequest<
-      GetCurrentEstablishmentPlaylistController.DTOBody,
-      GetCurrentEstablishmentPlaylistController.DTOParam
+      GetCurrentEstablishmentPlaylistController.DTO,
+      GetCurrentEstablishmentPlaylistController.Param
     >
   ): Promise<HttpResponse<GetCurrentEstablishmentPlaylistController.Response>> {
     try {
@@ -36,10 +36,11 @@ export class GetCurrentEstablishmentPlaylistController implements Controller {
         return badRequest(validation.value);
       }
 
-      const result = await this.getCurrentPlaylist.getCurrentPlaylist(
-        userId,
-        establishmentId
-      );
+      const result =
+        await this.getCurrentPlaylist.getCurrentEstablishmentPlaylist(
+          userId,
+          establishmentId
+        );
       if (result.isLeft()) {
         return badRequest(result.value);
       }
@@ -65,13 +66,13 @@ export class GetCurrentEstablishmentPlaylistController implements Controller {
 
 // eslint-disable-next-line no-redeclare
 export namespace GetCurrentEstablishmentPlaylistController {
-  export type DTOBody = {
+  export type DTO = {
     authenticated: {
       id: string;
     };
   };
 
-  export type DTOParam = {
+  export type Param = {
     establishmentId: string;
   };
 

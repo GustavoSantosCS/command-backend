@@ -1,9 +1,4 @@
-import {
-  EstablishmentEntity,
-  MusicEntity,
-  SurveyEntity,
-  SurveyMusicEntity
-} from '@/data/entities';
+import { SurveyEntity, SurveyMusicEntity } from '@/data/entities';
 import {
   IDGenerator,
   AddSurveyRepository,
@@ -35,7 +30,7 @@ export class DBAddSurvey implements AddSurveyUseCase {
     this.idGenerator = idGenerator;
   }
 
-  async addSurvey({
+  async add({
     userId,
     establishmentId,
     musics,
@@ -72,7 +67,7 @@ export class DBAddSurvey implements AddSurveyUseCase {
     });
     newSurvey.question = question;
 
-    const result = await this.addSurveyRepo.addSurvey(newSurvey);
+    const result = await this.addSurveyRepo.save(newSurvey);
 
     return right(result);
   }

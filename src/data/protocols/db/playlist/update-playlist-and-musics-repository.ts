@@ -5,7 +5,7 @@ import {
 } from '@/data/entities';
 
 export interface UpdatePlaylistAndMusicsRepository {
-  updateMusicsOfPlaylist(
+  updateMusics(
     playlist: PlaylistEntity,
     newMusics: MusicPlaylistEntity[]
   ): Promise<UpdatePlaylistAndMusicsRepository.Result>;

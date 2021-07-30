@@ -8,7 +8,7 @@ import {
 import { badRequest, ok, serverError } from '@/utils/http';
 import { Validator } from '@/validation/protocols';
 
-export class CreateRequestProductController implements Controller {
+export class AddRequestProductController implements Controller {
   private readonly validator: Validator;
   private readonly createRequestProduct: CreateRequestProductUseCase;
 
@@ -22,10 +22,10 @@ export class CreateRequestProductController implements Controller {
 
   async handle(
     httpRequest: HttpRequest<
-      CreateRequestProductController.DTOBody,
-      CreateRequestProductController.DTOParam
+      AddRequestProductController.DTO,
+      AddRequestProductController.Param
     >
-  ): Promise<HttpResponse<CreateRequestProductController.Response>> {
+  ): Promise<HttpResponse<AddRequestProductController.Response>> {
     try {
       const { accountId, amountOfProduct, obs, productId, total } =
         httpRequest.body;
@@ -42,16 +42,14 @@ export class CreateRequestProductController implements Controller {
         return badRequest(resultValidator.value);
       }
 
-      const resultCreate = await this.createRequestProduct.createRequestProduct(
-        {
-          userId,
-          productId,
-          accountId,
-          obs,
-          total: parseFloat(total),
-          amountOfProduct: parseInt(amountOfProduct)
-        }
-      );
+      const resultCreate = await this.createRequestProduct.add({
+        userId,
+        productId,
+        accountId,
+        obs,
+        total: parseFloat(total),
+        amountOfProduct: parseInt(amountOfProduct)
+      });
 
       if (resultCreate.isLeft()) {
         return badRequest(resultCreate.value);
@@ -59,7 +57,7 @@ export class CreateRequestProductController implements Controller {
 
       const { value } = resultCreate;
       delete value.product.establishment;
-      const newRequestProduct: CreateRequestProductController.Response = {
+      const newRequestProduct: AddRequestProductController.Response = {
         id: value.id,
         product: value.product,
         amountOfProduct: value.amountOfProduct,
@@ -79,8 +77,8 @@ export class CreateRequestProductController implements Controller {
 }
 
 // eslint-disable-next-line no-redeclare
-export namespace CreateRequestProductController {
-  export type DTOBody = {
+export namespace AddRequestProductController {
+  export type DTO = {
     authenticated: {
       id: string;
     };
@@ -91,7 +89,7 @@ export namespace CreateRequestProductController {
     accountId: string;
   };
 
-  export type DTOParam = null;
+  export type Param = null;
 
   export type Response = Omit<RequestProductEntity, 'account' | 'closedAt'>;
 }

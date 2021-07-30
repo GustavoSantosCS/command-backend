@@ -3,7 +3,7 @@ import { AccountNotFoundError, ProductNotFoundError } from '@/domain/errors';
 import { Either } from '@/shared/either';
 
 export interface CreateRequestProductUseCase {
-  createRequestProduct(
+  add(
     newRequestProduct: CreateRequestProductUseCase.Params
   ): Promise<CreateRequestProductUseCase.Result>;
 }

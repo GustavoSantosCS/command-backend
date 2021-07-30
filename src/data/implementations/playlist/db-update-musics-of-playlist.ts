@@ -34,7 +34,7 @@ export class DBUpdateMusicsOfPlaylist implements UpdateMusicsOfPlaylistUseCase {
     userId,
     establishmentId
   }: UpdateMusicsOfPlaylistUseCase.Param): Promise<UpdateMusicsOfPlaylistUseCase.Response> {
-    const playlist = await this.getPlaylistRepo.getPlaylistById(playlistId, {
+    const playlist = await this.getPlaylistRepo.getById(playlistId, {
       includeEstablishmentAndManager: true
     });
 
@@ -70,7 +70,7 @@ export class DBUpdateMusicsOfPlaylist implements UpdateMusicsOfPlaylistUseCase {
         )
     );
 
-    const resultUsecase = await this.updateMusicsRepo.updateMusicsOfPlaylist(
+    const resultUsecase = await this.updateMusicsRepo.updateMusics(
       playlist,
       playlistMusics
     );

@@ -21,7 +21,7 @@ export class DBAddEstablishment implements AddEstablishmentUseCase {
     this.saveEstablishmentRepo = saveEstablishmentRepo;
   }
 
-  async addEstablishment({
+  async add({
     userId,
     establishment,
     establishmentImage

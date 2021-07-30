@@ -18,8 +18,7 @@ export class GetAllEstablishmentsController implements Controller {
     httpRequest: HttpRequest<null, null>
   ): Promise<HttpResponse<GetAllEstablishmentsController.Response>> {
     try {
-      const establishments =
-        await this.getAllEstablishments.getAllEstablishments();
+      const establishments = await this.getAllEstablishments.getAll();
 
       return ok(establishments);
     } catch (error) {

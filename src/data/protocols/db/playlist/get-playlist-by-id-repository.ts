@@ -1,7 +1,7 @@
 import { PlaylistEntity } from '@/data/entities';
 
 export interface GetPlaylistByIdRepository {
-  getPlaylistById(
+  getById(
     playlistId: string,
     strategy: GetPlaylistByIdRepository.Config
   ): Promise<GetPlaylistByIdRepository.Result>;

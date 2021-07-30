@@ -3,7 +3,7 @@ import {
   DbGetAllAccountRequestProduct
 } from '@/data/implementations';
 import {
-  CreateRequestProductController,
+  AddRequestProductController,
   GetAllAccountRequestProductController
 } from '@/presentation/controllers/request-product';
 import { Controller } from '@/presentation/protocols';
@@ -15,7 +15,7 @@ import {
   requestProductRepo
 } from '@/main/singletons';
 
-export const makeCreateRequestProductController = (): Controller => {
+export const makeAddRequestProductController = (): Controller => {
   const productValidator = ValidatorBuilder.field('productId')
     .required('Produto não informado')
     .build();
@@ -53,7 +53,7 @@ export const makeCreateRequestProductController = (): Controller => {
     requestProductRepo
   );
 
-  return new CreateRequestProductController(validator, usecase);
+  return new AddRequestProductController(validator, usecase);
 };
 
 export const makeGetAllRequestProductController = (): Controller => {

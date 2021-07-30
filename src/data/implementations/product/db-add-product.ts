@@ -23,7 +23,7 @@ export class DBAddProduct implements AddProductUseCase {
     this.addProductRepo = addProductRepo;
   }
 
-  async add({
+  async save({
     establishmentId,
     userId,
     name,

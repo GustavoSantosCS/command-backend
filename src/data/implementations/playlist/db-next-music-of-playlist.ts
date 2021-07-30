@@ -26,7 +26,7 @@ export class DBNextMusicOfPlaylist implements NextPlaylistMusicUseCase {
     playlistId,
     userId
   }: NextPlaylistMusicUseCase.Param): Promise<NextPlaylistMusicUseCase.Result> {
-    const playlist = await this.getPlaylistRepo.getPlaylistById(playlistId, {
+    const playlist = await this.getPlaylistRepo.getById(playlistId, {
       includeEstablishmentAndManager: true,
       includeCurrentMusic: true,
       includeMusicToPlaylist: true
@@ -55,11 +55,10 @@ export class DBNextMusicOfPlaylist implements NextPlaylistMusicUseCase {
     nextCurrentMusic.isPlay = true;
     playlist.currentMusic = nextCurrentMusic;
 
-    const resultNewCurrent =
-      await this.saveCurrentMusicRepo.saveCurrentMusicPlaylist(
-        playlist,
-        nextCurrentMusic
-      );
+    const resultNewCurrent = await this.saveCurrentMusicRepo.saveCurrentMusic(
+      playlist,
+      nextCurrentMusic
+    );
 
     return right(resultNewCurrent);
   }

@@ -96,7 +96,7 @@ export class EstablishmentTypeOrmRepository
     }
   }
 
-  async getAllEstablishments(): Promise<EstablishmentEntity[]> {
+  async getAll(): Promise<EstablishmentEntity[]> {
     const establishmentRepo = await TypeORMHelpers.getRepository(
       EstablishmentEntity
     );

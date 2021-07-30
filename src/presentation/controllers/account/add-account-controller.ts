@@ -36,7 +36,7 @@ export class CreateAccountController implements Controller {
         return badRequest(validation.value);
       }
 
-      const result = await this.createAccount.create({
+      const result = await this.createAccount.add({
         userId,
         establishmentId
       });

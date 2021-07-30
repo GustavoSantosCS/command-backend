@@ -27,7 +27,7 @@ export class DBCreateRequestProduct implements CreateRequestProductUseCase {
     this.requestProductRepo = requestProductRepository;
   }
 
-  async createRequestProduct({
+  async add({
     userId,
     productId,
     accountId,

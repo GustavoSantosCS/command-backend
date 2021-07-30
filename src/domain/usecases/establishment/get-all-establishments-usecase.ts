@@ -1,7 +1,7 @@
 import { EstablishmentEntity } from '@/data/entities';
 
 export interface GetAllEstablishmentsUseCase {
-  getAllEstablishments(): Promise<GetAllEstablishmentsUseCase.Response>;
+  getAll(): Promise<GetAllEstablishmentsUseCase.Response>;
 }
 
 // eslint-disable-next-line no-redeclare

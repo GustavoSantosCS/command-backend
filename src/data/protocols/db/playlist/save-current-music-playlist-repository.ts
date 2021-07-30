@@ -1,7 +1,7 @@
 import { MusicPlaylistEntity, PlaylistEntity } from '@/data/entities';
 
 export interface SaveCurrentMusicPlaylistRepository {
-  saveCurrentMusicPlaylist(
+  saveCurrentMusic(
     playlist: PlaylistEntity,
     newCurrentPlaylist: MusicPlaylistEntity
   ): Promise<MusicPlaylistEntity>;

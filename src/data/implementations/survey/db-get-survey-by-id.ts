@@ -10,7 +10,7 @@ export class DBGetSurveyById implements GetSurveyByIdUseCase {
     this.getSurveyByIdRepo = getSurveyByIdRepo;
   }
 
-  async getSurveyById(surveyId: string): Promise<GetSurveyByIdUseCase.Result> {
+  async getById(surveyId: string): Promise<GetSurveyByIdUseCase.Result> {
     const trackedSurvey = await this.getSurveyByIdRepo.getById(
       surveyId,
       {

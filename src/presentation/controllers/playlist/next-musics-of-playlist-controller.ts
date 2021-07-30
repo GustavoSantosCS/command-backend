@@ -1,5 +1,4 @@
 import { MusicPlaylistEntity } from '@/data/entities';
-import { PlaylistNotFoundError } from '@/domain/errors';
 import { NextPlaylistMusicUseCase } from '@/domain/usecases';
 import {
   Controller,

@@ -3,7 +3,7 @@ import { EmailAlreadyUseError } from '@/domain/errors';
 import { Either } from '@/shared/either';
 
 export interface AddUserUseCase {
-  add(newUser: AddUserUseCase.Params): Promise<AddUserUseCase.Response>;
+  save(newUser: AddUserUseCase.Params): Promise<AddUserUseCase.Response>;
 }
 
 // eslint-disable-next-line no-redeclare

@@ -2,7 +2,7 @@ import { CATEGORY, ImagePersistenceData } from '@/domain/models';
 import { EstablishmentEntity } from '@/data/entities';
 
 export interface AddEstablishmentUseCase {
-  addEstablishment(
+  add(
     newEstablishment: AddEstablishmentUseCase.Params
   ): Promise<AddEstablishmentUseCase.Response>;
 }

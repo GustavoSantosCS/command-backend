@@ -6,9 +6,7 @@ import {
 import { Either } from '@/shared/either';
 
 export interface AddPlayListUseCase {
-  addPlayList(
-    newPlayList: AddPlayListUseCase.Params
-  ): AddPlayListUseCase.Result;
+  add(newPlayList: AddPlayListUseCase.Params): AddPlayListUseCase.Result;
 }
 
 // eslint-disable-next-line no-redeclare

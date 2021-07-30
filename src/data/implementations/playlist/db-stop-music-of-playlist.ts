@@ -26,7 +26,7 @@ export class DBStopMusicOfPlaylist implements StopPlaylistMusicUseCase {
     playlistId,
     userId
   }: StopPlaylistMusicUseCase.Param): Promise<StopPlaylistMusicUseCase.Result> {
-    const playlist = await this.getPlaylistRepo.getPlaylistById(playlistId, {
+    const playlist = await this.getPlaylistRepo.getById(playlistId, {
       includeEstablishmentAndManager: true,
       includeCurrentMusic: true
     });
@@ -45,7 +45,7 @@ export class DBStopMusicOfPlaylist implements StopPlaylistMusicUseCase {
 
     playlist.currentMusic.isPlay = false;
 
-    const result = await this.saveCurrentMusicRepo.saveCurrentMusicPlaylist(
+    const result = await this.saveCurrentMusicRepo.saveCurrentMusic(
       playlist,
       playlist.currentMusic
     );

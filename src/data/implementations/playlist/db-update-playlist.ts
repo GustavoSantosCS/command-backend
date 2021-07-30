@@ -23,14 +23,14 @@ export class DBUpdatePlaylist implements UpdatePlaylistUseCase {
     this.updatePlaylistRepo = updatePlaylistRepo;
   }
 
-  async updatePlaylist({
+  async update({
     name,
     id: playlistId,
     userId,
     active,
     establishmentId
   }: UpdatePlaylistUseCase.Param): Promise<UpdatePlaylistUseCase.Response> {
-    const playlist = await this.getPlaylistRepo.getPlaylistById(playlistId, {
+    const playlist = await this.getPlaylistRepo.getById(playlistId, {
       includeEstablishmentAndManager: true
     });
 
@@ -50,9 +50,7 @@ export class DBUpdatePlaylist implements UpdatePlaylistUseCase {
 
     playlist.name = name;
     playlist.isActive = active;
-    const resultUseCase = await this.updatePlaylistRepo.updatePlaylist(
-      playlist
-    );
+    const resultUseCase = await this.updatePlaylistRepo.update(playlist);
 
     const result: UpdatePlaylistUseCase.Return = {
       id: resultUseCase.id,

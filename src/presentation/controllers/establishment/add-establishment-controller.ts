@@ -36,7 +36,7 @@ export class AddEstablishmentController implements Controller {
     }
 
     try {
-      const newEstablishment = await this.addEstablishment.addEstablishment({
+      const newEstablishment = await this.addEstablishment.add({
         userId: body.authenticated.id,
         establishment: {
           name: body.name,

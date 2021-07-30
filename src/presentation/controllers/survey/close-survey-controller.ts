@@ -21,7 +21,7 @@ export class CloseSurveyController implements Controller {
     >
   ): Promise<CloseSurveyController.Response> {
     try {
-      const resultUsecase = await this.closeSurvey.closeSurvey(
+      const resultUsecase = await this.closeSurvey.close(
         httpRequest.params.surveyId,
         httpRequest.body.authenticated.id
       );

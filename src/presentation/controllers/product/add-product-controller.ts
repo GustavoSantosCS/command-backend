@@ -33,7 +33,7 @@ export class AddProductController implements Controller {
         return badRequest(validation.value);
       }
 
-      const resultCreate = await this.addProduct.add({
+      const resultCreate = await this.addProduct.save({
         userId: body.authenticated.id,
         name: body.name,
         description: body.description,

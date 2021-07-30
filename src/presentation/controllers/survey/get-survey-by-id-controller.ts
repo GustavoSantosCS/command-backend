@@ -22,7 +22,7 @@ export class GetSurveyByIdController implements Controller {
   ): Promise<GetSurveyByIdController.Response> {
     try {
       const { surveyId } = httpRequest.params;
-      const result = await this.getSurveyById.getSurveyById(surveyId);
+      const result = await this.getSurveyById.getById(surveyId);
       if (result.isLeft()) {
         return badRequest(result.value);
       }

@@ -27,7 +27,7 @@ export class DBAddUser implements AddUserUseCase {
     this.addUserRepo = addUserRepository;
   }
 
-  async add({
+  async save({
     name,
     email,
     password

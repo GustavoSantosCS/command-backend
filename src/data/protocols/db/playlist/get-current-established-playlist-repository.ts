@@ -1,7 +1,7 @@
 import { PlaylistEntity } from '@/data/entities';
 
 export interface GetCurrentEstablishmentPlaylistRepository {
-  getEstablishmentPlaylist(
+  getCurrentEstablishmentPlaylist(
     establishmentId: string
   ): Promise<Omit<PlaylistEntity, 'establishment' | 'musics'>>;
 }

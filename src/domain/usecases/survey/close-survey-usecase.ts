@@ -3,10 +3,7 @@ import { SurveyNotFoundError } from '@/domain/errors';
 import { Either } from '@/shared/either';
 
 export interface CloseSurveyUseCase {
-  closeSurvey(
-    surveyId: string,
-    userId: string
-  ): Promise<CloseSurveyUseCase.Result>;
+  close(surveyId: string, userId: string): Promise<CloseSurveyUseCase.Result>;
 }
 
 // eslint-disable-next-line no-redeclare

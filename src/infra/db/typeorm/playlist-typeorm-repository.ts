@@ -23,7 +23,7 @@ export class PlaylistTypeOrmRepository
     UpdatePlaylistAndMusicsRepository,
     SaveCurrentMusicPlaylistRepository
 {
-  async add(
+  async save(
     playlist: PlaylistEntity,
     musics: MusicPlaylistEntity[]
   ): Promise<Omit<PlaylistEntity, 'establishment' | 'musics'>> {
@@ -58,7 +58,7 @@ export class PlaylistTypeOrmRepository
     }
   }
 
-  async getEstablishmentPlaylist(
+  async getCurrentEstablishmentPlaylist(
     establishmentId: string
   ): Promise<PlaylistEntity> {
     const playlistRepo = await TypeORMHelpers.getRepository(PlaylistEntity);
@@ -72,7 +72,7 @@ export class PlaylistTypeOrmRepository
           { active: true, establishmentId }
         );
       const playlist = await queryBuilder.getOne();
-      const playlistComplete = await this.getPlaylistById(playlist.id, {
+      const playlistComplete = await this.getById(playlist.id, {
         includeCurrentMusic: true,
         includeMusicToPlaylist: true
       });
@@ -82,7 +82,7 @@ export class PlaylistTypeOrmRepository
     }
   }
 
-  async getPlaylistById(
+  async getById(
     playlistId: string,
     strategy?: GetPlaylistByIdRepository.Config
   ): Promise<PlaylistEntity> {
@@ -140,7 +140,7 @@ export class PlaylistTypeOrmRepository
     return playlist;
   }
 
-  async updatePlaylist(
+  async update(
     newDate: PlaylistEntity
   ): Promise<UpdatePlaylistRepository.Result> {
     const playlistRepo = await TypeORMHelpers.getRepository(PlaylistEntity);
@@ -158,7 +158,7 @@ export class PlaylistTypeOrmRepository
       .execute();
   }
 
-  async updateMusicsOfPlaylist(
+  async updateMusics(
     playlist: PlaylistEntity,
     newMusics: MusicPlaylistEntity[]
   ): Promise<UpdatePlaylistAndMusicsRepository.Result> {
@@ -166,7 +166,7 @@ export class PlaylistTypeOrmRepository
 
     await queryRunner.startTransaction();
     try {
-      const trackedPlaylist = await this.getPlaylistById(playlist.id, {
+      const trackedPlaylist = await this.getById(playlist.id, {
         includeMusicToPlaylist: true
       });
 
@@ -211,7 +211,7 @@ export class PlaylistTypeOrmRepository
     }
   }
 
-  async saveCurrentMusicPlaylist(
+  async saveCurrentMusic(
     playlist: PlaylistEntity,
     newCurrentPlaylist: MusicPlaylistEntity
   ): Promise<MusicPlaylistEntity> {

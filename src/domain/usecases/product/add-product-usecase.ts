@@ -4,7 +4,7 @@ import { EstablishmentNotFoundError } from '@/domain/errors';
 import { ProductEntity } from '@/data/entities';
 
 export interface AddProductUseCase {
-  add(newProduct: AddProductUseCase.Params): AddProductUseCase.Result;
+  save(newProduct: AddProductUseCase.Params): AddProductUseCase.Result;
 }
 
 // eslint-disable-next-line no-redeclare

@@ -38,7 +38,7 @@ export class UpdatePlaylistController implements Controller {
         return badRequest(validation.value);
       }
 
-      const resultUseCase = await this.updatePlayList.updatePlaylist({
+      const resultUseCase = await this.updatePlayList.update({
         userId: authenticated.id,
         id,
         active,

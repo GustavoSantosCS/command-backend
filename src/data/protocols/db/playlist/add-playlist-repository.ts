@@ -1,7 +1,7 @@
 import { MusicPlaylistEntity, PlaylistEntity } from '@/data/entities';
 
 export interface AddPlayListRepository {
-  add(
+  save(
     playlist: PlaylistEntity,
     newMusics: MusicPlaylistEntity[]
   ): Promise<AddPlayListRepository.Result>;

@@ -26,7 +26,7 @@ export class DBStartMusicOfPlaylist implements StartPlaylistMusicUseCase {
     playlistId,
     userId
   }: StartPlaylistMusicUseCase.Param): Promise<StartPlaylistMusicUseCase.Result> {
-    const playlist = await this.getPlaylistRepo.getPlaylistById(playlistId, {
+    const playlist = await this.getPlaylistRepo.getById(playlistId, {
       includeEstablishmentAndManager: true,
       includeCurrentMusic: true
     });
@@ -45,7 +45,7 @@ export class DBStartMusicOfPlaylist implements StartPlaylistMusicUseCase {
 
     playlist.currentMusic.isPlay = true;
 
-    const result = await this.saveCurrentMusicRepo.saveCurrentMusicPlaylist(
+    const result = await this.saveCurrentMusicRepo.saveCurrentMusic(
       playlist,
       playlist.currentMusic
     );

@@ -12,7 +12,7 @@ export class AccountTypeOrmRepository
     GetAccountByIdRepository,
     GetAllUserAccountRepository
 {
-  async add(account: AccountEntity): Promise<AccountEntity> {
+  async save(account: AccountEntity): Promise<AccountEntity> {
     const queryRunner = await TypeORMHelpers.createQueryRunner();
     try {
       await queryRunner.startTransaction();

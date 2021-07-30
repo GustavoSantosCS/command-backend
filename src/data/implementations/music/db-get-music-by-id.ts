@@ -11,7 +11,7 @@ export class DBGetMusicById implements GetMusicByIdUseCase {
     this.getMusicByIdRepo = getMusicByIdRepo;
   }
 
-  async getMusicById(
+  async getById(
     musicId: string
   ): Promise<Either<MusicNotFoundError, MusicEntity>> {
     const music = await this.getMusicByIdRepo.getById(musicId);

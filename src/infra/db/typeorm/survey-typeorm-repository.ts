@@ -17,7 +17,7 @@ export class SurveyTypeOrmRepository
     GetSurveyByIdRepository,
     CloseSurveyRepository
 {
-  async addSurvey(survey: SurveyEntity): Promise<SurveyEntity> {
+  async save(survey: SurveyEntity): Promise<SurveyEntity> {
     const queryRunner = await TypeORMHelpers.createQueryRunner();
     await queryRunner.startTransaction();
 

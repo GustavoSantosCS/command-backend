@@ -8,9 +8,8 @@ export class DBGetAllEstablishments implements GetAllEstablishmentsUseCase {
     this.getAllEstablishmentsRepo = getAllEstablishmentsRepo;
   }
 
-  async getAllEstablishments(): Promise<GetAllEstablishmentsUseCase.Response> {
-    const establishments =
-      await this.getAllEstablishmentsRepo.getAllEstablishments();
+  async getAll(): Promise<GetAllEstablishmentsUseCase.Response> {
+    const establishments = await this.getAllEstablishmentsRepo.getAll();
     return establishments;
   }
 }

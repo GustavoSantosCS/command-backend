@@ -18,10 +18,10 @@ export class GetAllEstablishmentMusicsController implements Controller {
 
   async handle(
     httpRequest: HttpRequest<
-      GetAllEstablishmentMusicsController.DTOBody,
-      GetAllEstablishmentMusicsController.DTOParams
+      GetAllEstablishmentMusicsController.DTO,
+      GetAllEstablishmentMusicsController.Params
     >
-  ): Promise<HttpResponse<GetAllEstablishmentMusicsController.DTOBody>> {
+  ): Promise<HttpResponse<GetAllEstablishmentMusicsController.DTO>> {
     try {
       const { establishmentId } = httpRequest.params;
 
@@ -42,13 +42,13 @@ export class GetAllEstablishmentMusicsController implements Controller {
 
 // eslint-disable-next-line no-redeclare
 export namespace GetAllEstablishmentMusicsController {
-  export type DTOBody = {
+  export type DTO = {
     authenticated: {
       id: string;
     };
   };
 
-  export type DTOParams = {
+  export type Params = {
     establishmentId: string;
   };
 

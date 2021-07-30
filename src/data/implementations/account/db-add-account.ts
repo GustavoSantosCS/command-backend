@@ -27,7 +27,7 @@ export class DBCreateAccount implements CreateAccountUseCase {
     this.addAccountRepo = addAccountRepo;
   }
 
-  async create({
+  async add({
     establishmentId,
     userId
   }: CreateAccountUseCase.Params): Promise<CreateAccountUseCase.Result> {
@@ -45,7 +45,7 @@ export class DBCreateAccount implements CreateAccountUseCase {
     newAccount.requestsMusic = [];
     newAccount.requestsProduct = [];
 
-    const accountRepo = await this.addAccountRepo.add(newAccount);
+    const accountRepo = await this.addAccountRepo.save(newAccount);
     return right(accountRepo);
   }
 }

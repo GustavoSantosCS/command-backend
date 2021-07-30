@@ -3,7 +3,7 @@ import { PlaylistNotFoundError } from '@/domain/errors';
 import { Either } from '@/shared/either';
 
 export interface UpdatePlaylistUseCase {
-  updatePlaylist(
+  update(
     data: UpdatePlaylistUseCase.Param
   ): Promise<UpdatePlaylistUseCase.Response>;
 }

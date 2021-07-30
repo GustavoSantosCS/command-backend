@@ -37,7 +37,7 @@ export class AddPlayListController implements Controller {
         );
       }
 
-      const resultAdd = await this.addPlayer.addPlayList({
+      const resultAdd = await this.addPlayer.add({
         name,
         establishmentId,
         userId: authenticated.id,

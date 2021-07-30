@@ -73,7 +73,7 @@ export class DBAddVote implements AddVoteUseCase {
     vote.survey = surveyRepo;
 
     // Save into database
-    const savedVote = await this.saveVoteRepo.saveVote(vote);
+    const savedVote = await this.saveVoteRepo.save(vote);
 
     delete savedVote.chosenMusic.establishment;
     delete savedVote.survey.establishment;

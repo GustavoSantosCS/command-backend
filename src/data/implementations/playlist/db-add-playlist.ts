@@ -36,7 +36,7 @@ export class DBAddPlayList implements AddPlayListUseCase {
     this.addPlayListRepo = addPlayListRepo;
   }
 
-  async addPlayList({
+  async add({
     establishmentId,
     userId,
     name,
@@ -80,7 +80,7 @@ export class DBAddPlayList implements AddPlayListUseCase {
         )
     );
 
-    const result = await this.addPlayListRepo.add(playlist, playlistMusics);
+    const result = await this.addPlayListRepo.save(playlist, playlistMusics);
 
     return right(result);
   }

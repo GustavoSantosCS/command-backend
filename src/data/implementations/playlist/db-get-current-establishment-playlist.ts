@@ -24,7 +24,7 @@ export class DBGetCurrentEstablishmentPlaylist
       getCurrentEstablishmentPlaylistRepo;
   }
 
-  async getCurrentPlaylist(
+  async getCurrentEstablishmentPlaylist(
     userId: string,
     establishmentId: string
   ): Promise<GetCurrentEstablishmentPlaylistUseCase.Response> {
@@ -35,7 +35,7 @@ export class DBGetCurrentEstablishmentPlaylist
     if (!establishmentRepo) return left(new EstablishmentNotFoundError());
 
     const currentPlaylist =
-      await this.getCurrentEstablishmentPlaylistRepo.getEstablishmentPlaylist(
+      await this.getCurrentEstablishmentPlaylistRepo.getCurrentEstablishmentPlaylist(
         establishmentId
       );
 

@@ -31,7 +31,7 @@ export class AddSurveyController implements Controller {
         return badRequest(validation.value);
       }
 
-      const survey = await this.addSurvey.addSurvey({
+      const survey = await this.addSurvey.add({
         question: httpRequest.body.question,
         musics: httpRequest.body.musics,
         establishmentId: httpRequest.body.establishmentId,

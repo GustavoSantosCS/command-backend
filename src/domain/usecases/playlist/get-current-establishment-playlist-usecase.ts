@@ -6,7 +6,7 @@ import {
 } from '@/domain/errors';
 
 export interface GetCurrentEstablishmentPlaylistUseCase {
-  getCurrentPlaylist(
+  getCurrentEstablishmentPlaylist(
     userId: string,
     establishmentId: string
   ): Promise<GetCurrentEstablishmentPlaylistUseCase.Response>;

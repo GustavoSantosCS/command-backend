@@ -18,7 +18,7 @@ export class DBCloseSurvey implements CloseSurveyUseCase {
     this.getSurveyByIdRepo = getSurveyByIdRepo;
   }
 
-  async closeSurvey(
+  async close(
     surveyId: string,
     userId: string
   ): Promise<CloseSurveyUseCase.Result> {
