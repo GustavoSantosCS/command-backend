@@ -51,7 +51,7 @@ export const notAuthorizedErro = (): HttpResponse => ({
   statusCode: 401,
   body: {
     error: {
-      message: 'Not Authorized'
+      message: 'Não Autorizado'
     }
   }
 });

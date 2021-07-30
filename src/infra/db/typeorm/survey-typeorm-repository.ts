@@ -131,13 +131,12 @@ export class SurveyTypeOrmRepository
     }
 
     if (strategy.includeVotes) {
-      let votesQueryBuilder = surveyRepo
+      const votesQueryBuilder = surveyRepo
         .createQueryBuilder('surveys')
         .leftJoinAndSelect('surveys.pollVotes', 'votes')
         .innerJoinAndSelect('votes.client', 'users')
         .where('surveys.id = :surveyId', { surveyId });
 
-      if (includeClose) votesQueryBuilder = votesQueryBuilder.withDeleted();
       const surveyAndVotes = await votesQueryBuilder.getOne();
       Object.assign(survey, { pollVotes: surveyAndVotes?.pollVotes || [] });
       survey.pollVotes = survey?.pollVotes.map(s => {

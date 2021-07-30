@@ -20,11 +20,11 @@ export class VoteEntity {
 
   @ManyToOne(() => SurveyEntity, survey => survey.pollVotes)
   @JoinColumn({ name: 'survey_id' })
-  survey?: SurveyEntity;
+  survey: SurveyEntity;
 
   @ManyToOne(() => UserEntity, user => user.pollVotes)
   @JoinColumn({ name: 'client_id' })
-  client?: UserEntity;
+  client: UserEntity;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

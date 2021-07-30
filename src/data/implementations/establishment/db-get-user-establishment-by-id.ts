@@ -18,7 +18,7 @@ export class DBGetUserEstablishmentById
   ): Promise<GetUserEstablishmentByIdUseCase.Response> {
     const establishmentRepo = await this.getEstablishmentByIdRepo.getById(
       establishmentId,
-      { withManager: true }
+      { withManager: true, withImage: true }
     );
 
     if (establishmentRepo?.manager.id !== userId) {

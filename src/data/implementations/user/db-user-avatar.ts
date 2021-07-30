@@ -27,7 +27,7 @@ export class DBUserAvatar implements UpdateUserAvatarUseCase {
     avatar
   }: UpdateUserAvatarUseCase.Params): Promise<UpdateUserAvatarUseCase.Response> {
     const userRepo = await this.getUserByIdRepo.getById(userId);
-    const oldAvatar = { ...userRepo.avatar };
+    const oldAvatar = userRepo.avatar;
 
     const newAvatar = new AvatarEntity();
     newAvatar.originalName = avatar.originalName;

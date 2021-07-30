@@ -42,5 +42,5 @@ export class AccountEntity {
   updatedAt: Date;
 
   @DeleteDateColumn({ name: 'closed_at' })
-  closedAt: Date;
+  closedAt?: Date;
 }

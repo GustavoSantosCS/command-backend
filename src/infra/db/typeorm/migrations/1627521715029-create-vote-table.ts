@@ -11,7 +11,7 @@ export class createVoteTable1627521715029 implements MigrationInterface {
           { name: 'music_id', type: 'uuid' },
           { name: 'survey_id', type: 'uuid' },
           { name: 'client_id', type: 'uuid' },
-          { name: 'closed_at', type: 'timestamp', default: 'now()' }
+          { name: 'created_at', type: 'timestamp', default: 'now()' }
         ],
         foreignKeys: [
           {

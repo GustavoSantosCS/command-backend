@@ -15,11 +15,11 @@ export class MusicPlaylistEntity {
 
   @ManyToOne(() => MusicEntity, music => music.musicToPlaylist)
   @JoinColumn({ name: 'idMusic' })
-  music?: MusicEntity;
+  music: MusicEntity;
 
   @ManyToOne(() => PlaylistEntity, playlist => playlist.musicToPlaylist)
   @JoinColumn({ name: 'idPlaylist' })
-  playlist?: PlaylistEntity;
+  playlist: PlaylistEntity;
 
   constructor(
     id: string,
