@@ -1,4 +1,3 @@
-import { UserModel } from '@/domain/models';
 import { UserEntity } from '@/data/entities';
 
 export interface UpdateUserRepository {
@@ -9,6 +8,6 @@ export interface UpdateUserRepository {
 
 // eslint-disable-next-line no-redeclare
 export namespace UpdateUserRepository {
-  export type Params = UserModel;
+  export type Params = UserEntity;
   export type Result = UserEntity;
 }

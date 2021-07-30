@@ -9,7 +9,6 @@ import {
   JoinColumn,
   OneToMany
 } from 'typeorm';
-import { UserModel } from '@/domain/models';
 import { AvatarEntity } from './avatar-entity';
 import { EstablishmentEntity } from './establishment-entity';
 import { VoteEntity } from './vote-entity';
@@ -50,8 +49,4 @@ export class UserEntity {
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt?: Date;
-
-  constructor(user: UserModel) {
-    Object.assign(this, user);
-  }
 }

@@ -6,7 +6,6 @@ import {
   UpdateUserRepository
 } from '@/data/protocols';
 import { EmailAlreadyUseError, IncorrectPasswordError } from '@/domain/errors';
-import { UserModel } from '@/domain/models';
 import { UpdateUserUseCase } from '@/domain/usecases';
 import { left, right } from '@/shared/either';
 import { UserEntity } from '@/data/entities';
@@ -32,31 +31,35 @@ export class DBUpdateUser implements UpdateUserUseCase {
     this.updateUserRepo = updateUserRepo;
   }
 
-  async update(newUser: UserModel): Promise<UpdateUserUseCase.Response> {
-    const trackedUser = await this.getUserByIdRepo.getById(newUser.id);
+  async update(
+    updateUserData: UserEntity
+  ): Promise<UpdateUserUseCase.Response> {
+    const userRepo = await this.getUserByIdRepo.getById(updateUserData.id);
 
     if (
-      !(await this.hashComparer.compare(newUser.password, trackedUser.password))
+      !(await this.hashComparer.compare(
+        updateUserData.password,
+        userRepo.password
+      ))
     )
-      return left(new IncorrectPasswordError(newUser.password));
+      return left(new IncorrectPasswordError(updateUserData.password));
 
-    if (trackedUser.email !== newUser.email) {
+    if (userRepo.email !== updateUserData.email) {
       const foundUser = await this.searchByEmailRepo.searchByEmail(
-        newUser.email
+        updateUserData.email
       );
 
-      if (foundUser) return left(new EmailAlreadyUseError(newUser.email));
+      if (foundUser)
+        return left(new EmailAlreadyUseError(updateUserData.email));
     }
 
-    const user: UserModel = {
-      id: newUser.id,
-      email: newUser.email,
-      name: newUser.name,
-      password: await this.hasher.hash(newUser.password),
-      avatar: newUser.avatar
-    };
+    const updateUser = new UserEntity();
+    updateUser.id = userRepo.id;
+    updateUser.name = updateUserData.name;
+    updateUser.email = updateUserData.email;
+    updateUser.password = await this.hasher.hash(updateUserData.password);
 
-    const result = await this.updateUserRepo.update(user);
+    const result = await this.updateUserRepo.update(updateUser);
 
     const userReturn: Omit<
       UserEntity,

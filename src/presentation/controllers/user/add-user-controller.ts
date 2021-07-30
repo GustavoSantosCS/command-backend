@@ -1,4 +1,4 @@
-import { UserModel } from '@/domain/models';
+import { UserEntity } from '@/data/entities';
 import { AddUserUseCase } from '@/domain/usecases';
 import {
   Controller,
@@ -65,7 +65,7 @@ export namespace AddUserController {
   };
 
   export type Response = Omit<
-    UserModel,
+    UserEntity,
     'password' | 'avatar' | 'establishments'
   >;
 }

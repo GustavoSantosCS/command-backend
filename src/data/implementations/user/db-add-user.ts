@@ -6,7 +6,6 @@ import {
   Hasher
 } from '@/data/protocols';
 import { EmailAlreadyUseError } from '@/domain/errors';
-import { UserModel } from '@/domain/models';
 import { AddUserUseCase } from '@/domain/usecases';
 import { left, right } from '@/shared/either';
 
@@ -28,8 +27,11 @@ export class DBAddUser implements AddUserUseCase {
     this.addUserRepo = addUserRepository;
   }
 
-  async add(newUser: AddUserUseCase.Params): Promise<AddUserUseCase.Response> {
-    const { name, email, password } = newUser;
+  async add({
+    name,
+    email,
+    password
+  }: AddUserUseCase.Params): Promise<AddUserUseCase.Response> {
     const searchResult = await this.searchByEmailRepo.searchByEmail(email);
 
     if (searchResult) {
@@ -37,21 +39,20 @@ export class DBAddUser implements AddUserUseCase {
     }
 
     const hasherPassword = await this.hasher.hash(password);
-    const user: UserModel = {
-      id: this.idGenerator.generate(),
-      name,
-      email,
-      password: hasherPassword
-    };
+    const newUser = new UserEntity();
+    newUser.id = this.idGenerator.generate();
+    newUser.name = name;
+    newUser.email = email;
+    newUser.password = hasherPassword;
 
-    const resultAddUser = await this.addUserRepo.save(user);
+    const userRepo = await this.addUserRepo.save(newUser);
 
     const userResult: AddUserUseCase.Result = {
-      id: resultAddUser.id,
-      name: resultAddUser.name,
-      email: resultAddUser.email,
-      createdAt: resultAddUser.createdAt,
-      updatedAt: resultAddUser.updatedAt
+      id: userRepo.id,
+      name: userRepo.name,
+      email: userRepo.email,
+      createdAt: userRepo.createdAt,
+      updatedAt: userRepo.updatedAt
     };
 
     return right(userResult);

@@ -8,7 +8,6 @@ import {
   PrimaryColumn,
   UpdateDateColumn
 } from 'typeorm';
-import { RequestProductModel } from '@/domain/models';
 import { AccountEntity } from './account-entity';
 import { ProductEntity } from './product-entity';
 

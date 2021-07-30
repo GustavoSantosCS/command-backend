@@ -7,7 +7,6 @@ import {
   GetUserByIdRepository,
   UpdateUserRepository
 } from '@/data/protocols';
-import { UserModel } from '@/domain/models';
 
 export class UserTypeOrmRepository
   implements
@@ -28,11 +27,10 @@ export class UserTypeOrmRepository
     return findUser;
   }
 
-  async save(user: UserModel): Promise<UserEntity> {
+  async save(user: UserEntity): Promise<UserEntity> {
     const repository = await TypeORMHelpers.getRepository(UserEntity);
-    const userEntity = new UserEntity(user);
-    const result = await repository.save(userEntity);
-    return result;
+    const userRepo = await repository.save(user);
+    return userRepo;
   }
 
   async saveAvatar(avatar: AvatarEntity): Promise<AvatarEntity> {
@@ -74,7 +72,7 @@ export class UserTypeOrmRepository
   }
 
   async update(
-    newUserData: Omit<UserModel, 'email'>
+    newUserData: Omit<UserEntity, 'email'>
   ): Promise<UpdateUserRepository.Result> {
     const repository = await TypeORMHelpers.getRepository(UserEntity);
 
