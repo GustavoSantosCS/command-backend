@@ -1,10 +1,13 @@
 import { RequestProductEntity } from '@/data/entities';
-import { RequestProductModel } from '@/domain/models';
 
 export interface CreateRequestProductRepository {
   save(
-    newRequestProduct: Omit<RequestProductModel, 'product' | 'account'>,
-    productId: string,
-    accountId: string
-  ): Promise<RequestProductEntity>;
+    newRequestProduct: CreateRequestProductRepository.Param
+  ): Promise<CreateRequestProductRepository.Return>;
+}
+
+// eslint-disable-next-line no-redeclare
+export namespace CreateRequestProductRepository {
+  export type Param = RequestProductEntity;
+  export type Return = RequestProductEntity;
 }

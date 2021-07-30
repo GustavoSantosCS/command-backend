@@ -20,11 +20,15 @@ export class DbGetAllAccountRequestProduct
     this.getAllRepo = getAllRepo;
   }
 
-  async getAllAccountRequestsProduct(
-    accountId: string
-  ): Promise<GetAllAccountRequestProductUseCase.Result> {
-    const account = await this.getAccountRepo.getById(accountId);
-    if (!account) return left(new AccountNotFoundError());
+  async getAllAccountRequestsProduct({
+    accountId,
+    userId
+  }): Promise<GetAllAccountRequestProductUseCase.Result> {
+    const account = await this.getAccountRepo.getById(accountId, {
+      withClient: true
+    });
+    if (!account || account?.client.id !== userId)
+      return left(new AccountNotFoundError());
 
     const requestsProduct = await this.getAllRepo.getAllAccountRequestsProduct(
       accountId

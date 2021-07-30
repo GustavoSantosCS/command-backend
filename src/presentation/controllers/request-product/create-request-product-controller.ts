@@ -1,4 +1,4 @@
-import { RequestProductModel } from '@/domain/models';
+import { RequestProductEntity } from '@/data/entities';
 import { CreateRequestProductUseCase } from '@/domain/usecases';
 import {
   Controller,
@@ -27,13 +27,15 @@ export class CreateRequestProductController implements Controller {
     >
   ): Promise<HttpResponse<CreateRequestProductController.Response>> {
     try {
-      const { body } = httpRequest;
+      const { accountId, amountOfProduct, obs, productId, total } =
+        httpRequest.body;
+      const { id: userId } = httpRequest.body.authenticated;
       const resultValidator = this.validator.validate({
-        productId: body.productId,
-        obs: body.obs,
-        total: parseFloat(body.total),
-        amountOfProduct: parseInt(body.amountOfProduct),
-        accountId: body.accountId
+        productId,
+        obs,
+        total: parseFloat(total),
+        amountOfProduct: parseInt(amountOfProduct),
+        accountId
       });
 
       if (resultValidator.isLeft()) {
@@ -42,11 +44,12 @@ export class CreateRequestProductController implements Controller {
 
       const resultCreate = await this.createRequestProduct.createRequestProduct(
         {
-          productId: body?.productId,
-          accountId: body.accountId,
-          obs: body?.obs,
-          total: parseFloat(body?.total),
-          amountOfProduct: parseInt(body?.amountOfProduct)
+          userId,
+          productId,
+          accountId,
+          obs,
+          total: parseFloat(total),
+          amountOfProduct: parseInt(amountOfProduct)
         }
       );
 
@@ -55,6 +58,7 @@ export class CreateRequestProductController implements Controller {
       }
 
       const { value } = resultCreate;
+      delete value.product.establishment;
       const newRequestProduct: CreateRequestProductController.Response = {
         id: value.id,
         product: value.product,
@@ -89,5 +93,5 @@ export namespace CreateRequestProductController {
 
   export type DTOParam = null;
 
-  export type Response = Omit<RequestProductModel, 'account' | 'closedAt'>;
+  export type Response = Omit<RequestProductEntity, 'account' | 'closedAt'>;
 }

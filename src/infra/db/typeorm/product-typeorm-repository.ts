@@ -70,14 +70,24 @@ export class ProductTypeOrmRepository
     }
   }
 
-  async getById(id: string): Promise<ProductEntity> {
+  async getById(
+    id: string,
+    config?: GetProductByIdRepository.Config
+  ): Promise<ProductEntity> {
     const productRepo = await TypeORMHelpers.getRepository(ProductEntity);
 
-    const productEntity = await productRepo
+    let queryRunner = productRepo
       .createQueryBuilder('products')
-      .innerJoinAndSelect('products.image', 'product_image')
-      .innerJoinAndSelect('products.establishment', 'establishments')
-      .innerJoinAndSelect('establishments.manager', 'users')
+      .innerJoinAndSelect('products.image', 'product_image');
+
+    if (config?.whitEstablishment) {
+      queryRunner = queryRunner.innerJoinAndSelect(
+        'products.establishment',
+        'establishments'
+      );
+    }
+
+    const productEntity = queryRunner
       .where('products.id = :id', { id })
       .getOne();
 
@@ -92,8 +102,8 @@ export class ProductTypeOrmRepository
     const productsEntity = await productRepo
       .createQueryBuilder('products')
       .innerJoinAndSelect('products.image', 'product_image')
-      .innerJoinAndSelect('products.establishment', 'establishments')
-      .where('establishments.id = :id', { id: establishmentId })
+      .innerJoin('products.establishment', 'establishments')
+      .where('establishments.id = :establishmentId', { establishmentId })
       .orderBy('products.name', 'ASC')
       .getMany();
 

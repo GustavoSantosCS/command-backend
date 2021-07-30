@@ -7,6 +7,7 @@ import {
 import { CreateRequestProductUseCase } from '@/domain/usecases';
 import { left, right } from '@/shared/either';
 import { AccountNotFoundError, ProductNotFoundError } from '@/domain/errors';
+import { RequestProductEntity } from '@/data/entities';
 
 export class DBCreateRequestProduct implements CreateRequestProductUseCase {
   private readonly idGenerator: IDGenerator;
@@ -27,39 +28,44 @@ export class DBCreateRequestProduct implements CreateRequestProductUseCase {
   }
 
   async createRequestProduct({
-    amountOfProduct,
+    userId,
     productId,
     accountId,
+    amountOfProduct,
     obs,
     total
   }: CreateRequestProductUseCase.Params): Promise<CreateRequestProductUseCase.Result> {
-    const account = this.accountRepo.getById(accountId);
-    if (!account) return left(new AccountNotFoundError());
+    const accountRepo = await this.accountRepo.getById(accountId, {
+      withClient: true,
+      withEstablishment: true
+    });
 
-    const product = this.productRepo.getById(productId);
-    if (!product) return left(new ProductNotFoundError());
+    // the account exists and belongs to a client
+    if (!accountRepo || accountRepo?.client.id !== userId)
+      return left(new AccountNotFoundError());
 
-    const newRequestProduct = await this.requestProductRepo.save(
-      {
-        id: this.idGenerator.generate(),
-        amountOfProduct,
-        obs,
-        total
-      },
-      productId,
-      accountId
+    // the product exists
+    const productRepo = await this.productRepo.getById(productId, {
+      whitEstablishment: true
+    });
+    if (!productRepo) return left(new ProductNotFoundError());
+
+    // the product belongs to the establishment of the account
+    if (accountRepo.establishment.id !== productRepo.establishment.id)
+      return left(new ProductNotFoundError());
+
+    const newRequestProduct = new RequestProductEntity();
+    newRequestProduct.id = this.idGenerator.generate();
+    newRequestProduct.amountOfProduct = amountOfProduct;
+    newRequestProduct.product = productRepo;
+    newRequestProduct.account = accountRepo;
+    newRequestProduct.obs = obs;
+    newRequestProduct.total = total;
+
+    const requestProductRepo = await this.requestProductRepo.save(
+      newRequestProduct
     );
 
-    const result: CreateRequestProductUseCase.Return = {
-      id: newRequestProduct.id,
-      amountOfProduct: newRequestProduct.amountOfProduct,
-      obs: newRequestProduct.obs,
-      product: newRequestProduct.product,
-      total: newRequestProduct.total,
-      createdAt: newRequestProduct.createdAt,
-      updatedAt: newRequestProduct.updatedAt
-    };
-
-    return right(result);
+    return right(requestProductRepo);
   }
 }

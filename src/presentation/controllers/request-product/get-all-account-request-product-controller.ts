@@ -1,4 +1,4 @@
-import { RequestProductModel } from '@/domain/models';
+import { RequestProductEntity } from '@/data/entities';
 import { GetAllAccountRequestProductUseCase } from '@/domain/usecases';
 import {
   Controller,
@@ -21,10 +21,13 @@ export class GetAllAccountRequestProductController implements Controller {
     >
   ): Promise<HttpResponse<GetAllAccountRequestProductController.Result>> {
     try {
+      const { accountId } = httpRequest.params;
+      const { id: userId } = httpRequest.body.authenticated;
       const resultGetAll =
-        await this.getAllAccountRsP.getAllAccountRequestsProduct(
-          httpRequest.params.accountId
-        );
+        await this.getAllAccountRsP.getAllAccountRequestsProduct({
+          userId,
+          accountId
+        });
 
       if (resultGetAll.isLeft()) return badRequest(resultGetAll.value);
 
@@ -44,7 +47,7 @@ export class GetAllAccountRequestProductController implements Controller {
       return ok(data);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('GetAllAccountRequestProductController:40 => ', error);
+      console.error(error);
       return serverError();
     }
   }
@@ -62,5 +65,5 @@ export namespace GetAllAccountRequestProductController {
     accountId: string;
   };
 
-  export type Result = Omit<RequestProductModel, 'account' | 'closedAt'>[];
+  export type Result = Omit<RequestProductEntity, 'account' | 'closedAt'>[];
 }

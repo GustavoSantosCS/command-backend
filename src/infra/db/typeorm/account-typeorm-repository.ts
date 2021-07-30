@@ -30,11 +30,33 @@ export class AccountTypeOrmRepository
     }
   }
 
-  async getById(accountId: string): Promise<GetAccountByIdRepository.Result> {
+  async getById(
+    accountId: string,
+    config?: GetAccountByIdRepository.Config
+  ): Promise<AccountEntity> {
     const repository = await TypeORMHelpers.getRepository(AccountEntity);
-    const accountFound = await repository.findOne(accountId);
+    let queryBuilder = repository.createQueryBuilder('accounts');
 
-    return accountFound;
+    if (config?.withClient) {
+      queryBuilder = queryBuilder.innerJoinAndSelect(
+        'accounts.client',
+        'users'
+      );
+    }
+
+    if (config?.withEstablishment) {
+      queryBuilder = queryBuilder.innerJoinAndSelect(
+        'accounts.establishment',
+        'establishments'
+      );
+    }
+
+    queryBuilder = queryBuilder.where('accounts.id = :accountId', {
+      accountId
+    });
+
+    const account = await queryBuilder.getOne();
+    return account;
   }
 
   async getAllUserAccount(

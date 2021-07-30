@@ -11,6 +11,7 @@ export interface CreateRequestProductUseCase {
 // eslint-disable-next-line no-redeclare
 export namespace CreateRequestProductUseCase {
   export type Params = {
+    userId: string;
     productId: string;
     accountId: string;
     obs: string;

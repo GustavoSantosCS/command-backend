@@ -42,8 +42,4 @@ export class RequestProductEntity {
 
   @DeleteDateColumn({ name: 'closed_at' })
   closedAt: Date;
-
-  constructor(requestProduct: RequestProductModel) {
-    Object.assign(this, requestProduct);
-  }
 }

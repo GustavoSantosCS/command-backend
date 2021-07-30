@@ -1,13 +1,16 @@
 import { AccountEntity } from '@/data/entities';
 
 export interface GetAccountByIdRepository {
-  getById(accountId: string): Promise<GetAccountByIdRepository.Result>;
+  getById(
+    accountId: string,
+    config?: GetAccountByIdRepository.Config
+  ): Promise<AccountEntity>;
 }
 
 // eslint-disable-next-line no-redeclare
 export namespace GetAccountByIdRepository {
-  export type Result = Omit<
-    AccountEntity,
-    'client' | 'establishment' | 'requestsProduct' | 'requestsMusic'
-  >;
+  export type Config = {
+    withClient?: boolean;
+    withEstablishment?: boolean;
+  };
 }
