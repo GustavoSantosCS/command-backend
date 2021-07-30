@@ -16,20 +16,20 @@ export class CreatePlaylistMusicTable1625200947671
         name: this.tableName,
         columns: [
           { name: 'id', type: 'uuid', isPrimary: true },
-          { name: 'idPlaylist', type: 'uuid' },
-          { name: 'idMusic', type: 'uuid' },
+          { name: 'playlist_id', type: 'uuid' },
+          { name: 'music_id', type: 'uuid' },
           { name: 'position', type: 'int' },
           { name: 'isPlay', type: 'boolean' }
         ],
         foreignKeys: [
           {
-            columnNames: ['idPlaylist'],
+            columnNames: ['playlist_id'],
             referencedColumnNames: ['id'],
             referencedTableName: 'playlists',
             name: 'playlists_music_fk'
           },
           {
-            columnNames: ['idMusic'],
+            columnNames: ['music_id'],
             referencedColumnNames: ['id'],
             referencedTableName: 'musics',
             name: 'music_playlists_fk'

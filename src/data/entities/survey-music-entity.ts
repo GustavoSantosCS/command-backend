@@ -11,10 +11,10 @@ export class SurveyMusicEntity {
   position: number;
 
   @ManyToOne(() => MusicEntity, music => music.surveyToMusic)
-  @JoinColumn({ name: 'idMusic' })
+  @JoinColumn({ name: 'music_id' })
   music?: MusicEntity;
 
   @ManyToOne(() => SurveyEntity, survey => survey.surveyToMusic)
-  @JoinColumn({ name: 'idSurvey' })
+  @JoinColumn({ name: 'survey_id' })
   survey?: SurveyEntity;
 }

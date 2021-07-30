@@ -14,11 +14,11 @@ export class MusicPlaylistEntity {
   isPlay: boolean;
 
   @ManyToOne(() => MusicEntity, music => music.musicToPlaylist)
-  @JoinColumn({ name: 'idMusic' })
+  @JoinColumn({ name: 'music_id' })
   music: MusicEntity;
 
   @ManyToOne(() => PlaylistEntity, playlist => playlist.musicToPlaylist)
-  @JoinColumn({ name: 'idPlaylist' })
+  @JoinColumn({ name: 'playlist_id' })
   playlist: PlaylistEntity;
 
   constructor(

@@ -8,19 +8,19 @@ export class CreateMusicTable1626846779793 implements MigrationInterface {
         name: this.tableName,
         columns: [
           { name: 'id', type: 'uuid', isPrimary: true },
-          { name: 'idSurvey', type: 'uuid' },
-          { name: 'idMusic', type: 'uuid' },
+          { name: 'survey_id', type: 'uuid' },
+          { name: 'music_id', type: 'uuid' },
           { name: 'position', type: 'int' }
         ],
         foreignKeys: [
           {
-            columnNames: ['idSurvey'],
+            columnNames: ['survey_id'],
             referencedColumnNames: ['id'],
             referencedTableName: 'surveys',
             name: 'survey_music_fk'
           },
           {
-            columnNames: ['idMusic'],
+            columnNames: ['music_id'],
             referencedColumnNames: ['id'],
             referencedTableName: 'musics',
             name: 'music_survey_fk'

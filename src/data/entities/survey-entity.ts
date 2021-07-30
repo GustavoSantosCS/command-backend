@@ -28,8 +28,8 @@ export class SurveyEntity {
   @ManyToMany(() => MusicEntity, musics => musics.surveys)
   @JoinTable({
     name: 'survey_music',
-    joinColumn: { name: 'idSurvey' },
-    inverseJoinColumn: { name: 'idMusic' }
+    joinColumn: { name: 'survey_id' },
+    inverseJoinColumn: { name: 'music_id' }
   })
   musics: MusicEntity[];
 

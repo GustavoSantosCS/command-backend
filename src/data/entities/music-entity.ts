@@ -38,16 +38,16 @@ export class MusicEntity {
   @ManyToMany(() => PlaylistEntity, playlists => playlists.musics)
   @JoinTable({
     name: 'playlist_music',
-    joinColumn: { name: 'idMusic' },
-    inverseJoinColumn: { name: 'idPlaylist' }
+    joinColumn: { name: 'music_id' },
+    inverseJoinColumn: { name: 'playlist_' }
   })
   playlists: PlaylistEntity[];
 
   @ManyToMany(() => SurveyEntity, surveys => surveys.musics)
   @JoinTable({
     name: 'survey_music',
-    joinColumn: { name: 'idMusic' },
-    inverseJoinColumn: { name: 'idSurvey' }
+    joinColumn: { name: 'music_id' },
+    inverseJoinColumn: { name: 'survey_id' }
   })
   surveys?: SurveyEntity[];
 
