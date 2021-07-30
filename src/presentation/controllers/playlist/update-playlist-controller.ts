@@ -1,4 +1,4 @@
-import { PlayListModel } from '@/domain/models';
+import { PlaylistEntity } from '@/data/entities';
 import { UpdatePlaylistUseCase } from '@/domain/usecases';
 import {
   Controller,
@@ -60,7 +60,7 @@ export class UpdatePlaylistController implements Controller {
       return ok(result);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('UpdatePlaylistController:61 => ', error);
+      console.error(error);
       return serverError();
     }
   }
@@ -80,6 +80,9 @@ export namespace UpdatePlaylistController {
 
   export type Param = null;
 
-  export type Return = Omit<PlayListModel, 'establishment'>;
+  export type Return = Omit<
+    PlaylistEntity,
+    'establishment' | 'musics' | 'musicToPlaylist' | 'currentMusic'
+  >;
   export type Response = HttpResponse<Return>;
 }

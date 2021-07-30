@@ -1,5 +1,4 @@
 import { PlaylistEntity } from '@/data/entities';
-import { PlayListModel } from '@/domain/models';
 import { GetCurrentEstablishmentPlaylistUseCase } from '@/domain/usecases';
 import {
   Controller,
@@ -45,7 +44,7 @@ export class GetCurrentEstablishmentPlaylistController implements Controller {
         return badRequest(result.value);
       }
 
-      const playerList: Omit<PlaylistEntity, 'establishment' | 'musics'> = {
+      const playerList: GetCurrentEstablishmentPlaylistController.Response = {
         id: result.value.id,
         name: result.value.name,
         isActive: result.value.isActive,
@@ -76,5 +75,5 @@ export namespace GetCurrentEstablishmentPlaylistController {
     establishmentId: string;
   };
 
-  export type Response = Omit<PlayListModel, 'establishment'>;
+  export type Response = Omit<PlaylistEntity, 'establishment' | 'musics'>;
 }

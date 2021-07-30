@@ -1,5 +1,4 @@
-import { EstablishmentEntity } from '@/data/entities';
-import { PlayListModel } from './playlist-model';
+import { EstablishmentEntity, PlaylistEntity } from '@/data/entities';
 
 export type MusicModel = {
   id: string;
@@ -7,7 +6,7 @@ export type MusicModel = {
   talent: string;
   duration: number;
   establishment?: EstablishmentEntity;
-  playlists?: PlayListModel[];
+  playlists?: PlaylistEntity[];
   createdAt?: Date;
   updatedAt?: Date;
 };

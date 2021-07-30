@@ -6,7 +6,7 @@ import {
   HttpResponse
 } from '@/presentation/protocols';
 import { badRequest, ok, serverError } from '@/utils/http';
-import { IsNotTypeError, MissingParamError } from '@/validation/errors';
+import { MissingParamError } from '@/validation/errors';
 import { Validator } from '@/validation/protocols';
 
 export class AddPlayListController implements Controller {

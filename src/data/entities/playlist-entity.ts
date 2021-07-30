@@ -1,4 +1,3 @@
-import { PlayListModel } from '@/domain/models';
 import {
   Column,
   CreateDateColumn,
