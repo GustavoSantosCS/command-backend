@@ -1,14 +1,10 @@
-import {
-  EstablishmentEntity,
-  ProductEntity,
-  ProductImageEntity
-} from '@/data/entities';
+/* eslint-disable no-param-reassign */
+import { ProductEntity } from '@/data/entities';
 import {
   AddProductRepository,
   GetAllEstablishmentProductsRepository,
   GetProductByIdRepository
 } from '@/data/protocols';
-import { ProductModel } from '@/domain/models';
 import { TypeORMHelpers } from './typeorm-helper';
 
 export class ProductTypeOrmRepository
@@ -17,10 +13,7 @@ export class ProductTypeOrmRepository
     GetProductByIdRepository,
     GetAllEstablishmentProductsRepository
 {
-  async save(
-    product: ProductModel,
-    establishmentId: string
-  ): Promise<ProductEntity> {
+  async save(product: ProductEntity): Promise<ProductEntity> {
     const connection = await TypeORMHelpers.getConnection();
     const queryRunner = connection.createQueryRunner();
 
@@ -29,37 +22,14 @@ export class ProductTypeOrmRepository
 
     try {
       // Save image
-      let imageEntity = new ProductImageEntity(product.image);
-      imageEntity = await queryRunner.manager.save(imageEntity);
-
-      // get establishment
-      const trackEstablishment = await queryRunner.manager.findOne(
-        EstablishmentEntity,
-        establishmentId,
-        {
-          relations: ['products']
-        }
-      );
+      const image = await queryRunner.manager.save(product.image);
 
       // Save product
-      let productEntity = new ProductEntity(product);
-      productEntity.establishment = trackEstablishment;
-      productEntity.image = imageEntity;
-      productEntity = await queryRunner.manager.save(productEntity);
-
-      // Save establishment with the new product
-      if (!trackEstablishment.products) {
-        trackEstablishment.products = [];
-      }
-
-      trackEstablishment.products.push(productEntity);
-      await queryRunner.manager.save(trackEstablishment);
+      product.image = image;
+      const productRepo = await queryRunner.manager.save(product);
 
       await queryRunner.commitTransaction();
-
-      delete productEntity.establishment;
-
-      return productEntity;
+      return productRepo;
     } catch (err) {
       // eslint-disable-next-line no-console
       console.error('ProductTypeOrmRepository:65 => ', err);

@@ -9,7 +9,6 @@ import {
   PrimaryColumn,
   UpdateDateColumn
 } from 'typeorm';
-import { ProductModel } from '@/domain/models';
 import { EstablishmentEntity } from './establishment-entity';
 import { ProductImageEntity } from './product-image-entity';
 
@@ -46,8 +45,4 @@ export class ProductEntity {
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: Date;
-
-  constructor(product: ProductModel) {
-    Object.assign(this, product);
-  }
 }

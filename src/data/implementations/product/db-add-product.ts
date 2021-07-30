@@ -6,6 +6,7 @@ import {
 import { AddProductUseCase } from '@/domain/usecases';
 import { left, right } from '@/shared/either';
 import { EstablishmentNotFoundError } from '@/domain/errors';
+import { ProductEntity, ProductImageEntity } from '@/data/entities';
 
 export class DBAddProduct implements AddProductUseCase {
   private readonly idGenerator: IDGenerator;
@@ -38,18 +39,18 @@ export class DBAddProduct implements AddProductUseCase {
     if (establishmentRepo?.manager.id !== userId)
       return left(new EstablishmentNotFoundError());
 
-    const product = await this.addProductRepo.save(
-      {
-        id: this.idGenerator.generate(),
-        name,
-        description,
-        isAvailable: true,
-        price,
-        image: productImage,
-        establishment: null
-      },
-      establishmentId
-    );
+    const newProduct = new ProductEntity();
+    newProduct.id = this.idGenerator.generate();
+    newProduct.name = name;
+    newProduct.description = description;
+    newProduct.price = price;
+    newProduct.establishment = establishmentRepo;
+    newProduct.isAvailable = true;
+    const image = new ProductImageEntity();
+    Object.assign(image, productImage);
+    newProduct.image = image;
+
+    const product = await this.addProductRepo.save(newProduct);
 
     return right(product);
   }

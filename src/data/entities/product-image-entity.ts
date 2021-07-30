@@ -1,5 +1,4 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
-import { ImagePersistenceData } from '@/domain/models';
 
 @Entity('product_image')
 export class ProductImageEntity {
@@ -11,8 +10,4 @@ export class ProductImageEntity {
 
   @Column()
   target: string;
-
-  constructor(image: ImagePersistenceData) {
-    Object.assign(this, image);
-  }
 }

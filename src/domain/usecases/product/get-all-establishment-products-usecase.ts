@@ -4,7 +4,7 @@ import { Either } from '@/shared/either';
 
 export interface GetAllEstablishmentProductsUseCase {
   getAllEstablishmentProducts(
-    establishmentId
+    establishmentId: string
   ): Promise<GetAllEstablishmentProductsUseCase.Result>;
 }
 

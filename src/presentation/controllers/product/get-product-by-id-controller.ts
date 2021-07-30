@@ -1,4 +1,4 @@
-import { ProductModel } from '@/domain/models';
+import { ProductEntity } from '@/data/entities';
 import { GetProductByIdUseCase } from '@/domain/usecases';
 import {
   Controller,
@@ -58,5 +58,5 @@ export namespace GetProductByIdController {
     id: string;
   };
 
-  export type Response = Omit<ProductModel, 'establishment'>;
+  export type Response = Omit<ProductEntity, 'establishment' | 'deletedAt'>;
 }

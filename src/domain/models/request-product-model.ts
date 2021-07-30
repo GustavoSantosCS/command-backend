@@ -1,9 +1,8 @@
-import { AccountEntity } from '@/data/entities';
-import { ProductModel } from './product-model';
+import { AccountEntity, ProductEntity } from '@/data/entities';
 
 export type RequestProductModel = {
   id: string;
-  product: ProductModel;
+  product: ProductEntity;
   account: AccountEntity;
   amountOfProduct: number;
   total: number;

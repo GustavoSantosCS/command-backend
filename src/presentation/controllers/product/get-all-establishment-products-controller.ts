@@ -1,4 +1,4 @@
-import { ProductModel } from '@/domain/models';
+import { ProductEntity } from '@/data/entities';
 import { GetAllEstablishmentProductsUseCase } from '@/domain/usecases';
 import {
   Controller,
@@ -16,10 +16,10 @@ export class GetAllEstablishmentProductsController implements Controller {
 
   async handle(
     httpRequest: HttpRequest<
-      GetAllEstablishmentProductsController.DTOBody,
-      GetAllEstablishmentProductsController.DTOParams
+      GetAllEstablishmentProductsController.DTO,
+      GetAllEstablishmentProductsController.Params
     >
-  ): Promise<HttpResponse<GetAllEstablishmentProductsController.DTOBody>> {
+  ): Promise<HttpResponse<GetAllEstablishmentProductsController.DTO>> {
     try {
       const establishmentId = httpRequest.params.id;
 
@@ -46,7 +46,7 @@ export class GetAllEstablishmentProductsController implements Controller {
       return ok(products);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('GetAllEstablishmentProductsController:51 => ', error);
+      console.error(error);
       return serverError();
     }
   }
@@ -54,15 +54,15 @@ export class GetAllEstablishmentProductsController implements Controller {
 
 // eslint-disable-next-line no-redeclare
 export namespace GetAllEstablishmentProductsController {
-  export type DTOBody = {
+  export type DTO = {
     authenticated: {
       id: string;
     };
   };
 
-  export type DTOParams = {
+  export type Params = {
     id: string;
   };
 
-  export type Response = Omit<ProductModel, 'establishment'>[];
+  export type Response = Omit<ProductEntity, 'establishment' | 'deletedAt'>[];
 }

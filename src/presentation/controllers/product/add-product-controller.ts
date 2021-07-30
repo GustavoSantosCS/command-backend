@@ -1,4 +1,5 @@
-import { ImagePersistenceData, ProductModel } from '@/domain/models';
+import { ProductEntity } from '@/data/entities';
+import { ImagePersistenceData } from '@/domain/models';
 import { AddProductUseCase } from '@/domain/usecases';
 import {
   Controller,
@@ -60,7 +61,7 @@ export class AddProductController implements Controller {
       return ok(newProduct);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('AddProductController:45 => ', error);
+      console.error(error);
       return serverError();
     }
   }
@@ -79,5 +80,5 @@ export namespace AddProductController {
     productImage: ImagePersistenceData;
   };
 
-  export type Response = Omit<ProductModel, 'establishment'>;
+  export type Response = Omit<ProductEntity, 'establishment' | 'deletedAt'>;
 }
