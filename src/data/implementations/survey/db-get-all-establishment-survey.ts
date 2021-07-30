@@ -23,10 +23,10 @@ export class DBGetAllEstablishmentSurvey
   async getAll(
     establishmentId: string
   ): Promise<GetAllEstablishmentSurveyUseCase.Response> {
-    const establishment = await this.getAllEstablishmentById.getById(
+    const establishmentRepo = await this.getAllEstablishmentById.getById(
       establishmentId
     );
-    if (!establishment) {
+    if (!establishmentRepo) {
       return left(new EstablishmentNotFoundError());
     }
 

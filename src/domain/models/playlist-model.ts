@@ -1,12 +1,11 @@
-import { EstablishmentEntity } from '@/data/entities';
-import { MusicModel } from './music-model';
+import { EstablishmentEntity, MusicEntity } from '@/data/entities';
 
 export type PlayListModel = {
   id: string;
   name: string;
   establishment: EstablishmentEntity;
   isActive: boolean;
-  musics?: MusicModel[];
+  musics?: MusicEntity[];
   createdAt?: Date;
   updatedAt?: Date;
 };

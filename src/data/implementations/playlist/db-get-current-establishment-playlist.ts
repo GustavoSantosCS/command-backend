@@ -28,11 +28,11 @@ export class DBGetCurrentEstablishmentPlaylist
     userId: string,
     establishmentId: string
   ): Promise<GetCurrentEstablishmentPlaylistUseCase.Response> {
-    const establishment = await this.getEstablishmentByIdRepo.getById(
+    const establishmentRepo = await this.getEstablishmentByIdRepo.getById(
       establishmentId
     );
 
-    if (!establishment) return left(new EstablishmentNotFoundError());
+    if (!establishmentRepo) return left(new EstablishmentNotFoundError());
 
     const currentPlaylist =
       await this.getCurrentEstablishmentPlaylistRepo.getEstablishmentPlaylist(

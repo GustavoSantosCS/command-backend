@@ -1,4 +1,4 @@
-import { MusicModel } from '@/domain/models';
+import { MusicEntity } from '@/data/entities';
 import { GetAllEstablishmentMusicsUseCase } from '@/domain/usecases';
 import {
   Controller,
@@ -23,18 +23,18 @@ export class GetAllEstablishmentMusicsController implements Controller {
     >
   ): Promise<HttpResponse<GetAllEstablishmentMusicsController.DTOBody>> {
     try {
-      const idEstablishment = httpRequest.params.id;
+      const { establishmentId } = httpRequest.params;
 
-      const response =
+      const usecaseResult =
         await this.getAllEstablishmentMusics.getAllEstablishmentMusics(
-          idEstablishment
+          establishmentId
         );
 
-      if (response.isLeft()) return badRequest(response.value);
-      return ok(response.value);
+      if (usecaseResult.isLeft()) return badRequest(usecaseResult.value);
+      return ok(usecaseResult.value);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('GetAllEstablishmentMusicsController:37 => ', error);
+      console.error(error);
       return serverError();
     }
   }
@@ -49,8 +49,8 @@ export namespace GetAllEstablishmentMusicsController {
   };
 
   export type DTOParams = {
-    id: string;
+    establishmentId: string;
   };
 
-  export type Response = Omit<MusicModel, 'establishment'>[];
+  export type Response = MusicEntity[];
 }

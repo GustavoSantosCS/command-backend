@@ -4,7 +4,7 @@ import { EstablishmentNotFoundError } from '@/domain/errors';
 
 export interface GetAllEstablishmentMusicsUseCase {
   getAllEstablishmentMusics(
-    idEstablishment: string
+    establishmentId: string
   ): Promise<GetAllEstablishmentMusicsUseCase.Result>;
 }
 

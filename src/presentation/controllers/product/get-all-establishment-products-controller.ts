@@ -21,11 +21,11 @@ export class GetAllEstablishmentProductsController implements Controller {
     >
   ): Promise<HttpResponse<GetAllEstablishmentProductsController.DTOBody>> {
     try {
-      const idEstablishment = httpRequest.params.id;
+      const establishmentId = httpRequest.params.id;
 
       const resultGetAll =
         await this.getAllEstablishmentProducts.getAllEstablishmentProducts(
-          idEstablishment
+          establishmentId
         );
       if (resultGetAll.isLeft()) {
         return badRequest(resultGetAll.value);

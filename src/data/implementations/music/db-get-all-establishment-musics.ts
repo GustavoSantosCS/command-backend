@@ -20,15 +20,15 @@ export class DBGetAllEstablishmentMusics
   async getAllEstablishmentMusics(
     establishmentId: string
   ): Promise<GetAllEstablishmentMusicsUseCase.Result> {
-    const establishment = await this.getEstablishmentByIdRepo.getById(
+    const establishmentRepo = await this.getEstablishmentByIdRepo.getById(
       establishmentId
     );
-    if (!establishment) return left(new EstablishmentNotFoundError());
+    if (!establishmentRepo) return left(new EstablishmentNotFoundError());
 
-    const musics =
+    const musicsRepo =
       await this.getAllEstablishmentMusicsRepo.getAllEstablishmentMusics(
         establishmentId
       );
-    return right(musics);
+    return right(musicsRepo);
   }
 }

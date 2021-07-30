@@ -10,7 +10,7 @@ export default (router: Router): void => {
   router.post('/music', authorization, adapterRoute(makeAddMusicController()));
 
   router.get(
-    '/establishment/:id/musics',
+    '/establishment/:establishmentId/musics',
     authorization,
     adapterRoute(makeGetAllEstablishmentMusicsController())
   );

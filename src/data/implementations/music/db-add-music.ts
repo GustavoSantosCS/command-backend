@@ -1,10 +1,10 @@
+import { MusicEntity } from '@/data/entities';
 import {
   AddMusicRepository,
   GetEstablishmentByIdRepository,
   IDGenerator
 } from '@/data/protocols';
 import { EstablishmentNotFoundError } from '@/domain/errors';
-import { MusicModel } from '@/domain/models';
 import { AddMusicUseCase } from '@/domain/usecases';
 import { left, right } from '@/shared/either';
 
@@ -30,22 +30,21 @@ export class DBAddMusic implements AddMusicUseCase {
     talent,
     duration
   }: AddMusicUseCase.Params): Promise<AddMusicUseCase.Result> {
-    const establishment = await this.getEstablishmentByIdRepo.getById(
-      establishmentId
+    const establishmentRepo = await this.getEstablishmentByIdRepo.getById(
+      establishmentId,
+      { withManager: true }
     );
-    if (!establishment) return left(new EstablishmentNotFoundError());
+    if (establishmentRepo?.manager.id !== userId)
+      return left(new EstablishmentNotFoundError());
 
-    const { manager } = establishment;
-    if (manager.id !== userId) return left(new EstablishmentNotFoundError());
+    const newMusic = new MusicEntity();
+    newMusic.id = this.idGenerator.generate();
+    newMusic.name = name;
+    newMusic.talent = talent;
+    newMusic.duration = duration;
+    newMusic.establishment = establishmentRepo;
 
-    const createMusic: MusicModel = {
-      id: this.idGenerator.generate(),
-      name,
-      duration,
-      talent
-    };
-
-    const result = await this.addMusicRepo.add(createMusic, establishmentId);
+    const result = await this.addMusicRepo.save(newMusic);
     return right(result);
   }
 }

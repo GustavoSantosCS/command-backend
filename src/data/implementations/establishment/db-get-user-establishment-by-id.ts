@@ -16,14 +16,15 @@ export class DBGetUserEstablishmentById
     userId: string,
     establishmentId: string
   ): Promise<GetUserEstablishmentByIdUseCase.Response> {
-    const establishment = await this.getEstablishmentByIdRepo.getById(
-      establishmentId
+    const establishmentRepo = await this.getEstablishmentByIdRepo.getById(
+      establishmentId,
+      { withManager: true }
     );
 
-    if (establishment?.manager.id !== userId) {
+    if (establishmentRepo?.manager.id !== userId) {
       return left(new EstablishmentNotFoundError());
     }
 
-    return right(establishment);
+    return right(establishmentRepo);
   }
 }

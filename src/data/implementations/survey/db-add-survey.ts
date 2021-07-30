@@ -42,10 +42,11 @@ export class DBAddSurvey implements AddSurveyUseCase {
     question
   }: AddSurveyUseCase.Param): Promise<AddSurveyUseCase.Result> {
     const establishmentRepo = await this.getEstablishment.getById(
-      establishmentId
+      establishmentId,
+      { withManager: true }
     );
 
-    if (!establishmentRepo || establishmentRepo?.manager.id !== userId)
+    if (establishmentRepo?.manager.id !== userId)
       return left(new EstablishmentNotFoundError());
 
     const musicsResult = await Promise.all(

@@ -1,4 +1,4 @@
-import { MusicModel } from '@/domain/models';
+import { MusicEntity } from '@/data/entities';
 import { AddMusicUseCase } from '@/domain/usecases';
 import {
   Controller,
@@ -9,10 +9,13 @@ import { badRequest, ok, serverError } from '@/utils/http';
 import { Validator } from '@/validation/protocols';
 
 export class AddMusicController implements Controller {
-  constructor(
-    private readonly validator: Validator,
-    private readonly addMusic: AddMusicUseCase
-  ) {}
+  private readonly validator: Validator;
+  private readonly addMusic: AddMusicUseCase;
+
+  constructor(validator: Validator, addMusic: AddMusicUseCase) {
+    this.validator = validator;
+    this.addMusic = addMusic;
+  }
 
   async handle(
     httpRequest: HttpRequest<AddMusicController.DTO, null>
@@ -53,7 +56,7 @@ export class AddMusicController implements Controller {
       return ok(music);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('AddMusicController:54 => ', error);
+      console.error(error);
       return serverError();
     }
   }
@@ -71,5 +74,5 @@ export namespace AddMusicController {
     establishmentId: string;
   };
 
-  export type Response = Omit<MusicModel, 'establishment' | 'playlists'>;
+  export type Response = Omit<MusicEntity, 'establishment' | 'playlists'>;
 }

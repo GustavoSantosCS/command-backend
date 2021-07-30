@@ -58,18 +58,36 @@ export class EstablishmentTypeOrmRepository
   }
 
   async getById(
-    establishmentId: string
+    establishmentId: string,
+    config?: GetEstablishmentByIdRepository.Config
   ): Promise<GetEstablishmentByIdRepository.Result> {
     try {
       const establishmentRepository = await TypeORMHelpers.getRepository(
         EstablishmentEntity
       );
-      const query = establishmentRepository
-        .createQueryBuilder('establishments')
-        .innerJoinAndSelect('establishments.manager', 'users')
-        .innerJoinAndSelect('establishments.image', 'establishment_image')
-        .where('establishments.id = :establishmentId', { establishmentId });
-      const establishmentsUser = await query.getOne();
+      let queryBuilder =
+        establishmentRepository.createQueryBuilder('establishments');
+
+      if (config?.withImage) {
+        queryBuilder = queryBuilder.innerJoinAndSelect(
+          'establishments.image',
+          'establishment_image'
+        );
+      }
+
+      if (config?.withManager) {
+        queryBuilder = queryBuilder.innerJoinAndSelect(
+          'establishments.manager',
+          'users'
+        );
+      }
+
+      queryBuilder = queryBuilder.where(
+        'establishments.id = :establishmentId',
+        { establishmentId }
+      );
+
+      const establishmentsUser = await queryBuilder.getOne();
       return establishmentsUser;
     } catch (error) {
       // eslint-disable-next-line no-console

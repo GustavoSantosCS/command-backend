@@ -23,11 +23,11 @@ export class GetUserEstablishmentByIdController implements Controller {
   ): Promise<HttpResponse<GetUserEstablishmentByIdController.Response>> {
     try {
       const { id: userId } = httpRequest.body.authenticated;
-      const { idEstablishment } = httpRequest.params;
+      const { establishmentId } = httpRequest.params;
 
       const response = await this.getUserEstablishment.getUserEstablishmentById(
         userId,
-        idEstablishment
+        establishmentId
       );
 
       if (response.isLeft())
@@ -62,7 +62,7 @@ export namespace GetUserEstablishmentByIdController {
   };
 
   export type Param = {
-    idEstablishment: string;
+    establishmentId: string;
   };
 
   export type Return = Omit<

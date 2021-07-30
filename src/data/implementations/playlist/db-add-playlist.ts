@@ -42,18 +42,19 @@ export class DBAddPlayList implements AddPlayListUseCase {
     name,
     musics
   }: AddPlayListUseCase.Params): AddPlayListUseCase.Result {
-    const establishment = await this.getEstablishmentByIdRepo.getById(
-      establishmentId
+    const establishmentRepo = await this.getEstablishmentByIdRepo.getById(
+      establishmentId,
+      { withManager: true }
     );
 
-    if (establishment?.manager.id !== userId)
+    if (establishmentRepo?.manager.id !== userId)
       return left(new EstablishmentNotFoundError());
 
     const playlist = new PlaylistEntity();
     playlist.id = this.idGenerator.generate();
     playlist.name = name;
     playlist.isActive = false;
-    playlist.establishment = establishment as EstablishmentEntity;
+    playlist.establishment = establishmentRepo as EstablishmentEntity;
 
     const musicsTrack = await Promise.all(
       musics.map(async musicId => {

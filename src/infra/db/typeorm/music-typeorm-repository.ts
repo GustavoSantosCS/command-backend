@@ -1,10 +1,9 @@
-import { EstablishmentEntity, MusicEntity } from '@/data/entities';
+import { MusicEntity } from '@/data/entities';
 import {
   AddMusicRepository,
   GetAllEstablishmentMusicsRepository,
   GetMusicByIdRepository
 } from '@/data/protocols';
-import { MusicModel } from '@/domain/models';
 import { TypeORMHelpers } from './typeorm-helper';
 
 export class MusicTypeOrmRepository
@@ -13,33 +12,17 @@ export class MusicTypeOrmRepository
     GetAllEstablishmentMusicsRepository,
     GetMusicByIdRepository
 {
-  async add(
-    musicModel: MusicModel,
-    establishmentId: string
-  ): Promise<MusicEntity> {
+  async save(newMusic: MusicEntity): Promise<MusicEntity> {
     const queryRunner = await TypeORMHelpers.createQueryRunner();
 
     await queryRunner.startTransaction();
 
     try {
-      // get establishment
-      const trackedEstablishment = await queryRunner.manager.findOne(
-        EstablishmentEntity,
-        establishmentId
-      );
-
-      // create music entity
-      const musicEntity = new MusicEntity(musicModel);
-      musicEntity.establishment = trackedEstablishment;
-      const persistentMusic = await queryRunner.manager.save(musicEntity);
-
+      const musicRepo = await queryRunner.manager.save(newMusic);
       await queryRunner.commitTransaction();
-
-      delete persistentMusic.establishment;
-      return persistentMusic;
+      delete musicRepo.establishment;
+      return musicRepo;
     } catch (err) {
-      // eslint-disable-next-line no-console
-      console.error('MusicTypeOrmRepository:47 => ', err);
       await queryRunner.rollbackTransaction();
       throw err;
     } finally {

@@ -30,11 +30,12 @@ export class DBAddProduct implements AddProductUseCase {
     price,
     productImage
   }: AddProductUseCase.Params): AddProductUseCase.Result {
-    const establishment = await this.getEstablishmentByIdRepo.getById(
-      establishmentId
+    const establishmentRepo = await this.getEstablishmentByIdRepo.getById(
+      establishmentId,
+      { withManager: true }
     );
 
-    if (establishment?.manager.id !== userId)
+    if (establishmentRepo?.manager.id !== userId)
       return left(new EstablishmentNotFoundError());
 
     const product = await this.addProductRepo.save(

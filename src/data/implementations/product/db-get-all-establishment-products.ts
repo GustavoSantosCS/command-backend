@@ -23,10 +23,10 @@ export class DBGetAllEstablishmentProducts
   async getAllEstablishmentProducts(
     establishmentId: string
   ): Promise<GetAllEstablishmentProductsUseCase.Result> {
-    const establishment = await this.getEstablishmentByIdRepo.getById(
+    const establishmentRepo = await this.getEstablishmentByIdRepo.getById(
       establishmentId
     );
-    if (!establishment) return left(new EstablishmentNotFoundError());
+    if (!establishmentRepo) return left(new EstablishmentNotFoundError());
 
     const products =
       await this.getAllEstablishmentProductsRepo.getAllEstablishmentProducts(
