@@ -61,7 +61,7 @@ export class AddPlayListController implements Controller {
       return ok(playerList);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('AddPlayListController:57 => ', error);
+      console.error(error);
       return serverError();
     }
   }

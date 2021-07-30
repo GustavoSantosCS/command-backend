@@ -49,7 +49,7 @@ export class AddEstablishmentController implements Controller {
       return ok(newEstablishment);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('AddEstablishmentController:55 => ', error);
+      console.error(error);
       return serverError(error);
     }
   }

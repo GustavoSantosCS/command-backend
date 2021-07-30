@@ -26,7 +26,7 @@ export class GetAllUserEstablishmentsController implements Controller {
       return ok(establishments);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('GetAllUserEstablishmentsController:41 => ', error);
+      console.error(error);
       return serverError(error);
     }
   }

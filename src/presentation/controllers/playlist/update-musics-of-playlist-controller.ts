@@ -68,7 +68,7 @@ export class UpdateMusicsOfPlaylistController implements Controller {
       return ok(result);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('UpdateMusicsOfPlaylistController:65 => ', error);
+      console.error(error);
       return serverError();
     }
   }

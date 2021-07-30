@@ -57,7 +57,7 @@ export class GetCurrentEstablishmentPlaylistController implements Controller {
       return ok(playerList);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('GetCurrentEstablishmentPlaylistUseCase:60 => ', error);
+      console.error(error);
       return serverError();
     }
   }

@@ -24,7 +24,7 @@ export class GetAllEstablishmentsController implements Controller {
       return ok(establishments);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('GetAllEstablishmentsController:27 => ', error);
+      console.error(error);
       return serverError(error);
     }
   }

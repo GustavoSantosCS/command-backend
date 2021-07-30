@@ -50,7 +50,7 @@ export class StartPlaylistMusicController implements Controller {
       return ok(musicPlaylistEntity);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('StartPlaylistMusicController:65 => ', error);
+      console.error(error);
       return serverError();
     }
   }

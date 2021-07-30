@@ -49,7 +49,7 @@ export class AddUserController implements Controller {
       return ok(user);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('AddUserController:52 => ', error);
+      console.error(error);
       return serverError(error);
     }
   }

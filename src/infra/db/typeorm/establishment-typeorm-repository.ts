@@ -91,7 +91,7 @@ export class EstablishmentTypeOrmRepository
       return establishmentsUser;
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('EstablishmentTypeOrmRepository:getById => ', error);
+      console.error(error);
       throw error;
     }
   }

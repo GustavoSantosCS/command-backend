@@ -32,7 +32,7 @@ export class ProductTypeOrmRepository
       return productRepo;
     } catch (err) {
       // eslint-disable-next-line no-console
-      console.error('ProductTypeOrmRepository:65 => ', err);
+      console.error(err);
       await queryRunner.rollbackTransaction();
       throw err;
     } finally {

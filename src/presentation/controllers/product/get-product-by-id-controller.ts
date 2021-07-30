@@ -40,7 +40,7 @@ export class GetProductByIdController implements Controller {
       return ok(product);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('GetProductByIdController:31 => ', error);
+      console.error(error);
       return serverError();
     }
   }

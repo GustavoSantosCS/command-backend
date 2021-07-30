@@ -37,7 +37,7 @@ export class UpdateUserAvatarController implements Controller {
       return ok(updateAvatar);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('UpdateUserAvatarController:36 => ', error);
+      console.error(error);
       return serverError(error);
     }
   }
