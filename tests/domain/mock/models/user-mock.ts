@@ -1,6 +1,6 @@
+import { UserEntity } from '@/data/entities';
 import faker from 'faker';
-import { UserModel } from '@/domain/models';
-import { makeMockAvatarUserModel } from './avatar-mock';
+import { makeMockAvatarUser } from './avatar-mock';
 
 faker.locale = 'pt_BR';
 
@@ -9,23 +9,29 @@ type ConfigMock = {
   id?: boolean;
 };
 
-export const makeMockUserModel = ({
+export const makeMockUser = ({
   id = true,
   avatar = false
-}: ConfigMock): UserModel => {
-  const user: UserModel = {
-    id: id ? faker.datatype.uuid() : null,
-    name: faker.name.findName(),
-    email: faker.internet.email().toLowerCase(),
-    password: faker.internet.password()
-  };
+}: ConfigMock): UserEntity => {
+  const user = new UserEntity();
 
-  if (avatar) user.avatar = makeMockAvatarUserModel();
+  user.id = id ? faker.datatype.uuid() : null;
+  user.name = faker.name.findName();
+  user.email = faker.internet.email().toLowerCase();
+  user.password = faker.internet.password();
+  user.createdAt = faker.date.past();
+  user.updatedAt = faker.date.recent();
 
+  if (avatar) {
+    user.avatar = makeMockAvatarUser();
+  }
   return user;
 };
 
-export const makeMockAddUserModel = (): Omit<UserModel, 'id'> & {
+export const makeMockAddUser = (): Omit<
+  UserEntity,
+  'id' | 'createdAt' | 'updatedAt'
+> & {
   confirmPassword: string;
 } => {
   const password = faker.internet.password();

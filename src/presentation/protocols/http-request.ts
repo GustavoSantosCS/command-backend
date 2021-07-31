@@ -1,4 +1,4 @@
-export interface HttpRequest<B = any, P = any> {
+export interface HttpRequest<B = null, P = null> {
   body?: B;
   headers?: any;
   params?: P;

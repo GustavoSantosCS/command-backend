@@ -4,8 +4,11 @@ import { IsNotEmailError } from '@/validation/errors';
 
 let fieldLabel: string;
 let message: string;
-const makeSut = (messageValidator = null): { sut: EmailValidator } => ({
-  sut: new EmailValidator(fieldLabel, messageValidator)
+const makeSut = (
+  messageValidator?: string
+): { sut: EmailValidator; validateMessage: string } => ({
+  sut: new EmailValidator(fieldLabel, messageValidator || message),
+  validateMessage: messageValidator || message
 });
 
 describe('Test Unit EmailValidator', () => {
@@ -21,7 +24,7 @@ describe('Test Unit EmailValidator', () => {
     const result = sut.validate({ [fieldLabel]: fieldValue });
 
     expect(result.isLeft()).toBeTruthy();
-    expect(result.value).toEqual(new IsNotEmailError(fieldLabel, fieldValue));
+    expect(result.value).toEqual(new IsNotEmailError(message, fieldLabel));
   });
 
   test('Should return true if email is valid', () => {
@@ -38,18 +41,18 @@ describe('Test Unit EmailValidator', () => {
     const result = sut.validate({ [fieldLabel]: null });
 
     expect(result.isLeft()).toBeTruthy();
-    expect(result.value).toEqual(new IsNotEmailError(fieldLabel, null));
+    expect(result.value).toEqual(new IsNotEmailError(message, fieldLabel));
   });
 
   test('Should return the customMessage if have error', () => {
-    const { sut } = makeSut(message);
+    const { sut, validateMessage } = makeSut(`${message} custom`);
     const fieldValue = faker.random.word();
 
     const result = sut.validate({ [fieldLabel]: fieldValue });
 
     expect(result.isLeft()).toBeTruthy();
     expect(result.value).toEqual(
-      new IsNotEmailError(fieldLabel, fieldValue, message)
+      new IsNotEmailError(validateMessage, fieldLabel)
     );
   });
 });

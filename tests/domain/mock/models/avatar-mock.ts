@@ -1,16 +1,18 @@
 import faker from 'faker';
-import { AvatarModel } from '@/domain/models';
+
 import { env } from '@/shared/config';
+import { AvatarEntity } from '@/data/entities';
 
 faker.locale = 'pt_BR';
 
-export const makeMockAvatarUserModel = (): AvatarModel => {
+export const makeMockAvatarUser = (): AvatarEntity => {
   const originalName = faker.random.word();
   const persistentName = `${faker.datatype.uuid()}-${originalName}`;
   const target = `${env.app.protocol}://${env.app.host}:${env.app.port}/files/${persistentName}`;
   return {
     originalName,
     persistentName,
-    target
+    target,
+    user: null
   };
 };

@@ -1,27 +1,26 @@
 import faker from 'faker';
-import { UserAvatarController } from '@/presentation/controllers/user';
+import { UpdateUserAvatarController } from '@/presentation/controllers/user';
 import { HttpRequest } from '@/presentation/protocols';
-import { makeMockAvatarUserModel } from '@tests/domain/mock/models';
+import { makeMockAvatarUser } from '@tests/domain/mock/models';
 import { UserAvatarUseCaseSpy } from '@tests/domain/mock/usecases';
-import { left } from '@/shared/either';
-import { persistencyError } from '@tests/shared/persistency-error-mock';
+import { serverError } from '@/utils/http';
 
-let sut: UserAvatarController;
+let sut: UpdateUserAvatarController;
 let userAvatarUseCaseSpy: UserAvatarUseCaseSpy;
 
-const makerHttpRequest = (): HttpRequest<UserAvatarController.Params> => ({
+const makerHttpRequest = (): HttpRequest<UpdateUserAvatarController.DTO> => ({
   body: {
     authenticated: {
       id: faker.datatype.uuid()
     },
-    avatar: makeMockAvatarUserModel()
+    avatar: makeMockAvatarUser()
   }
 });
 
-describe('Test Unit: UserAvatarController', () => {
+describe('Test Unit: UpdateUserAvatarController', () => {
   beforeEach(() => {
     userAvatarUseCaseSpy = new UserAvatarUseCaseSpy();
-    sut = new UserAvatarController(userAvatarUseCaseSpy);
+    sut = new UpdateUserAvatarController(userAvatarUseCaseSpy);
   });
 
   it('should call UserAvatarUseCase with the correct values', async () => {
@@ -30,7 +29,7 @@ describe('Test Unit: UserAvatarController', () => {
 
     await sut.handle(httpRequest);
 
-    expect(spy.parameters.user).toEqual(httpRequest.body.authenticated);
+    expect(spy.parameters.userId).toEqual(httpRequest.body.authenticated.id);
     expect(spy.parameters.avatar).toEqual(httpRequest.body.avatar);
   });
 
@@ -42,21 +41,7 @@ describe('Test Unit: UserAvatarController', () => {
     const response = await sut.handle(httpRequest);
 
     expect(response.statusCode).toBe(500);
-    expect(response.body).toHaveProperty('errors');
-    expect(response.body.errors[0]).toHaveProperty('message');
-  });
-
-  it('should return 500 if the return of AddUserUseCase is PersistencyError', async () => {
-    const httpRequest = makerHttpRequest();
-    const spy = userAvatarUseCaseSpy;
-    spy.return = left(persistencyError);
-
-    const response = await sut.handle(httpRequest);
-
-    expect(response.statusCode).toBe(500);
-    expect(response.body).toHaveProperty('errors');
-    expect(response.body.errors[0]).toHaveProperty('message');
-    expect(response.body.errors[0]).toHaveProperty('value');
+    expect(response).toEqual(serverError());
   });
 
   it('should return 200 if UserAvatarUseCase is success', async () => {

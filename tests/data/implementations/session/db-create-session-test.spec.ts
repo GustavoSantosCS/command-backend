@@ -2,11 +2,10 @@ import { Encrypter, HashComparer } from '@/data/protocols';
 import { CreateSessionUseCase } from '@/domain/usecases';
 import { DBCreateSession } from '@/data/implementations';
 import { UserEntity } from '@/data/entities';
-import { makeMockUserEntity } from '@tests/data/mock/entities';
 import { throwError } from '@tests/shared';
-import { UserModel } from '@/domain/models';
 import { SearchUserByEmailRepositorySpy } from '@tests/infra/mock/db/user';
 import { FailedLoginError } from '@/domain/errors';
+import { makeMockUser } from '@tests/domain/mock/models';
 // Sub
 class HashComparerSub implements HashComparer {
   async compare(plaitext: string, hash: string): Promise<boolean> {
@@ -26,20 +25,20 @@ class EncrypterSub implements Encrypter {
 let sut: DBCreateSession;
 let repository: SearchUserByEmailRepositorySpy;
 let comparatorHasher: HashComparer;
-let data: UserEntity;
+let userFind: UserEntity;
 let encrypter: Encrypter;
 let request: CreateSessionUseCase.Params;
 
 describe('Test Unit: DBCreateSession', () => {
   beforeEach(() => {
-    data = makeMockUserEntity();
+    userFind = makeMockUser({ id: true, avatar: true });
     repository = new SearchUserByEmailRepositorySpy();
-    repository.return = data;
+    repository.return = userFind;
     comparatorHasher = new HashComparerSub();
     encrypter = new EncrypterSub();
     request = {
-      email: data.email,
-      password: `${data.password}-hash`
+      email: userFind.email,
+      password: `${userFind.password}-hash`
     };
     sut = new DBCreateSession(repository, comparatorHasher, encrypter);
   });
@@ -74,7 +73,7 @@ describe('Test Unit: DBCreateSession', () => {
 
     await sut.createSession(request);
 
-    expect(spy).toBeCalledWith(request.password, data.password);
+    expect(spy).toBeCalledWith(request.password, userFind.password);
   });
 
   it('should return error if HashComparer return false', async () => {
@@ -100,7 +99,7 @@ describe('Test Unit: DBCreateSession', () => {
 
     await sut.createSession(request);
 
-    expect(spy.parameters.body).toEqual({ id: data.id });
+    expect(spy.parameters.body).toEqual({ id: userFind.id });
   });
 
   it('should throws if Encrypter throws', async () => {
@@ -112,14 +111,13 @@ describe('Test Unit: DBCreateSession', () => {
   });
 
   it('should return success if success', async () => {
-    const returnOfUseCase: Omit<UserModel, 'password'> = { ...(data as any) };
-
     const result = await sut.createSession(request);
 
     expect(result.isRight()).toBeTruthy();
-    const value = result.value as CreateSessionUseCase.RightType;
-
-    expect(value.user).toEqual(returnOfUseCase);
+    const value = result.value as CreateSessionUseCase.Return;
+    const aux = userFind;
+    delete aux.password;
+    expect(value.user).toEqual(aux);
     expect(value.token).toEqual((encrypter as EncrypterSub).return);
   });
 });

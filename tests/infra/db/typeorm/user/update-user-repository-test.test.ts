@@ -1,12 +1,11 @@
 import { UserEntity } from '@/data/entities';
 import { UpdateUserRepository } from '@/data/protocols';
-import { UserModel } from '@/domain/models';
 import { TypeORMHelpers, UserTypeOrmRepository } from '@/infra/db/typeorm';
-import { makeMockUserModel } from '@tests/domain/mock/models';
+import { makeMockUser } from '@tests/domain/mock/models';
 
 let sut: UpdateUserRepository;
-let newUserDateModel: UserModel;
-let currentUserDateModel: UserModel;
+let newUserDateModel: UserEntity;
+let currentUserDateModel: UserEntity;
 
 describe('Test Integration: UpdateUserRepository', () => {
   beforeAll(async () => {
@@ -20,8 +19,8 @@ describe('Test Integration: UpdateUserRepository', () => {
   });
 
   beforeEach(async () => {
-    currentUserDateModel = makeMockUserModel({ id: true, avatar: false });
-    newUserDateModel = makeMockUserModel({ id: false, avatar: false });
+    currentUserDateModel = makeMockUser({ id: true, avatar: false });
+    newUserDateModel = makeMockUser({ id: false, avatar: false });
     newUserDateModel.id = currentUserDateModel.id;
 
     await new UserTypeOrmRepository().save(currentUserDateModel);
@@ -30,11 +29,9 @@ describe('Test Integration: UpdateUserRepository', () => {
   it('should return an entity is update success', async () => {
     const result = await sut.update(newUserDateModel);
 
-    const value: UserEntity = result.value as UserEntity;
-    expect(result.isRight()).toBeTruthy();
-    expect(value.id).toBe(newUserDateModel.id);
-    expect(value.name).toBe(newUserDateModel.name);
-    expect(value.email).toBe(newUserDateModel.email);
-    expect(value.password).toBe(newUserDateModel.password);
+    expect(result.id).toBe(newUserDateModel.id);
+    expect(result.name).toBe(newUserDateModel.name);
+    expect(result.email).toBe(newUserDateModel.email);
+    expect(result.password).toBe(newUserDateModel.password);
   });
 });

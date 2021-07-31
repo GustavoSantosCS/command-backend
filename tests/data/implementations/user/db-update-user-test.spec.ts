@@ -1,9 +1,6 @@
 import faker from 'faker';
 import { UserEntity } from '@/data/entities';
-import { UserModel } from '@/domain/models';
 import { UpdateUserUseCase } from '@/domain/usecases';
-import { makeMockUserEntity } from '@tests/data/mock/entities';
-import { makeMockUserModel } from '@tests/domain/mock/models';
 import { HasherSpy, HashComparerSpy } from '@tests/infra/mock/cryptography';
 import {
   GetUserByIdRepositorySpy,
@@ -12,6 +9,7 @@ import {
 } from '@tests/infra/mock/db/user';
 import { EmailAlreadyUseError } from '@/domain/errors';
 import { DBUpdateUser } from '@/data/implementations';
+import { makeMockUser } from '@tests/domain/mock/models';
 
 let sut: UpdateUserUseCase;
 let searchByEmailRepositorySpy: SearchUserByEmailRepositorySpy;
@@ -20,8 +18,8 @@ let getUserByIdRepository: GetUserByIdRepositorySpy;
 let hasherSpy: HasherSpy;
 let hashComparerSpy: HashComparerSpy;
 
-let newUserModel: UserModel;
-let newUserModelHashPassword: UserModel;
+let newUserEntity: UserEntity;
+let newUserEntityHashPassword: UserEntity;
 let userEntity: UserEntity;
 let userEntityHashPassword: UserEntity;
 let userEntityDifferentEmail: UserEntity;
@@ -29,14 +27,14 @@ let hashPassword: string;
 
 describe('Test Unit: DBUpdateUser', () => {
   beforeEach(() => {
-    newUserModel = makeMockUserModel({ id: true, avatar: true });
+    newUserEntity = makeMockUser({ id: true, avatar: false });
 
-    hashPassword = `${faker.datatype.uuid()}-${newUserModel.password}`;
-    newUserModelHashPassword = { ...newUserModel, password: hashPassword };
+    hashPassword = `${faker.datatype.uuid()}-${newUserEntity.password}`;
+    newUserEntityHashPassword = { ...newUserEntity, password: hashPassword };
 
-    userEntity = makeMockUserEntity({
-      ...newUserModel
-    });
+    userEntity = {
+      ...newUserEntity
+    };
     userEntityHashPassword = { ...userEntity, password: hashPassword };
 
     userEntityDifferentEmail = {
@@ -69,55 +67,56 @@ describe('Test Unit: DBUpdateUser', () => {
   it('should call GetUserByIdRepository with the correct values', async () => {
     const spy = getUserByIdRepository;
 
-    await sut.update(newUserModel);
+    await sut.update(newUserEntity);
 
     expect(spy.calls).toBe(1);
-    expect(spy.parameters).toBe(newUserModel.id);
+    expect(spy.parameters).toBe(newUserEntity.id);
   });
 
   it('should call SearchByEmailRepository if the TrackUser have different email', async () => {
     getUserByIdRepository.return = userEntityDifferentEmail;
     const spy = searchByEmailRepositorySpy;
 
-    await sut.update(newUserModel);
+    await sut.update(newUserEntity);
 
     expect(spy.calls).toBe(1);
-    expect(spy.parameters).toBe(newUserModel.email);
+    expect(spy.parameters).toBe(newUserEntity.email);
   });
 
   it('should return EmailAlreadyUseError if the email is already in use and is not the user current', async () => {
     getUserByIdRepository.return = userEntityDifferentEmail;
     searchByEmailRepositorySpy.return = userEntityHashPassword;
 
-    const result = await sut.update(newUserModel);
+    const result = await sut.update(newUserEntity);
 
     expect(result.isLeft()).toBeTruthy();
-    expect(result.value).toEqual(new EmailAlreadyUseError(newUserModel.email));
+    expect(result.value).toEqual(new EmailAlreadyUseError(newUserEntity.email));
   });
 
   it('should call Hasher with the correct', async () => {
     const spy = hasherSpy;
 
-    await sut.update(newUserModel);
+    await sut.update(newUserEntity);
 
     expect(spy.calls).toBe(1);
-    expect(spy.parameters).toBe(newUserModel.password);
+    expect(spy.parameters).toBe(newUserEntity.password);
   });
 
   it('should call UpdateUserRepository with the correct', async () => {
     const spy = updateUserRepositorySpy;
 
-    await sut.update(newUserModel);
+    await sut.update(newUserEntity);
 
     expect(spy.calls).toBe(1);
-    expect(spy.parameters).toEqual(newUserModelHashPassword);
+    expect(spy.parameters.id).toEqual(newUserEntityHashPassword.id);
+    expect(spy.parameters.password).toEqual(newUserEntityHashPassword.password);
   });
 
   it('should throws if GetUserByIdRepository throws', async () => {
     const spy = getUserByIdRepository;
     spy.throwsError();
 
-    const promise = sut.update(newUserModel);
+    const promise = sut.update(newUserEntity);
 
     await expect(promise).rejects.toThrow();
   });
@@ -126,7 +125,7 @@ describe('Test Unit: DBUpdateUser', () => {
     getUserByIdRepository.return = userEntityDifferentEmail;
     searchByEmailRepositorySpy.throwsError();
 
-    const promise = sut.update(newUserModel);
+    const promise = sut.update(newUserEntity);
 
     await expect(promise).rejects.toThrow();
   });
@@ -135,15 +134,15 @@ describe('Test Unit: DBUpdateUser', () => {
     const spy = updateUserRepositorySpy;
     spy.throwsError();
 
-    const promise = sut.update(newUserModel);
+    const promise = sut.update(newUserEntity);
 
     await expect(promise).rejects.toThrow();
   });
 
-  it('should return UserModel if success', async () => {
-    const result = await sut.update(newUserModel);
+  it('should return UserEntity if success', async () => {
+    const result = await sut.update(newUserEntity);
 
     expect(result.isRight()).toBeTruthy();
-    expect(result.value).toEqual(userEntityHashPassword);
+    expect((result.value as UserEntity).id).toEqual(userEntityHashPassword.id);
   });
 });

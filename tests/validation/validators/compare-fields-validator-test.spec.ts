@@ -7,10 +7,15 @@ let fieldLabel2: string;
 
 let message: string;
 
-type SutTypes = { sut: CompareFieldsValidator };
+type SutTypes = { sut: CompareFieldsValidator; validateMessage: string };
 
 const makeSut = (messageValidator?: string): SutTypes => ({
-  sut: new CompareFieldsValidator(fieldLabel1, fieldLabel2, messageValidator)
+  sut: new CompareFieldsValidator(
+    fieldLabel1,
+    fieldLabel2,
+    messageValidator || message
+  ),
+  validateMessage: messageValidator || message
 });
 
 const makeDifferentWord = (word: string): string => {
@@ -64,7 +69,7 @@ describe('Test Unit CompareFieldsValidator', () => {
     const result = sut.validate(bodyTest);
     expect(result.isLeft()).toBeTruthy();
     expect(result.value).toEqual(
-      new NotEqualFieldsError(bodyTest[fieldLabel1], bodyTest[fieldLabel2])
+      new NotEqualFieldsError(message, bodyTest[fieldLabel1])
     );
   });
 
@@ -78,7 +83,7 @@ describe('Test Unit CompareFieldsValidator', () => {
 
     expect(result.isLeft()).toBeTruthy();
     expect(result.value).toEqual(
-      new NotEqualFieldsError(null, bodyTest[fieldLabel2])
+      new NotEqualFieldsError(message, bodyTest[fieldLabel2])
     );
   });
 
@@ -92,12 +97,12 @@ describe('Test Unit CompareFieldsValidator', () => {
 
     expect(result.isLeft()).toBeTruthy();
     expect(result.value).toEqual(
-      new NotEqualFieldsError(bodyTest[fieldLabel1], null)
+      new NotEqualFieldsError(message, bodyTest[fieldLabel1])
     );
   });
 
   it('should return NotEqualFieldsError container the customMessage if fall', () => {
-    const { sut } = makeSut(message);
+    const { sut, validateMessage } = makeSut(`${message} custom`);
     const word = faker.random.word();
     const differentWord = makeDifferentWord(word);
     const bodyTest = {
@@ -109,11 +114,7 @@ describe('Test Unit CompareFieldsValidator', () => {
 
     expect(result.isLeft()).toBeTruthy();
     expect(result.value).toEqual(
-      new NotEqualFieldsError(
-        bodyTest[fieldLabel1],
-        bodyTest[fieldLabel2],
-        message
-      )
+      new NotEqualFieldsError(validateMessage, fieldLabel1)
     );
   });
 });

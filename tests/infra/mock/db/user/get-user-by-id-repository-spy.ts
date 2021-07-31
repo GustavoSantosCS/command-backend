@@ -1,11 +1,11 @@
 import { UserEntity } from '@/data/entities';
 import { GetUserByIdRepository } from '@/data/protocols';
-import { makeMockUserEntity } from '@tests/data/mock/entities';
+import { makeMockUser } from '@tests/domain/mock/models';
 
 export class GetUserByIdRepositorySpy implements GetUserByIdRepository {
   parameters: string;
   error: Error;
-  return: UserEntity | null = makeMockUserEntity();
+  return: UserEntity | null = makeMockUser({ id: true });
   calls = 0;
 
   throwsError() {

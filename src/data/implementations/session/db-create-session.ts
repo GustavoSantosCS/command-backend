@@ -7,6 +7,7 @@ import { PayloadModel } from '@/domain/models';
 import { CreateSessionUseCase } from '@/domain/usecases';
 import { FailedLoginError } from '@/domain/errors';
 import { left, right } from '@/shared/either';
+import { UserEntity } from '@/data/entities';
 
 export class DBCreateSession implements CreateSessionUseCase {
   private readonly searchUserByEmailRepo: SearchUserByEmailRepository;
@@ -51,7 +52,7 @@ export class DBCreateSession implements CreateSessionUseCase {
         avatar: user.avatar,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt
-      }
+      } as UserEntity
     };
 
     return right(result);

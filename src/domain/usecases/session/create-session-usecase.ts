@@ -13,10 +13,7 @@ export namespace CreateSessionUseCase {
 
   export type Return = {
     token: string;
-    user: Omit<
-      UserEntity,
-      'password' | 'establishments' | 'accounts' | 'pollVotes' | 'deletedAt'
-    >;
+    user: UserEntity;
   };
 
   export type Result = Either<FailedLoginError, Return>;

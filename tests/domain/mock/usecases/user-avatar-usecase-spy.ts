@@ -1,19 +1,17 @@
-import { AvatarModel } from '@/domain/models';
-import { UserAvatarUseCase } from '@/domain/usecases';
-import { PersistencyError } from '@/infra/errors';
-import { AppError } from '@/shared/app-error';
-import { Either, left, right } from '@/shared/either';
-import { makeMockAvatarUserModel } from '../models';
+import { UpdateUserAvatarUseCase } from '@/domain/usecases';
+import { left, right } from '@/shared/either';
+import { AppError } from '@/shared/errors';
+import { makeMockAvatarUser } from '../models';
 
 type Returns = {
-  right: Either<PersistencyError, AvatarModel>;
-  left: Either<PersistencyError, AvatarModel>;
+  right: UpdateUserAvatarUseCase.Response;
+  left: UpdateUserAvatarUseCase.Response;
 };
 
-export class UserAvatarUseCaseSpy implements UserAvatarUseCase {
+export class UserAvatarUseCaseSpy implements UpdateUserAvatarUseCase {
   returns: Returns = {
-    right: right(makeMockAvatarUserModel()),
-    left: left(new PersistencyError('any_message', {}, 'any_value'))
+    right: right(makeMockAvatarUser()),
+    left: left(undefined)
   };
   return = this.returns.right;
   parameters = null;
@@ -24,8 +22,8 @@ export class UserAvatarUseCaseSpy implements UserAvatarUseCase {
   }
 
   async saveAvatar(
-    data: UserAvatarUseCase.Params
-  ): Promise<UserAvatarUseCase.Response> {
+    data: UpdateUserAvatarUseCase.Params
+  ): Promise<UpdateUserAvatarUseCase.Response> {
     if (this.error) throw this.error;
     this.parameters = data;
 

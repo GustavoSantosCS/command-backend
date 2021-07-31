@@ -1,50 +1,47 @@
 import faker from 'faker';
-import { UserModel } from '@/domain/models';
+
 import { HttpRequest } from '@/presentation/protocols';
 import { ValidatorSpy } from '@tests/validation/mock';
-import {
-  CreateSessionUseCaseSpy,
-  UpdateUserUseCaseSpy
-} from '@tests/domain/mock/usecases';
+import { UpdateUserUseCaseSpy } from '@tests/domain/mock/usecases';
 import { UpdateUserController } from '@/presentation/controllers/user';
+import { badRequest, serverError } from '@/utils/http';
+import { left, right } from '@/shared/either';
+import { makeMockUser } from '@tests/domain/mock/models';
+import { UserEntity } from '@/data/entities';
+import { EmailAlreadyUseError } from '@/domain/errors';
 
-let httpRequest: HttpRequest<UpdateUserController.Params>;
+let httpRequest: HttpRequest<UpdateUserController.DTO>;
 let authenticated: { id: string };
-let newUserData: Omit<UserModel, 'id'>;
+let newUserData: Omit<UpdateUserController.DTO, 'authenticated'>;
 
 let sut: UpdateUserController;
 let validate: ValidatorSpy;
 let usecaseUpdate: UpdateUserUseCaseSpy;
-let usecaseCreateSession: CreateSessionUseCaseSpy;
+let userUpdate: UserEntity;
 
 describe('Test Unit: UpdateUserController', () => {
   beforeEach(() => {
-    authenticated = { id: faker.datatype.uuid() };
+    userUpdate = makeMockUser({ id: true });
+    authenticated = { id: userUpdate.id };
     newUserData = {
-      name: faker.random.word(),
-      email: faker.internet.email().toLowerCase(),
-      password: faker.internet.password()
+      name: userUpdate.name,
+      email: userUpdate.email,
+      password: userUpdate.password
     };
 
     httpRequest = {
       body: {
+        authenticated,
         name: newUserData.name,
         email: newUserData.email,
-        password: newUserData.password,
-        confirmPassword: newUserData.password,
-        authenticated
+        password: newUserData.password
       }
     };
 
     validate = new ValidatorSpy();
     usecaseUpdate = new UpdateUserUseCaseSpy();
-    usecaseUpdate = new UpdateUserUseCaseSpy();
-    usecaseCreateSession = new CreateSessionUseCaseSpy();
-    sut = new UpdateUserController(
-      validate,
-      usecaseUpdate,
-      usecaseCreateSession
-    );
+    usecaseUpdate.return = right(userUpdate);
+    sut = new UpdateUserController(validate, usecaseUpdate);
   });
 
   it('should call validate with the correct values', async () => {
@@ -55,9 +52,8 @@ describe('Test Unit: UpdateUserController', () => {
     expect(spy.calls).toBe(1);
     expect(spy.parameters).toEqual({
       name: newUserData.name,
-      email: newUserData.email,
-      password: newUserData.password,
-      confirmPassword: newUserData.password
+      email: newUserData.email.toLocaleLowerCase(),
+      password: newUserData.password
     });
   });
 
@@ -92,21 +88,18 @@ describe('Test Unit: UpdateUserController', () => {
     const response = await sut.handle(httpRequest);
 
     expect(response.statusCode).toBe(500);
-    expect(response.body).toHaveProperty('errors');
-    expect(response.body.errors[0]).toHaveProperty('message');
-    expect(response.body.errors[0]).toHaveProperty('value');
+    expect(response).toEqual(serverError());
   });
 
   it('should return 400 if UpdateUserUseCase return unsuccess', async () => {
     const spy = usecaseUpdate;
-    spy.return = spy.returns.left;
+    spy.return = left(new EmailAlreadyUseError(''));
 
     const response = await sut.handle(httpRequest);
 
     expect(response.statusCode).toBe(400);
     expect(response.body).toHaveProperty('errors');
-    expect(response.body.errors[0]).toHaveProperty('message');
-    expect(response.body.errors[0]).toHaveProperty('value');
+    expect(response).toEqual(badRequest(new EmailAlreadyUseError('')));
   });
 
   it('should return 200 if UpdateUserUseCase return success', async () => {

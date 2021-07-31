@@ -7,9 +7,14 @@ let fieldValue: string[];
 let message: string;
 
 const makeSut = (
-  messageValidator: string = null
-): { sut: BelongsToArrayValidator } => ({
-  sut: new BelongsToArrayValidator(fieldLabel, fieldValue, messageValidator)
+  messageValidator?: string
+): { sut: BelongsToArrayValidator; validateMessage: string } => ({
+  sut: new BelongsToArrayValidator(
+    fieldLabel,
+    fieldValue,
+    messageValidator || message
+  ),
+  validateMessage: messageValidator || message
 });
 
 const makeWordDifferent = (array: string[]): string => {
@@ -36,7 +41,7 @@ describe('Test Unit BelongsToArrayValidator', () => {
     const result = sut.validate({ [fieldLabel]: testValue });
 
     expect(result.isLeft()).toBeTruthy();
-    expect(result.value).toEqual(new InvalidParamError(fieldLabel, testValue));
+    expect(result.value).toEqual(new InvalidParamError(message, fieldLabel));
   });
 
   test('should return true if the value belongs to array', () => {
@@ -57,7 +62,7 @@ describe('Test Unit BelongsToArrayValidator', () => {
     const result = sut.validate({ [fieldLabel]: testValue });
 
     expect(result.isLeft()).toBeTruthy();
-    expect(result.value).toEqual(new InvalidParamError(fieldLabel, testValue));
+    expect(result.value).toEqual(new InvalidParamError(message, fieldLabel));
   });
 
   test('should return error if the array is empty', () => {
@@ -75,7 +80,7 @@ describe('Test Unit BelongsToArrayValidator', () => {
   });
 
   test('should return InvalidParamError container the customMessage if fall', () => {
-    const { sut } = makeSut(message);
+    const { sut, validateMessage } = makeSut(`${message} custom`);
 
     const testValue = null;
 
@@ -83,7 +88,7 @@ describe('Test Unit BelongsToArrayValidator', () => {
 
     expect(result.isLeft()).toBeTruthy();
     expect(result.value).toEqual(
-      new InvalidParamError(fieldLabel, testValue, message)
+      new InvalidParamError(validateMessage, fieldLabel)
     );
   });
 });

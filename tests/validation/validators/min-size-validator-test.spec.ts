@@ -6,8 +6,15 @@ let fieldLabel: string;
 let sizeFieldLabel: number;
 let message: string;
 
-const makeSut = (messageValidator = null): { sut: MinimumSizeValidator } => ({
-  sut: new MinimumSizeValidator(fieldLabel, sizeFieldLabel, messageValidator)
+const makeSut = (
+  messageValidator = null
+): { sut: MinimumSizeValidator; validateMessage: string } => ({
+  sut: new MinimumSizeValidator(
+    fieldLabel,
+    sizeFieldLabel,
+    messageValidator || message
+  ),
+  validateMessage: messageValidator || message
 });
 
 const makeWordTheSize = (size: number): string => {
@@ -34,9 +41,7 @@ describe('Test Unit MinimumSizeValidator', () => {
     const result = sut.validate({ [fieldLabel]: fieldValue });
 
     expect(result.isLeft()).toBeTruthy();
-    expect(result.value).toEqual(
-      new MinimumSizeError(fieldLabel, sizeFieldLabel)
-    );
+    expect(result.value).toEqual(new MinimumSizeError(message, fieldLabel));
   });
 
   test('should return error if the word is not informed', () => {
@@ -45,9 +50,7 @@ describe('Test Unit MinimumSizeValidator', () => {
     const result = sut.validate({ [fieldLabel]: null });
 
     expect(result.isLeft()).toBeTruthy();
-    expect(result.value).toEqual(
-      new MinimumSizeError(fieldLabel, sizeFieldLabel)
-    );
+    expect(result.value).toEqual(new MinimumSizeError(message, fieldLabel));
   });
 
   test('should return true if the word informed has the same size', () => {
@@ -69,13 +72,13 @@ describe('Test Unit MinimumSizeValidator', () => {
   });
 
   test('should return to custom message if this is provided', () => {
-    const { sut } = makeSut(message);
+    const { sut, validateMessage } = makeSut(`${message} custom`);
 
     const result = sut.validate({ [fieldLabel]: null });
 
     expect(result.isLeft()).toBeTruthy();
     expect(result.value).toEqual(
-      new MinimumSizeError(fieldLabel, sizeFieldLabel, message)
+      new MinimumSizeError(validateMessage, fieldLabel)
     );
   });
 });

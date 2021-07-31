@@ -24,7 +24,7 @@ export class GetAllUserAccountController implements Controller {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      return serverError(error);
+      return serverError();
     }
   }
 }

@@ -1,7 +1,7 @@
 import { Either, left, right } from '@/shared/either';
 import { Validator } from '@/validation/protocols';
 import { ValidatorError } from '@/validation/errors';
-import { AppError } from '@/shared/app-error';
+import { AppError } from '@/shared/errors';
 
 type Returns = {
   right: Either<ValidatorError, true>;

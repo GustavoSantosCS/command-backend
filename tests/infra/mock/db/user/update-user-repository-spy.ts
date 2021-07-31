@@ -1,11 +1,11 @@
 import { UpdateUserRepository } from '@/data/protocols';
-import { makeMockUserEntity } from '@tests/data/mock/entities';
+import { makeMockUser } from '@tests/domain/mock/models';
 
 export class UpdateUserRepositorySpy implements UpdateUserRepository {
   parameters: any;
   calls = 0;
   error: Error;
-  return = makeMockUserEntity();
+  return = makeMockUser({ id: true });
 
   throwsError() {
     this.error = new Error('any_message');

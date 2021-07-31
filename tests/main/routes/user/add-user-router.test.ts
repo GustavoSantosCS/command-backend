@@ -2,8 +2,8 @@ import request from 'supertest';
 import faker from 'faker';
 import app from '@/main/config/app';
 import { TypeORMHelpers, UserTypeOrmRepository } from '@/infra/db/typeorm';
-import { makeMockAddUserModel } from '@tests/domain/mock/models';
 import { UserEntity } from '@/data/entities';
+import { makeMockAddUser } from '@tests/domain/mock/models';
 
 describe('Tests Integration User Add Router', () => {
   beforeAll(async () => {
@@ -20,7 +20,7 @@ describe('Tests Integration User Add Router', () => {
 
   describe('POST /user', () => {
     it('should return 200 on create', async () => {
-      const { name, email, password, confirmPassword } = makeMockAddUserModel();
+      const { name, email, password, confirmPassword } = makeMockAddUser();
       const response = await request(app)
         .post('/user')
         .send({
@@ -37,7 +37,7 @@ describe('Tests Integration User Add Router', () => {
     });
 
     it('should return 400 if name is not provider', async () => {
-      const { email, password, confirmPassword } = makeMockAddUserModel();
+      const { email, password, confirmPassword } = makeMockAddUser();
       const response = await request(app)
         .post('/user')
         .send({
@@ -53,7 +53,7 @@ describe('Tests Integration User Add Router', () => {
     });
 
     it('should return 400 if the name has less than 3 digits', async () => {
-      const { email, password, confirmPassword } = makeMockAddUserModel();
+      const { email, password, confirmPassword } = makeMockAddUser();
       const response = await request(app)
         .post('/user')
         .send({
@@ -70,7 +70,7 @@ describe('Tests Integration User Add Router', () => {
     });
 
     it('should return 400 if email is not provider', async () => {
-      const { name, password, confirmPassword } = makeMockAddUserModel();
+      const { name, password, confirmPassword } = makeMockAddUser();
       const response = await request(app)
         .post('/user')
         .send({
@@ -86,7 +86,7 @@ describe('Tests Integration User Add Router', () => {
     });
 
     it('should return 400 if the email provider is not email', async () => {
-      const { name, password, confirmPassword } = makeMockAddUserModel();
+      const { name, password, confirmPassword } = makeMockAddUser();
       const response = await request(app)
         .post('/user')
         .send({
@@ -103,7 +103,7 @@ describe('Tests Integration User Add Router', () => {
     });
 
     it('should return 400 if the email provider is being using', async () => {
-      const { name, email, password, confirmPassword } = makeMockAddUserModel();
+      const { name, email, password, confirmPassword } = makeMockAddUser();
       const repository = new UserTypeOrmRepository();
       await repository.save(
         new UserEntity({
@@ -129,7 +129,7 @@ describe('Tests Integration User Add Router', () => {
     });
 
     it('should return 400 if password is not provider', async () => {
-      const { name, email, confirmPassword } = makeMockAddUserModel();
+      const { name, email, confirmPassword } = makeMockAddUser();
       const response = await request(app)
         .post('/user')
         .send({
@@ -145,7 +145,7 @@ describe('Tests Integration User Add Router', () => {
     });
 
     it('should return 400 if the password has less than 5 digits', async () => {
-      const { name, email } = makeMockAddUserModel();
+      const { name, email } = makeMockAddUser();
       const response = await request(app)
         .post('/user')
         .send({
@@ -162,7 +162,7 @@ describe('Tests Integration User Add Router', () => {
     });
 
     it('should return 400 if confirmPassword is not provider', async () => {
-      const { name, email, password } = makeMockAddUserModel();
+      const { name, email, password } = makeMockAddUser();
       const response = await request(app)
         .post('/user')
         .send({
@@ -178,7 +178,7 @@ describe('Tests Integration User Add Router', () => {
     });
 
     it('should return 400 if confirmPassword is not equal to password', async () => {
-      const { name, email, password } = makeMockAddUserModel();
+      const { name, email, password } = makeMockAddUser();
       const response = await request(app)
         .post('/user')
         .send({

@@ -4,7 +4,7 @@ import {
   SearchUserByEmailRepository
 } from '@/data/protocols';
 import { TypeORMHelpers, UserTypeOrmRepository } from '@/infra/db/typeorm';
-import { makeMockUserEntity } from '@tests/data/mock/entities';
+import { makeMockUser } from '@tests/domain/mock/models';
 
 let addRepository: AddUserRepository;
 let sut: SearchUserByEmailRepository;
@@ -21,7 +21,7 @@ describe('Test Integration', () => {
   });
 
   beforeEach(async () => {
-    userEntity = makeMockUserEntity();
+    userEntity = makeMockUser({ id: true });
     delete userEntity.avatar;
 
     sut = new UserTypeOrmRepository();

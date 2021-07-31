@@ -1,13 +1,13 @@
 import { UserEntity } from '@/data/entities';
 import { SearchUserByEmailRepository } from '@/data/protocols';
-import { makeMockUserEntity } from '@tests/data/mock/entities';
+import { makeMockUser } from '@tests/domain/mock/models';
 
 export class SearchUserByEmailRepositorySpy
   implements SearchUserByEmailRepository
 {
   parameters: string;
   error: Error;
-  return: UserEntity | null;
+  return: UserEntity | null = makeMockUser({ id: true });
   calls = 0;
 
   throwsError() {

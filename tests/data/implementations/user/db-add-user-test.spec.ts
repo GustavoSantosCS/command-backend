@@ -1,49 +1,43 @@
 import faker from 'faker';
 
 import { DBAddUser } from '@/data/implementations';
-import {IDGenerator,
-  AddUserRepository,
-  SearchUserByEmailRepository
-, Hasher } from '@/data/protocols';
 
 import { EmailAlreadyUseError } from '@/domain/errors';
-import { UserModel } from '@/domain/models';
 
-import { makeMockUserEntity } from '@tests/data/mock/entities';
 import { IdGeneratorSpy } from '@tests/infra/mock';
 import { HasherSpy } from '@tests/infra/mock/cryptography';
 import {
   AddUserRepositorySpy,
   SearchUserByEmailRepositorySpy
 } from '@tests/infra/mock/db/user';
-import { right } from '@/shared/either';
 import { UserEntity } from '@/data/entities';
-import { PersistencyError } from '@/infra/errors';
-import { makeMockUserModel } from '@tests/domain/mock/models';
-import { persistencyError } from '@tests/shared/persistency-error-mock';
+import { makeMockUser } from '@tests/domain/mock/models';
 
 let sut: DBAddUser;
 let idGeneratorSpy: IdGeneratorSpy;
 let hasherSpy: HasherSpy;
 let searchByEmailRepositorySpy: SearchUserByEmailRepositorySpy;
 let addUserRepositorySpy: AddUserRepositorySpy;
-let newUserModel: UserModel;
-let userModelHashPassword: UserModel;
+let newUserEntity: UserEntity;
+let UserEntityHashPassword: UserEntity;
 let userEntity: UserEntity;
 let userEntityHashPassword: UserEntity;
 let hashPassword: string;
 
 describe('Test Unit: DBAddUser', () => {
   beforeEach(() => {
-    newUserModel = makeMockUserModel({ id: false, avatar: false });
-    userEntity = makeMockUserEntity({
-      ...newUserModel,
+    newUserEntity = makeMockUser({ id: false, avatar: false });
+    userEntity = {
+      ...newUserEntity,
       id: faker.datatype.uuid()
-    });
+    };
+    delete newUserEntity.updatedAt;
+    delete newUserEntity.createdAt;
+
     hashPassword = `${faker.datatype.uuid()}-${userEntity.password}`;
     userEntityHashPassword = { ...userEntity, password: hashPassword };
-    userModelHashPassword = {
-      ...newUserModel,
+    UserEntityHashPassword = {
+      ...newUserEntity,
       id: userEntity.id,
       password: hashPassword
     };
@@ -58,7 +52,7 @@ describe('Test Unit: DBAddUser', () => {
     hasherSpy.return = hashPassword;
 
     addUserRepositorySpy = new AddUserRepositorySpy();
-    addUserRepositorySpy.return = right(userEntityHashPassword);
+    addUserRepositorySpy.return = userEntityHashPassword;
 
     sut = new DBAddUser(
       idGeneratorSpy,
@@ -71,27 +65,27 @@ describe('Test Unit: DBAddUser', () => {
   it('should call SearchUserByEmailRepository with the correct values', async () => {
     const spy = searchByEmailRepositorySpy;
 
-    await sut.add(newUserModel);
+    await sut.save(newUserEntity);
 
-    expect(spy.parameters).toEqual(newUserModel.email);
+    expect(spy.parameters).toEqual(newUserEntity.email);
   });
 
   it('should return EmailAlreadyUseError if email already use', async () => {
     const spy = searchByEmailRepositorySpy;
     spy.return = userEntityHashPassword;
 
-    const response = await sut.add(newUserModel);
+    const response = await sut.save(newUserEntity);
 
     expect(response.isLeft()).toBeTruthy();
     expect(response.value).toEqual(
-      new EmailAlreadyUseError(newUserModel.email)
+      new EmailAlreadyUseError(newUserEntity.email)
     );
   });
 
   it('should call IDGenerator one time', async () => {
     const spy = idGeneratorSpy;
 
-    await sut.add(newUserModel);
+    await sut.save(newUserEntity);
 
     expect(spy.calls).toBe(1);
   });
@@ -100,7 +94,7 @@ describe('Test Unit: DBAddUser', () => {
     const spy = idGeneratorSpy;
     spy.throwsError();
 
-    const promise = sut.add(newUserModel);
+    const promise = sut.save(newUserEntity);
 
     await expect(promise).rejects.toThrow();
   });
@@ -108,16 +102,16 @@ describe('Test Unit: DBAddUser', () => {
   it('should call Hasher with the correct values', async () => {
     const spy = hasherSpy;
 
-    await sut.add(newUserModel);
+    await sut.save(newUserEntity);
 
-    expect(spy.parameters).toEqual(newUserModel.password);
+    expect(spy.parameters).toEqual(newUserEntity.password);
   });
 
   it('should throws if Hasher throws', async () => {
     const spy = hasherSpy;
     spy.throwsError();
 
-    const promise = sut.add(newUserModel);
+    const promise = sut.save(newUserEntity);
 
     await expect(promise).rejects.toThrow();
   });
@@ -125,34 +119,26 @@ describe('Test Unit: DBAddUser', () => {
   it('should call AddUserRepository with the correct values', async () => {
     const spy = addUserRepositorySpy;
 
-    await sut.add(newUserModel);
+    await sut.save(newUserEntity);
 
-    expect(spy.parameters).toEqual(userModelHashPassword);
+    expect(spy.parameters).toEqual(UserEntityHashPassword);
   });
 
   it('should throws if AddUserRepository throws', async () => {
     const spy = addUserRepositorySpy;
     spy.throwsError();
 
-    const promise = sut.add(newUserModel);
+    const promise = sut.save(newUserEntity);
 
     await expect(promise).rejects.toThrow();
   });
 
   it('should return a new User if success to persistent', async () => {
-    const response = await sut.add(newUserModel);
+    const response = await sut.save(newUserEntity);
 
+    const aux = userEntityHashPassword;
+    delete aux.password;
     expect(response.isRight()).toBeTruthy();
-    expect(response.value).toEqual(userEntityHashPassword);
-  });
-
-  it('should return PersistencyError if fall to persistent', async () => {
-    const spy = addUserRepositorySpy;
-    spy.return = spy.returns.left;
-
-    const result = await sut.add(newUserModel);
-
-    expect(result.isLeft()).toBeTruthy();
-    expect(result.value).toEqual(persistencyError);
+    expect(response.value).toEqual(aux);
   });
 });

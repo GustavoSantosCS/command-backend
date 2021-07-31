@@ -1,20 +1,12 @@
-import faker from 'faker';
 import { right } from '@/shared/either';
-
 import { CreateSessionUseCase } from '@/domain/usecases';
-import { AppError } from '@/shared/app-error';
-import { UserModel } from '@/domain/models';
-
-export const makeMockUserSession = (): Omit<UserModel, 'password'> => ({
-  id: faker.datatype.uuid(),
-  name: faker.name.findName(),
-  email: faker.internet.email()
-});
+import { AppError } from '@/shared/errors';
+import { makeMockUser } from '../models';
 
 export class CreateSessionUseCaseSpy implements CreateSessionUseCase {
   return: CreateSessionUseCase.Result = right({
     token: 'token',
-    user: makeMockUserSession()
+    user: makeMockUser({ id: true })
   });
   parameters = null;
   error: AppError;
