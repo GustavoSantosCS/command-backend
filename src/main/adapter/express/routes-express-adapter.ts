@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
-import { HttpRequest, Controller } from '@/presentation/protocols';
+import { Request, Response } from 'express'
+import { HttpRequest, Controller } from '@/presentation/protocols'
 
 export const adapterRoute =
   (controller: Controller) => async (req: Request, res: Response) => {
@@ -8,8 +8,8 @@ export const adapterRoute =
       params: req.params,
       query: req.query,
       headers: req.headers
-    };
+    }
 
-    const httpResponse = await controller.handle(httpRequest);
-    return res.status(httpResponse.statusCode).json(httpResponse.body);
-  };
+    const httpResponse = await controller.handle(httpRequest)
+    return res.status(httpResponse.statusCode).json(httpResponse.body)
+  }

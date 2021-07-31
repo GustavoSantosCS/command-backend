@@ -1,41 +1,41 @@
-import { MusicEntity } from '@/data/entities';
-import { GetAllEstablishmentMusicsUseCase } from '@/domain/usecases';
+import { MusicEntity } from '@/data/entities'
+import { GetAllEstablishmentMusicsUseCase } from '@/domain/usecases'
 import {
   Controller,
   HttpRequest,
   HttpResponse
-} from '@/presentation/protocols';
-import { badRequest, ok, serverError } from '@/utils/http';
+} from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/utils/http'
 
 export class GetAllEstablishmentMusicsController implements Controller {
-  private readonly getAllEstablishmentMusics: GetAllEstablishmentMusicsUseCase;
+  private readonly getAllEstablishmentMusics: GetAllEstablishmentMusicsUseCase
 
-  constructor(
+  constructor (
     getAllEstablishmentMusicsUseCase: GetAllEstablishmentMusicsUseCase
   ) {
-    this.getAllEstablishmentMusics = getAllEstablishmentMusicsUseCase;
+    this.getAllEstablishmentMusics = getAllEstablishmentMusicsUseCase
   }
 
-  async handle(
+  async handle (
     httpRequest: HttpRequest<
-      GetAllEstablishmentMusicsController.DTO,
-      GetAllEstablishmentMusicsController.Params
+    GetAllEstablishmentMusicsController.DTO,
+    GetAllEstablishmentMusicsController.Params
     >
   ): Promise<HttpResponse<GetAllEstablishmentMusicsController.DTO>> {
     try {
-      const { establishmentId } = httpRequest.params;
+      const { establishmentId } = httpRequest.params
 
       const usecaseResult =
         await this.getAllEstablishmentMusics.getAllEstablishmentMusics(
           establishmentId
-        );
+        )
 
-      if (usecaseResult.isLeft()) return badRequest(usecaseResult.value);
-      return ok(usecaseResult.value);
+      if (usecaseResult.isLeft()) return badRequest(usecaseResult.value)
+      return ok(usecaseResult.value)
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(error);
-      return serverError();
+      console.error(error)
+      return serverError()
     }
   }
 }
@@ -44,13 +44,13 @@ export class GetAllEstablishmentMusicsController implements Controller {
 export namespace GetAllEstablishmentMusicsController {
   export type DTO = {
     authenticated: {
-      id: string;
-    };
-  };
+      id: string
+    }
+  }
 
   export type Params = {
-    establishmentId: string;
-  };
+    establishmentId: string
+  }
 
-  export type Response = MusicEntity[];
+  export type Response = MusicEntity[]
 }

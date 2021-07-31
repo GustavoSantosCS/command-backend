@@ -1,34 +1,34 @@
-import { UserEntity } from '@/data/entities';
-import { UpdateUserUseCase } from '@/domain/usecases';
+import { UserEntity } from '@/data/entities'
+import { UpdateUserUseCase } from '@/domain/usecases'
 import {
   Controller,
   HttpRequest,
   HttpResponse
-} from '@/presentation/protocols';
-import { badRequest, ok, serverError } from '@/utils/http';
-import { Validator } from '@/validation/protocols';
+} from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/utils/http'
+import { Validator } from '@/validation/protocols'
 
 export class UpdateUserController implements Controller {
-  private readonly validator: Validator;
-  private readonly updateUser: UpdateUserUseCase;
+  private readonly validator: Validator
+  private readonly updateUser: UpdateUserUseCase
 
-  constructor(validator: Validator, updateUserUsecase: UpdateUserUseCase) {
-    this.validator = validator;
-    this.updateUser = updateUserUsecase;
+  constructor (validator: Validator, updateUserUsecase: UpdateUserUseCase) {
+    this.validator = validator
+    this.updateUser = updateUserUsecase
   }
 
-  async handle(
+  async handle (
     httpRequest: HttpRequest<UpdateUserController.DTO>
   ): Promise<HttpResponse<UpdateUserController.Response>> {
     try {
-      const { body } = httpRequest;
+      const { body } = httpRequest
       const validation = this.validator.validate({
         name: body.name,
         email: body.email,
         password: body.password
-      });
+      })
       if (validation.isLeft()) {
-        return badRequest(validation.value);
+        return badRequest(validation.value)
       }
 
       const resultUpdate = await this.updateUser.update({
@@ -36,11 +36,11 @@ export class UpdateUserController implements Controller {
         name: body.name,
         email: body.email.toLowerCase(),
         password: body.password
-      });
+      })
       if (resultUpdate.isLeft()) {
-        return badRequest(resultUpdate.value);
+        return badRequest(resultUpdate.value)
       }
-      const { value: user } = resultUpdate;
+      const { value: user } = resultUpdate
 
       const updateUser: UpdateUserController.Response = {
         id: user.id,
@@ -49,12 +49,12 @@ export class UpdateUserController implements Controller {
         avatar: user.avatar,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt
-      };
-      return ok(updateUser);
+      }
+      return ok(updateUser)
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(error);
-      return serverError();
+      console.error(error)
+      return serverError()
     }
   }
 }
@@ -63,12 +63,12 @@ export class UpdateUserController implements Controller {
 export namespace UpdateUserController {
   export type DTO = {
     authenticated: {
-      id: string;
-    };
-    name: string;
-    email: string;
-    password: string;
-  };
+      id: string
+    }
+    name: string
+    email: string
+    password: string
+  }
 
-  export type Response = Omit<UserEntity, 'password' | 'establishments'>;
+  export type Response = Omit<UserEntity, 'password' | 'establishments'>
 }

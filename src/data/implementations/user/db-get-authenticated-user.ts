@@ -1,23 +1,22 @@
-import { GetUserByIdRepository } from '@/data/protocols';
-import { GetAuthenticatedUserUseCase } from '@/domain/usecases';
-import { UserNotFoundError } from '@/domain/errors';
-import { left, right } from '@/shared/either';
-import { UserEntity } from '@/data/entities';
+import { GetUserByIdRepository } from '@/data/protocols'
+import { GetAuthenticatedUserUseCase } from '@/domain/usecases'
+import { UserNotFoundError } from '@/domain/errors'
+import { left, right } from '@/shared/either'
 
 export class DBGetAuthenticatedUser implements GetAuthenticatedUserUseCase {
-  private readonly getByIdRepo: GetUserByIdRepository;
+  private readonly getByIdRepo: GetUserByIdRepository
 
-  constructor(getByIdRepo: GetUserByIdRepository) {
-    this.getByIdRepo = getByIdRepo;
+  constructor (getByIdRepo: GetUserByIdRepository) {
+    this.getByIdRepo = getByIdRepo
   }
 
-  async getAuthenticatedUser(
+  async getAuthenticatedUser (
     userId: string
   ): Promise<GetAuthenticatedUserUseCase.Result> {
-    const user = await this.getByIdRepo.getById(userId);
+    const user = await this.getByIdRepo.getById(userId)
 
     if (!user) {
-      return left(new UserNotFoundError());
+      return left(new UserNotFoundError())
     }
 
     const result: GetAuthenticatedUserUseCase.Return = {
@@ -27,7 +26,7 @@ export class DBGetAuthenticatedUser implements GetAuthenticatedUserUseCase {
       avatar: user.avatar,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt
-    };
-    return right(result);
+    }
+    return right(result)
   }
 }

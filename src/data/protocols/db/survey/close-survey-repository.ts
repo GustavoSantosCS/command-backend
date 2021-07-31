@@ -1,5 +1,5 @@
-import { SurveyEntity } from '@/data/entities';
+import { SurveyEntity } from '@/data/entities'
 
 export interface CloseSurveyRepository {
-  remove(survey: SurveyEntity, softDelete: boolean): Promise<SurveyEntity>;
+  remove: (survey: SurveyEntity, softDelete: boolean) => Promise<SurveyEntity>
 }

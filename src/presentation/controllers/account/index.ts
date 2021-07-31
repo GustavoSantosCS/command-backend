@@ -1,2 +1,2 @@
-export * from './add-account-controller';
-export * from './get-all-user-account-controller';
+export * from './add-account-controller'
+export * from './get-all-user-account-controller'

@@ -1,2 +1,2 @@
-export * from './authorization';
-export * from './multer';
+export * from './authorization'
+export * from './multer'

@@ -1,11 +1,11 @@
-import { VoteEntity } from '@/data/entities';
-import { SaveVoteRepository } from '@/data/protocols';
-import { TypeORMHelpers } from './typeorm-helper';
+import { VoteEntity } from '@/data/entities'
+import { SaveVoteRepository } from '@/data/protocols'
+import { TypeORMHelpers } from './typeorm-helper'
 
 export class VoteTypeOrmRepository implements SaveVoteRepository {
-  async save(vote: VoteEntity): Promise<VoteEntity> {
-    const voteRepo = await TypeORMHelpers.getRepository(VoteEntity);
-    const result = await voteRepo.save(vote);
-    return result;
+  async save (vote: VoteEntity): Promise<VoteEntity> {
+    const voteRepo = await TypeORMHelpers.getRepository(VoteEntity)
+    const result = await voteRepo.save(vote)
+    return result
   }
 }

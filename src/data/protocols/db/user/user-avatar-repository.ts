@@ -1,13 +1,13 @@
-import { AvatarEntity } from '@/data/entities';
+import { AvatarEntity } from '@/data/entities'
 
 export interface UserAvatarRepository {
-  saveAvatar(
+  saveAvatar: (
     newAvatar: UserAvatarRepository.Params
-  ): Promise<UserAvatarRepository.Result>;
+  ) => Promise<UserAvatarRepository.Result>
 }
 
 // eslint-disable-next-line no-redeclare
 export namespace UserAvatarRepository {
-  export type Params = AvatarEntity;
-  export type Result = AvatarEntity;
+  export type Params = AvatarEntity
+  export type Result = AvatarEntity
 }

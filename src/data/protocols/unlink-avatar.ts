@@ -1,5 +1,5 @@
-import { AvatarEntity } from '../entities';
+import { AvatarEntity } from '../entities'
 
 export interface UnlinkAvatar {
-  removeAvatar(oldAvatar: AvatarEntity): Promise<void>;
+  removeAvatar: (oldAvatar: AvatarEntity) => Promise<void>
 }

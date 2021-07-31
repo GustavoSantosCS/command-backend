@@ -1,27 +1,27 @@
-import request from 'supertest';
-import faker from 'faker';
-import app from '@/main/config/app';
-import { TypeORMHelpers, UserTypeOrmRepository } from '@/infra/db/typeorm';
-import { UserEntity } from '@/data/entities';
-import { makeMockAddUser } from '@tests/domain/mock/models';
+import request from 'supertest'
+import faker from 'faker'
+import app from '@/main/config/app'
+import { TypeORMHelpers, UserTypeOrmRepository } from '@/infra/db/typeorm'
+import { UserEntity } from '@/data/entities'
+import { makeMockAddUser } from '@tests/domain/mock/models'
 
 describe('Tests Integration User Add Router', () => {
   beforeAll(async () => {
-    await TypeORMHelpers.connect();
-  });
+    await TypeORMHelpers.connect()
+  })
 
   afterAll(async () => {
-    await TypeORMHelpers.disconnect();
-  });
+    await TypeORMHelpers.disconnect()
+  })
 
   beforeEach(async () => {
-    await TypeORMHelpers.clearDataBase();
-  });
+    await TypeORMHelpers.clearDataBase()
+  })
 
   describe('POST /user', () => {
     it('should return 200 on create', async () => {
-      const { name, email, password, confirmPassword } = makeMockAddUser();
-      const response = await request(app)
+      const { name, email, password, confirmPassword } = makeMockAddUser()
+      await request(app)
         .post('/user')
         .send({
           name,
@@ -31,14 +31,12 @@ describe('Tests Integration User Add Router', () => {
         })
         .expect('Content-Type', /json/)
         .expect(200)
-        .catch(console.error);
-      // const body = JSON.parse(response.text);
-      // expect(body).toHaveProperty('id');
-    });
+        .catch(console.error)
+    })
 
     it('should return 400 if name is not provider', async () => {
-      const { email, password, confirmPassword } = makeMockAddUser();
-      const response = await request(app)
+      const { email, password, confirmPassword } = makeMockAddUser()
+      await request(app)
         .post('/user')
         .send({
           email,
@@ -47,14 +45,12 @@ describe('Tests Integration User Add Router', () => {
         })
         .expect('Content-Type', /json/)
         .expect(400)
-        .catch(console.error);
-      // const { errors } = JSON.parse(response.text);
-      // expect(errors[0].message).toBe('name não informado');
-    });
+        .catch(console.error)
+    })
 
     it('should return 400 if the name has less than 3 digits', async () => {
-      const { email, password, confirmPassword } = makeMockAddUser();
-      const response = await request(app)
+      const { email, password, confirmPassword } = makeMockAddUser()
+      await request(app)
         .post('/user')
         .send({
           name: 'AA',
@@ -64,14 +60,12 @@ describe('Tests Integration User Add Router', () => {
         })
         .expect('Content-Type', /json/)
         .expect(400)
-        .catch(console.error);
-      // const { errors } = JSON.parse(response.text);
-      // expect(errors[0].message).toBe('name deve conter ao menos 3 letras');
-    });
+        .catch(console.error)
+    })
 
     it('should return 400 if email is not provider', async () => {
-      const { name, password, confirmPassword } = makeMockAddUser();
-      const response = await request(app)
+      const { name, password, confirmPassword } = makeMockAddUser()
+      await request(app)
         .post('/user')
         .send({
           name,
@@ -80,14 +74,12 @@ describe('Tests Integration User Add Router', () => {
         })
         .expect('Content-Type', /json/)
         .expect(400)
-        .catch(console.error);
-      // const { errors } = JSON.parse(response.text);
-      // expect(errors[0].message).toBe('E-mail não informado');
-    });
+        .catch(console.error)
+    })
 
     it('should return 400 if the email provider is not email', async () => {
-      const { name, password, confirmPassword } = makeMockAddUser();
-      const response = await request(app)
+      const { name, password, confirmPassword } = makeMockAddUser()
+      await request(app)
         .post('/user')
         .send({
           name,
@@ -97,23 +89,19 @@ describe('Tests Integration User Add Router', () => {
         })
         .expect('Content-Type', /json/)
         .expect(400)
-        .catch(console.error);
-      // const { errors } = JSON.parse(response.text);
-      // expect(errors[0].message).toBe('Valor informado não é um email');
-    });
+        .catch(console.error)
+    })
 
     it('should return 400 if the email provider is being using', async () => {
-      const { name, email, password, confirmPassword } = makeMockAddUser();
-      const repository = new UserTypeOrmRepository();
-      await repository.save(
-        new UserEntity({
-          id: faker.datatype.uuid(),
-          name,
-          email,
-          password
-        })
-      );
-      const response = await request(app)
+      const { name, email, password, confirmPassword } = makeMockAddUser()
+      const repository = new UserTypeOrmRepository()
+      const auxUser = new UserEntity()
+      auxUser.id = faker.datatype.uuid()
+      auxUser.name = name
+      auxUser.email = email
+      auxUser.password = password
+      await repository.save(auxUser)
+      await request(app)
         .post('/user')
         .send({
           name,
@@ -123,14 +111,12 @@ describe('Tests Integration User Add Router', () => {
         })
         .expect('Content-Type', /json/)
         .expect(400)
-        .catch(console.error);
-      // const { errors } = JSON.parse(response.text);
-      // expect(errors[0].message).toBe('Email já está em uso!');
-    });
+        .catch(console.error)
+    })
 
     it('should return 400 if password is not provider', async () => {
-      const { name, email, confirmPassword } = makeMockAddUser();
-      const response = await request(app)
+      const { name, email, confirmPassword } = makeMockAddUser()
+      await request(app)
         .post('/user')
         .send({
           name,
@@ -139,14 +125,12 @@ describe('Tests Integration User Add Router', () => {
         })
         .expect('Content-Type', /json/)
         .expect(400)
-        .catch(console.error);
-      // const { errors } = JSON.parse(response.text);
-      // expect(errors[0].message).toBe('Senha não informada');
-    });
+        .catch(console.error)
+    })
 
     it('should return 400 if the password has less than 5 digits', async () => {
-      const { name, email } = makeMockAddUser();
-      const response = await request(app)
+      const { name, email } = makeMockAddUser()
+      await request(app)
         .post('/user')
         .send({
           name,
@@ -156,14 +140,12 @@ describe('Tests Integration User Add Router', () => {
         })
         .expect('Content-Type', /json/)
         .expect(400)
-        .catch(console.error);
-      // const { errors } = JSON.parse(response.text);
-      // expect(errors[0].message).toBe('Senha deve ter pelo menos 5 caracteres');
-    });
+        .catch(console.error)
+    })
 
     it('should return 400 if confirmPassword is not provider', async () => {
-      const { name, email, password } = makeMockAddUser();
-      const response = await request(app)
+      const { name, email, password } = makeMockAddUser()
+      await request(app)
         .post('/user')
         .send({
           name,
@@ -172,14 +154,12 @@ describe('Tests Integration User Add Router', () => {
         })
         .expect('Content-Type', /json/)
         .expect(400)
-        .catch(console.error);
-      // const { errors } = JSON.parse(response.text);
-      // expect(errors[0].message).toBe('Confirmação de Senha não informada');
-    });
+        .catch(console.error)
+    })
 
     it('should return 400 if confirmPassword is not equal to password', async () => {
-      const { name, email, password } = makeMockAddUser();
-      const response = await request(app)
+      const { name, email, password } = makeMockAddUser()
+      await request(app)
         .post('/user')
         .send({
           name,
@@ -189,9 +169,7 @@ describe('Tests Integration User Add Router', () => {
         })
         .expect('Content-Type', /json/)
         .expect(400)
-        .catch(console.error);
-      // const { errors } = JSON.parse(response.text);
-      // expect(errors[0].message).toBe('Senhas não batem');
-    });
-  });
-});
+        .catch(console.error)
+    })
+  })
+})

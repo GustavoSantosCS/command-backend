@@ -1,18 +1,18 @@
-import { Entity, Column, PrimaryColumn, OneToOne } from 'typeorm';
+import { Entity, Column, PrimaryColumn, OneToOne } from 'typeorm'
 
-import { UserEntity } from './user-entity';
+import { UserEntity } from './user-entity'
 
 @Entity('avatars')
 export class AvatarEntity {
   @PrimaryColumn()
-  persistentName: string;
+  persistentName: string
 
   @Column()
-  originalName: string;
+  originalName: string
 
   @Column()
-  target: string;
+  target: string
 
   @OneToOne(() => UserEntity, user => user.avatar)
-  user: UserEntity;
+  user: UserEntity
 }

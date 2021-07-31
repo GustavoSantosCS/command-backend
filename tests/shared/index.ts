@@ -1,1 +1,1 @@
-export * from './throwsError';
+export * from './throwsError'

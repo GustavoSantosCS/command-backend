@@ -1,1 +1,1 @@
-export * from './add-vote-usecase';
+export * from './add-vote-usecase'

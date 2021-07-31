@@ -1,13 +1,13 @@
-import { UserEntity } from '@/data/entities';
+import { UserEntity } from '@/data/entities'
 
 export interface SearchUserByEmailRepository {
-  searchByEmail(
+  searchByEmail: (
     email: SearchUserByEmailRepository.Params
-  ): Promise<SearchUserByEmailRepository.Result>;
+  ) => Promise<SearchUserByEmailRepository.Result>
 }
 
 // eslint-disable-next-line no-redeclare
 export namespace SearchUserByEmailRepository {
-  export type Params = string;
-  export type Result = UserEntity;
+  export type Params = string
+  export type Result = UserEntity
 }

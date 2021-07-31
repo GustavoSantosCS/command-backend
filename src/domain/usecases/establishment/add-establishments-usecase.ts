@@ -1,34 +1,34 @@
-import { CATEGORY, ImagePersistenceData } from '@/domain/models';
-import { EstablishmentEntity } from '@/data/entities';
+import { CATEGORY, ImagePersistenceData } from '@/domain/models'
+import { EstablishmentEntity } from '@/data/entities'
 
 export interface AddEstablishmentUseCase {
-  add(
+  add: (
     newEstablishment: AddEstablishmentUseCase.Params
-  ): Promise<AddEstablishmentUseCase.Response>;
+  ) => Promise<AddEstablishmentUseCase.Response>
 }
 
 // eslint-disable-next-line no-redeclare
 export namespace AddEstablishmentUseCase {
   export type Params = {
-    userId: string;
+    userId: string
     establishment: {
-      name: string;
-      category: CATEGORY;
-      description: string;
-    };
-    establishmentImage: ImagePersistenceData;
-  };
+      name: string
+      category: CATEGORY
+      description: string
+    }
+    establishmentImage: ImagePersistenceData
+  }
 
   export type Return = Omit<
-    EstablishmentEntity,
-    | 'manager'
-    | 'products'
-    | 'playlists'
-    | 'accounts'
-    | 'surveys'
-    | 'musics'
-    | 'deletedAt'
-  >;
+  EstablishmentEntity,
+  | 'manager'
+  | 'products'
+  | 'playlists'
+  | 'accounts'
+  | 'surveys'
+  | 'musics'
+  | 'deletedAt'
+  >
 
-  export type Response = Return;
+  export type Response = Return
 }

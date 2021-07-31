@@ -9,61 +9,61 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany
-} from 'typeorm';
-import { EstablishmentImageEntity } from './establishment-image-entity';
-import { UserEntity } from './user-entity';
-import { ProductEntity } from './product-entity';
-import { MusicEntity } from './music-entity';
-import { PlaylistEntity } from './playlist-entity';
-import { AccountEntity } from './account-entity';
-import { SurveyEntity } from './survey-entity';
+} from 'typeorm'
+import { EstablishmentImageEntity } from './establishment-image-entity'
+import { UserEntity } from './user-entity'
+import { ProductEntity } from './product-entity'
+import { MusicEntity } from './music-entity'
+import { PlaylistEntity } from './playlist-entity'
+import { AccountEntity } from './account-entity'
+import { SurveyEntity } from './survey-entity'
 
 @Entity('establishments')
 export class EstablishmentEntity {
   @PrimaryColumn()
-  id: string;
+  id: string
 
   @Column()
-  name: string;
+  name: string
 
   @Column()
-  category: string;
+  category: string
 
   @Column()
-  description: string;
+  description: string
 
   @Column()
-  isOpen: boolean;
+  isOpen: boolean
 
   @ManyToOne(() => UserEntity, user => user.establishments)
   @JoinColumn({ name: 'manager' })
-  manager: UserEntity;
+  manager: UserEntity
 
   @OneToMany(() => ProductEntity, product => product.establishment)
-  products: ProductEntity[];
+  products: ProductEntity[]
 
   @OneToMany(() => PlaylistEntity, playlist => playlist.establishment)
-  playlists: PlaylistEntity[];
+  playlists: PlaylistEntity[]
 
   @OneToMany(() => AccountEntity, account => account.establishment)
-  accounts: AccountEntity[];
+  accounts: AccountEntity[]
 
   @OneToMany(() => SurveyEntity, survey => survey.establishment)
-  surveys: SurveyEntity[];
+  surveys: SurveyEntity[]
 
   @OneToOne(() => EstablishmentImageEntity)
   @JoinColumn({ name: 'image' })
-  image: EstablishmentImageEntity;
+  image: EstablishmentImageEntity
 
   @OneToMany(() => MusicEntity, music => music.establishment)
-  musics: MusicEntity[];
+  musics: MusicEntity[]
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
+  createdAt: Date
 
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
+  updatedAt: Date
 
   @DeleteDateColumn({ name: 'deleted_at' })
-  deletedAt?: Date;
+  deletedAt?: Date
 }

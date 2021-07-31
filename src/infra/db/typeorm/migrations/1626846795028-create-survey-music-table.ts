@@ -1,8 +1,8 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import { MigrationInterface, QueryRunner, Table } from 'typeorm'
 
 export class CreateMusicTable1626846779793 implements MigrationInterface {
-  tableName = 'survey_music';
-  public async up(queryRunner: QueryRunner): Promise<void> {
+  tableName = 'survey_music'
+  public async up (queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
         name: this.tableName,
@@ -27,25 +27,25 @@ export class CreateMusicTable1626846779793 implements MigrationInterface {
           }
         ]
       })
-    );
+    )
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {
-    const table = await queryRunner.getTable(this.tableName);
+  public async down (queryRunner: QueryRunner): Promise<void> {
+    const table = await queryRunner.getTable(this.tableName)
 
     // Remove Chave Estrangeria 1
     const foreignKey1 = table.foreignKeys.find(
-      fk => fk.columnNames.indexOf('survey_music_fk') !== -1
-    );
+      fk => fk.columnNames.includes('survey_music_fk')
+    )
     // Remove Chave Estrangeria 2
     const foreignKey2 = table.foreignKeys.find(
-      fk => fk.columnNames.indexOf('music_survey_fk') !== -1
-    );
+      fk => fk.columnNames.includes('music_survey_fk')
+    )
     await queryRunner.dropForeignKeys(this.tableName, [
       foreignKey1,
       foreignKey2
-    ]);
+    ])
 
-    await queryRunner.dropTable(this.tableName);
+    await queryRunner.dropTable(this.tableName)
   }
 }

@@ -1,27 +1,27 @@
 import {
   GetPlaylistByIdRepository,
   SaveCurrentMusicPlaylistRepository
-} from '@/data/protocols';
+} from '@/data/protocols'
 import {
   PlaylistIsNotActiveError,
   PlaylistNotFoundError
-} from '@/domain/errors';
-import { StartPlaylistMusicUseCase } from '@/domain/usecases';
-import { left, right } from '@/shared/either';
+} from '@/domain/errors'
+import { StartPlaylistMusicUseCase } from '@/domain/usecases'
+import { left, right } from '@/shared/either'
 
 export class DBStartMusicOfPlaylist implements StartPlaylistMusicUseCase {
-  private readonly getPlaylistRepo: GetPlaylistByIdRepository;
-  private readonly saveCurrentMusicRepo: SaveCurrentMusicPlaylistRepository;
+  private readonly getPlaylistRepo: GetPlaylistByIdRepository
+  private readonly saveCurrentMusicRepo: SaveCurrentMusicPlaylistRepository
 
-  constructor(
+  constructor (
     getPlaylistRepo: GetPlaylistByIdRepository,
     saveCurrentMusicRepo: SaveCurrentMusicPlaylistRepository
   ) {
-    this.getPlaylistRepo = getPlaylistRepo;
-    this.saveCurrentMusicRepo = saveCurrentMusicRepo;
+    this.getPlaylistRepo = getPlaylistRepo
+    this.saveCurrentMusicRepo = saveCurrentMusicRepo
   }
 
-  async startMusic({
+  async startMusic ({
     establishmentId,
     playlistId,
     userId
@@ -29,27 +29,27 @@ export class DBStartMusicOfPlaylist implements StartPlaylistMusicUseCase {
     const playlist = await this.getPlaylistRepo.getById(playlistId, {
       includeEstablishmentAndManager: true,
       includeCurrentMusic: true
-    });
+    })
 
     if (
       !playlist ||
       playlist?.establishment.id !== establishmentId ||
       playlist?.establishment.manager.id !== userId
     ) {
-      return left(new PlaylistNotFoundError());
+      return left(new PlaylistNotFoundError())
     }
 
     if (!playlist.isActive) {
-      return left(new PlaylistIsNotActiveError());
+      return left(new PlaylistIsNotActiveError())
     }
 
-    playlist.currentMusic.isPlay = true;
+    playlist.currentMusic.isPlay = true
 
     const result = await this.saveCurrentMusicRepo.saveCurrentMusic(
       playlist,
       playlist.currentMusic
-    );
+    )
 
-    return right(result);
+    return right(result)
   }
 }

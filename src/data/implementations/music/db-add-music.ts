@@ -1,29 +1,29 @@
-import { MusicEntity } from '@/data/entities';
+import { MusicEntity } from '@/data/entities'
 import {
   AddMusicRepository,
   GetEstablishmentByIdRepository,
   IDGenerator
-} from '@/data/protocols';
-import { EstablishmentNotFoundError } from '@/domain/errors';
-import { AddMusicUseCase } from '@/domain/usecases';
-import { left, right } from '@/shared/either';
+} from '@/data/protocols'
+import { EstablishmentNotFoundError } from '@/domain/errors'
+import { AddMusicUseCase } from '@/domain/usecases'
+import { left, right } from '@/shared/either'
 
 export class DBAddMusic implements AddMusicUseCase {
-  private readonly idGenerator: IDGenerator;
-  private readonly getEstablishmentByIdRepo: GetEstablishmentByIdRepository;
-  private readonly addMusicRepo: AddMusicRepository;
+  private readonly idGenerator: IDGenerator
+  private readonly getEstablishmentByIdRepo: GetEstablishmentByIdRepository
+  private readonly addMusicRepo: AddMusicRepository
 
-  constructor(
+  constructor (
     idGenerator: IDGenerator,
     getEstablishmentByIdRepo: GetEstablishmentByIdRepository,
     addMusicRepo: AddMusicRepository
   ) {
-    this.idGenerator = idGenerator;
-    this.getEstablishmentByIdRepo = getEstablishmentByIdRepo;
-    this.addMusicRepo = addMusicRepo;
+    this.idGenerator = idGenerator
+    this.getEstablishmentByIdRepo = getEstablishmentByIdRepo
+    this.addMusicRepo = addMusicRepo
   }
 
-  async add({
+  async add ({
     userId,
     establishmentId,
     name,
@@ -33,18 +33,17 @@ export class DBAddMusic implements AddMusicUseCase {
     const establishmentRepo = await this.getEstablishmentByIdRepo.getById(
       establishmentId,
       { withManager: true }
-    );
-    if (establishmentRepo?.manager.id !== userId)
-      return left(new EstablishmentNotFoundError());
+    )
+    if (establishmentRepo?.manager.id !== userId) { return left(new EstablishmentNotFoundError()) }
 
-    const newMusic = new MusicEntity();
-    newMusic.id = this.idGenerator.generate();
-    newMusic.name = name;
-    newMusic.talent = talent;
-    newMusic.duration = duration;
-    newMusic.establishment = establishmentRepo;
+    const newMusic = new MusicEntity()
+    newMusic.id = this.idGenerator.generate()
+    newMusic.name = name
+    newMusic.talent = talent
+    newMusic.duration = duration
+    newMusic.establishment = establishmentRepo
 
-    const result = await this.addMusicRepo.save(newMusic);
-    return right(result);
+    const result = await this.addMusicRepo.save(newMusic)
+    return right(result)
   }
 }

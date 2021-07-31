@@ -1,37 +1,36 @@
-import { EstablishmentEntity } from '@/data/entities';
-import { EstablishmentNotFoundError } from '@/domain/errors';
-import { GetUserEstablishmentByIdUseCase } from '@/domain/usecases';
+import { EstablishmentEntity } from '@/data/entities'
+import { EstablishmentNotFoundError } from '@/domain/errors'
+import { GetUserEstablishmentByIdUseCase } from '@/domain/usecases'
 import {
   Controller,
   HttpRequest,
   HttpResponse
-} from '@/presentation/protocols';
-import { badRequest, ok, serverError } from '@/utils/http';
+} from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/utils/http'
 
 export class GetUserEstablishmentByIdController implements Controller {
-  private readonly getUserEstablishment: GetUserEstablishmentByIdUseCase;
+  private readonly getUserEstablishment: GetUserEstablishmentByIdUseCase
 
-  constructor(getUserEstablishment: GetUserEstablishmentByIdUseCase) {
-    this.getUserEstablishment = getUserEstablishment;
+  constructor (getUserEstablishment: GetUserEstablishmentByIdUseCase) {
+    this.getUserEstablishment = getUserEstablishment
   }
 
-  async handle(
+  async handle (
     httpRequest: HttpRequest<
-      GetUserEstablishmentByIdController.DTO,
-      GetUserEstablishmentByIdController.Param
+    GetUserEstablishmentByIdController.DTO,
+    GetUserEstablishmentByIdController.Param
     >
   ): Promise<HttpResponse<GetUserEstablishmentByIdController.Response>> {
     try {
-      const { id: userId } = httpRequest.body.authenticated;
-      const { establishmentId } = httpRequest.params;
+      const { id: userId } = httpRequest.body.authenticated
+      const { establishmentId } = httpRequest.params
 
       const response = await this.getUserEstablishment.getUserEstablishmentById(
         userId,
         establishmentId
-      );
+      )
 
-      if (response.isLeft())
-        return badRequest(new EstablishmentNotFoundError());
+      if (response.isLeft()) { return badRequest(new EstablishmentNotFoundError()) }
 
       const establishment: GetUserEstablishmentByIdController.Return = {
         id: response.value.id,
@@ -42,13 +41,13 @@ export class GetUserEstablishmentByIdController implements Controller {
         image: response.value.image,
         createdAt: response.value.createdAt,
         updatedAt: response.value.updatedAt
-      };
+      }
 
-      return ok(establishment);
+      return ok(establishment)
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(error);
-      return serverError();
+      console.error(error)
+      return serverError()
     }
   }
 }
@@ -57,24 +56,24 @@ export class GetUserEstablishmentByIdController implements Controller {
 export namespace GetUserEstablishmentByIdController {
   export type DTO = {
     authenticated: {
-      id: string;
-    };
-  };
+      id: string
+    }
+  }
 
   export type Param = {
-    establishmentId: string;
-  };
+    establishmentId: string
+  }
 
   export type Return = Omit<
-    EstablishmentEntity,
-    | 'manager'
-    | 'products'
-    | 'playlists'
-    | 'accounts'
-    | 'surveys'
-    | 'musics'
-    | 'deletedAt'
-  >;
+  EstablishmentEntity,
+  | 'manager'
+  | 'products'
+  | 'playlists'
+  | 'accounts'
+  | 'surveys'
+  | 'musics'
+  | 'deletedAt'
+  >
 
-  export type Response = Return;
+  export type Response = Return
 }

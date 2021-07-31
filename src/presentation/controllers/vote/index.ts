@@ -1,1 +1,1 @@
-export * from './add-vote-controller';
+export * from './add-vote-controller'

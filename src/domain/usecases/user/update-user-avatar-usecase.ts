@@ -1,19 +1,18 @@
-import { AvatarEntity } from '@/data/entities';
-
-import { Either } from '@/shared/either';
+import { AvatarEntity } from '@/data/entities'
+import { Either } from '@/shared/either'
 
 export interface UpdateUserAvatarUseCase {
-  saveAvatar(
+  saveAvatar: (
     data: UpdateUserAvatarUseCase.Params
-  ): Promise<UpdateUserAvatarUseCase.Response>;
+  ) => Promise<UpdateUserAvatarUseCase.Response>
 }
 
 // eslint-disable-next-line no-redeclare
 export namespace UpdateUserAvatarUseCase {
   export type Params = {
-    userId: string;
-    avatar: Omit<AvatarEntity, 'user'>;
-  };
+    userId: string
+    avatar: Omit<AvatarEntity, 'user'>
+  }
 
-  export type Response = Either<undefined, AvatarEntity>;
+  export type Response = Either<undefined, AvatarEntity>
 }

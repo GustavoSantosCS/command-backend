@@ -1,13 +1,13 @@
-import { MusicPlaylistEntity, PlaylistEntity } from '@/data/entities';
+import { MusicPlaylistEntity, PlaylistEntity } from '@/data/entities'
 
 export interface AddPlayListRepository {
-  save(
+  save: (
     playlist: PlaylistEntity,
     newMusics: MusicPlaylistEntity[]
-  ): Promise<AddPlayListRepository.Result>;
+  ) => Promise<AddPlayListRepository.Result>
 }
 
 // eslint-disable-next-line no-redeclare
 export namespace AddPlayListRepository {
-  export type Result = Omit<PlaylistEntity, 'establishment' | 'musics'>;
+  export type Result = Omit<PlaylistEntity, 'establishment' | 'musics'>
 }

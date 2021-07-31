@@ -9,21 +9,21 @@ import {
   OneToMany,
   PrimaryColumn,
   UpdateDateColumn
-} from 'typeorm';
-import { EstablishmentEntity } from './establishment-entity';
-import { MusicEntity } from './music-entity';
-import { MusicPlaylistEntity } from './music-playlist-entity';
+} from 'typeorm'
+import { EstablishmentEntity } from './establishment-entity'
+import { MusicEntity } from './music-entity'
+import { MusicPlaylistEntity } from './music-playlist-entity'
 
 @Entity('playlists')
 export class PlaylistEntity {
   @PrimaryColumn()
-  id: string;
+  id: string
 
   @Column()
-  name: string;
+  name: string
 
   @Column()
-  isActive: boolean;
+  isActive: boolean
 
   @ManyToMany(() => MusicEntity, musics => musics.playlists)
   @JoinTable({
@@ -31,25 +31,25 @@ export class PlaylistEntity {
     joinColumn: { name: 'playlist_id' },
     inverseJoinColumn: { name: 'music_id' }
   })
-  musics: MusicEntity[];
+  musics: MusicEntity[]
 
   @ManyToOne(() => EstablishmentEntity, establishment => establishment.musics)
   @JoinColumn({ name: 'establishment_id' })
-  establishment: EstablishmentEntity;
+  establishment: EstablishmentEntity
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
+  createdAt: Date
 
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
+  updatedAt: Date
 
   @OneToMany(
     () => MusicPlaylistEntity,
     musicToPlaylist => musicToPlaylist.playlist
   )
-  musicToPlaylist!: MusicPlaylistEntity[];
+  musicToPlaylist!: MusicPlaylistEntity[]
 
   @ManyToOne(() => MusicPlaylistEntity)
   @JoinColumn({ name: 'current_music_id' })
-  currentMusic!: MusicPlaylistEntity;
+  currentMusic!: MusicPlaylistEntity
 }

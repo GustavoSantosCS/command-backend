@@ -1,31 +1,31 @@
-import { PlaylistEntity } from '@/data/entities';
-import { UpdatePlaylistUseCase } from '@/domain/usecases';
+import { PlaylistEntity } from '@/data/entities'
+import { UpdatePlaylistUseCase } from '@/domain/usecases'
 import {
   Controller,
   HttpRequest,
   HttpResponse
-} from '@/presentation/protocols';
-import { badRequest, ok, serverError } from '@/utils/http';
-import { Validator } from '@/validation/protocols';
+} from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/utils/http'
+import { Validator } from '@/validation/protocols'
 
 export class UpdatePlaylistController implements Controller {
-  private readonly validate: Validator;
-  private readonly updatePlayList: UpdatePlaylistUseCase;
+  private readonly validate: Validator
+  private readonly updatePlayList: UpdatePlaylistUseCase
 
-  constructor(validate: Validator, updatePlayList: UpdatePlaylistUseCase) {
-    this.validate = validate;
-    this.updatePlayList = updatePlayList;
+  constructor (validate: Validator, updatePlayList: UpdatePlaylistUseCase) {
+    this.validate = validate
+    this.updatePlayList = updatePlayList
   }
 
-  async handle(
+  async handle (
     httpRequest: HttpRequest<
-      UpdatePlaylistController.DTO,
-      UpdatePlaylistController.Param
+    UpdatePlaylistController.DTO,
+    UpdatePlaylistController.Param
     >
   ): Promise<UpdatePlaylistController.Response> {
     try {
       const { authenticated, establishmentId, id, active, name } =
-        httpRequest.body;
+        httpRequest.body
 
       const validation = this.validate.validate({
         userId: authenticated.id,
@@ -33,9 +33,9 @@ export class UpdatePlaylistController implements Controller {
         name,
         id,
         establishmentId
-      });
+      })
       if (validation.isLeft()) {
-        return badRequest(validation.value);
+        return badRequest(validation.value)
       }
 
       const resultUseCase = await this.updatePlayList.update({
@@ -44,24 +44,24 @@ export class UpdatePlaylistController implements Controller {
         active,
         name,
         establishmentId
-      });
+      })
       if (resultUseCase.isLeft()) {
-        return badRequest(resultUseCase.value);
+        return badRequest(resultUseCase.value)
       }
 
-      const { value: playlist } = resultUseCase;
+      const { value: playlist } = resultUseCase
       const result: UpdatePlaylistController.Return = {
         id: playlist.id,
         name: playlist.name,
         isActive: playlist.isActive,
         createdAt: playlist.createdAt,
         updatedAt: playlist.updatedAt
-      };
-      return ok(result);
+      }
+      return ok(result)
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(error);
-      return serverError();
+      console.error(error)
+      return serverError()
     }
   }
 }
@@ -70,19 +70,19 @@ export class UpdatePlaylistController implements Controller {
 export namespace UpdatePlaylistController {
   export type DTO = {
     authenticated: {
-      id: string;
-    };
-    id: string;
-    name: string;
-    active: boolean;
-    establishmentId: string;
-  };
+      id: string
+    }
+    id: string
+    name: string
+    active: boolean
+    establishmentId: string
+  }
 
-  export type Param = null;
+  export type Param = null
 
   export type Return = Omit<
-    PlaylistEntity,
-    'establishment' | 'musics' | 'musicToPlaylist' | 'currentMusic'
-  >;
-  export type Response = HttpResponse<Return>;
+  PlaylistEntity,
+  'establishment' | 'musics' | 'musicToPlaylist' | 'currentMusic'
+  >
+  export type Response = HttpResponse<Return>
 }

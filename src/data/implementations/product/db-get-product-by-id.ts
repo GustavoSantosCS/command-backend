@@ -1,19 +1,19 @@
-import { GetProductByIdRepository } from '@/data/protocols';
-import { GetProductByIdUseCase } from '@/domain/usecases';
-import { left, right } from '@/shared/either';
-import { ProductNotFoundError } from '@/domain/errors';
+import { GetProductByIdRepository } from '@/data/protocols'
+import { GetProductByIdUseCase } from '@/domain/usecases'
+import { left, right } from '@/shared/either'
+import { ProductNotFoundError } from '@/domain/errors'
 
 export class DBGetProductByID implements GetProductByIdUseCase {
-  private readonly getProductByIdRepo: GetProductByIdRepository;
+  private readonly getProductByIdRepo: GetProductByIdRepository
 
-  constructor(getProductByIdRepo: GetProductByIdRepository) {
-    this.getProductByIdRepo = getProductByIdRepo;
+  constructor (getProductByIdRepo: GetProductByIdRepository) {
+    this.getProductByIdRepo = getProductByIdRepo
   }
 
-  async getById(idProduct: string): Promise<GetProductByIdUseCase.Result> {
-    const product = await this.getProductByIdRepo.getById(idProduct);
+  async getById (idProduct: string): Promise<GetProductByIdUseCase.Result> {
+    const product = await this.getProductByIdRepo.getById(idProduct)
 
-    if (!product) return left(new ProductNotFoundError());
+    if (!product) return left(new ProductNotFoundError())
 
     const result: GetProductByIdUseCase.Return = {
       id: product.id,
@@ -25,8 +25,8 @@ export class DBGetProductByID implements GetProductByIdUseCase {
       createdAt: product.createdAt,
       updatedAt: product.updatedAt,
       deletedAt: product.deletedAt
-    };
+    }
 
-    return right(result);
+    return right(result)
   }
 }

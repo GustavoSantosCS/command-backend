@@ -4,11 +4,11 @@ import {
   Table,
   TableColumn,
   TableForeignKey
-} from 'typeorm';
+} from 'typeorm'
 
 export class CreateAvatarTable1623267125585 implements MigrationInterface {
-  tableName = 'avatars';
-  public async up(queryRunner: QueryRunner): Promise<void> {
+  tableName = 'avatars'
+  public async up (queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
         name: this.tableName,
@@ -19,7 +19,7 @@ export class CreateAvatarTable1623267125585 implements MigrationInterface {
         ]
       }),
       true
-    );
+    )
 
     await queryRunner.addColumn(
       'users',
@@ -28,7 +28,7 @@ export class CreateAvatarTable1623267125585 implements MigrationInterface {
         type: 'varchar',
         isNullable: true
       })
-    );
+    )
 
     await queryRunner.createForeignKey(
       'users',
@@ -38,16 +38,16 @@ export class CreateAvatarTable1623267125585 implements MigrationInterface {
         referencedTableName: 'avatars',
         name: 'user_avatar_fk'
       })
-    );
+    )
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {
-    const table = await queryRunner.getTable('users');
+  public async down (queryRunner: QueryRunner): Promise<void> {
+    const table = await queryRunner.getTable('users')
     const foreignKey = table.foreignKeys.find(
-      fk => fk.columnNames.indexOf('avatar') !== -1
-    );
-    await queryRunner.dropForeignKey('users', foreignKey);
-    await queryRunner.dropColumn('users', 'avatar');
-    await queryRunner.dropTable('avatars');
+      fk => fk.columnNames.includes('avatar')
+    )
+    await queryRunner.dropForeignKey('users', foreignKey)
+    await queryRunner.dropColumn('users', 'avatar')
+    await queryRunner.dropTable('avatars')
   }
 }

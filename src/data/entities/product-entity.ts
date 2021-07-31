@@ -8,41 +8,41 @@ import {
   OneToOne,
   PrimaryColumn,
   UpdateDateColumn
-} from 'typeorm';
-import { EstablishmentEntity } from './establishment-entity';
-import { ProductImageEntity } from './product-image-entity';
+} from 'typeorm'
+import { EstablishmentEntity } from './establishment-entity'
+import { ProductImageEntity } from './product-image-entity'
 
 @Entity('products')
 export class ProductEntity {
   @PrimaryColumn()
-  id?: string;
+  id?: string
 
   @Column()
-  name: string;
+  name: string
 
   @Column()
-  description: string;
+  description: string
 
   @Column()
-  isAvailable: boolean;
+  isAvailable: boolean
 
   @Column('decimal', { precision: 5, scale: 2 })
-  price: number;
+  price: number
 
   @OneToOne(() => ProductImageEntity)
   @JoinColumn({ name: 'image' })
-  image: ProductImageEntity;
+  image: ProductImageEntity
 
   @ManyToOne(() => EstablishmentEntity, establishment => establishment.products)
   @JoinColumn({ name: 'establishment_id' })
-  establishment: EstablishmentEntity;
+  establishment: EstablishmentEntity
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
+  createdAt: Date
 
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
+  updatedAt: Date
 
   @DeleteDateColumn({ name: 'deleted_at' })
-  deletedAt: Date;
+  deletedAt: Date
 }

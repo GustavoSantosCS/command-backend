@@ -1,1 +1,1 @@
-export * from './db-add-vote';
+export * from './db-add-vote'

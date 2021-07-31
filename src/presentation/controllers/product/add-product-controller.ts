@@ -1,36 +1,36 @@
-import { ProductEntity } from '@/data/entities';
-import { ImagePersistenceData } from '@/domain/models';
-import { AddProductUseCase } from '@/domain/usecases';
+import { ProductEntity } from '@/data/entities'
+import { ImagePersistenceData } from '@/domain/models'
+import { AddProductUseCase } from '@/domain/usecases'
 import {
   Controller,
   HttpRequest,
   HttpResponse
-} from '@/presentation/protocols';
-import { badRequest, ok, serverError } from '@/utils/http';
-import { Validator } from '@/validation/protocols';
+} from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/utils/http'
+import { Validator } from '@/validation/protocols'
 
 export class AddProductController implements Controller {
-  private readonly validator: Validator;
-  private readonly addProduct: AddProductUseCase;
+  private readonly validator: Validator
+  private readonly addProduct: AddProductUseCase
 
-  constructor(validator: Validator, addProductUseCase: AddProductUseCase) {
-    this.validator = validator;
-    this.addProduct = addProductUseCase;
+  constructor (validator: Validator, addProductUseCase: AddProductUseCase) {
+    this.validator = validator
+    this.addProduct = addProductUseCase
   }
 
-  async handle(
+  async handle (
     httpRequest: HttpRequest<AddProductController.DTO>
   ): Promise<HttpResponse<AddProductController.Response>> {
     try {
-      const { body } = httpRequest;
+      const { body } = httpRequest
       const validation = this.validator.validate({
         name: body?.name,
         description: body?.description,
         price: parseFloat(body?.price),
         establishmentId: body?.establishmentId
-      });
+      })
       if (validation.isLeft()) {
-        return badRequest(validation.value);
+        return badRequest(validation.value)
       }
 
       const resultCreate = await this.addProduct.save({
@@ -40,13 +40,13 @@ export class AddProductController implements Controller {
         price: parseFloat(body.price),
         establishmentId: body.establishmentId,
         productImage: body.productImage
-      });
+      })
 
       if (resultCreate.isLeft()) {
-        return badRequest(resultCreate.value);
+        return badRequest(resultCreate.value)
       }
 
-      const { value } = resultCreate;
+      const { value } = resultCreate
       const newProduct: AddProductController.Response = {
         id: value.id,
         name: value.name,
@@ -56,13 +56,13 @@ export class AddProductController implements Controller {
         isAvailable: value.isAvailable,
         createdAt: value.createdAt,
         updatedAt: value.updatedAt
-      };
+      }
 
-      return ok(newProduct);
+      return ok(newProduct)
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(error);
-      return serverError();
+      console.error(error)
+      return serverError()
     }
   }
 }
@@ -71,14 +71,14 @@ export class AddProductController implements Controller {
 export namespace AddProductController {
   export type DTO = {
     authenticated: {
-      id: string;
-    };
-    name: string;
-    description: string;
-    price: string;
-    establishmentId: string;
-    productImage: ImagePersistenceData;
-  };
+      id: string
+    }
+    name: string
+    description: string
+    price: string
+    establishmentId: string
+    productImage: ImagePersistenceData
+  }
 
-  export type Response = Omit<ProductEntity, 'establishment' | 'deletedAt'>;
+  export type Response = Omit<ProductEntity, 'establishment' | 'deletedAt'>
 }

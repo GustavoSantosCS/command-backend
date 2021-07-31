@@ -8,45 +8,45 @@ import {
   OneToOne,
   JoinColumn,
   OneToMany
-} from 'typeorm';
-import { AvatarEntity } from './avatar-entity';
-import { EstablishmentEntity } from './establishment-entity';
-import { VoteEntity } from './vote-entity';
-import { AccountEntity } from './account-entity';
+} from 'typeorm'
+import { AvatarEntity } from './avatar-entity'
+import { EstablishmentEntity } from './establishment-entity'
+import { VoteEntity } from './vote-entity'
+import { AccountEntity } from './account-entity'
 
 @Entity('users')
 export class UserEntity {
   @PrimaryColumn()
-  id: string;
+  id: string
 
   @Column()
-  name: string;
+  name: string
 
   @Column()
-  email: string;
+  email: string
 
   @Column()
-  password: string;
+  password: string
 
   @OneToOne(() => AvatarEntity, avatar => avatar.user)
   @JoinColumn({ name: 'avatar' })
-  avatar?: AvatarEntity;
+  avatar?: AvatarEntity
 
   @OneToMany(() => EstablishmentEntity, establishment => establishment.manager)
-  establishments?: EstablishmentEntity[];
+  establishments?: EstablishmentEntity[]
 
   @OneToMany(() => AccountEntity, account => account.client)
-  accounts?: AccountEntity[];
+  accounts?: AccountEntity[]
 
   @OneToMany(() => VoteEntity, vote => vote.client)
-  pollVotes?: VoteEntity[];
+  pollVotes?: VoteEntity[]
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
+  createdAt: Date
 
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
+  updatedAt: Date
 
   @DeleteDateColumn({ name: 'deleted_at' })
-  deletedAt?: Date;
+  deletedAt?: Date
 }

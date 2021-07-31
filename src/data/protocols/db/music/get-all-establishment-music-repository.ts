@@ -1,12 +1,12 @@
-import { MusicEntity } from '@/data/entities';
+import { MusicEntity } from '@/data/entities'
 
 export interface GetAllEstablishmentMusicsRepository {
-  getAllEstablishmentMusics(
+  getAllEstablishmentMusics: (
     establishmentId: string
-  ): Promise<
-    Omit<
-      MusicEntity,
-      'establishment' | 'playlists' | 'surveys' | 'musicToPlaylist'
-    >[]
-  >;
+  ) => Promise<
+  Array<Omit<
+  MusicEntity,
+  'establishment' | 'playlists' | 'surveys' | 'musicToPlaylist'
+  >>
+  >
 }

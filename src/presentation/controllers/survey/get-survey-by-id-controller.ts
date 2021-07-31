@@ -1,36 +1,36 @@
-import { SurveyEntity } from '@/data/entities';
-import { GetSurveyByIdUseCase } from '@/domain/usecases';
+import { SurveyEntity } from '@/data/entities'
+import { GetSurveyByIdUseCase } from '@/domain/usecases'
 import {
   Controller,
   HttpRequest,
   HttpResponse
-} from '@/presentation/protocols';
-import { badRequest, ok, serverError } from '@/utils/http';
+} from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/utils/http'
 
 export class GetSurveyByIdController implements Controller {
-  private getSurveyById: GetSurveyByIdUseCase;
+  private readonly getSurveyById: GetSurveyByIdUseCase
 
-  constructor(getSurveyById: GetSurveyByIdUseCase) {
-    this.getSurveyById = getSurveyById;
+  constructor (getSurveyById: GetSurveyByIdUseCase) {
+    this.getSurveyById = getSurveyById
   }
 
-  async handle(
+  async handle (
     httpRequest: HttpRequest<
-      GetSurveyByIdController.DTO,
-      GetSurveyByIdController.Param
+    GetSurveyByIdController.DTO,
+    GetSurveyByIdController.Param
     >
   ): Promise<GetSurveyByIdController.Response> {
     try {
-      const { surveyId } = httpRequest.params;
-      const result = await this.getSurveyById.getById(surveyId);
+      const { surveyId } = httpRequest.params
+      const result = await this.getSurveyById.getById(surveyId)
       if (result.isLeft()) {
-        return badRequest(result.value);
+        return badRequest(result.value)
       }
-      return ok(result.value);
+      return ok(result.value)
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(error);
-      return serverError();
+      console.error(error)
+      return serverError()
     }
   }
 }
@@ -39,12 +39,12 @@ export class GetSurveyByIdController implements Controller {
 export namespace GetSurveyByIdController {
   export type DTO = {
     authenticated: {
-      id: string;
-    };
-  };
+      id: string
+    }
+  }
   export type Param = {
-    surveyId: string;
-  };
+    surveyId: string
+  }
 
-  export type Response = HttpResponse<SurveyEntity>;
+  export type Response = HttpResponse<SurveyEntity>
 }

@@ -1,8 +1,8 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import { MigrationInterface, QueryRunner, Table } from 'typeorm'
 
 export class CreateProductTable1625019009005 implements MigrationInterface {
-  tableName = 'products';
-  public async up(queryRunner: QueryRunner): Promise<void> {
+  tableName = 'products'
+  public async up (queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
         name: this.tableName,
@@ -26,15 +26,15 @@ export class CreateProductTable1625019009005 implements MigrationInterface {
           }
         ]
       })
-    );
+    )
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {
-    const table = await queryRunner.getTable(this.tableName);
+  public async down (queryRunner: QueryRunner): Promise<void> {
+    const table = await queryRunner.getTable(this.tableName)
     const foreignKey = table.foreignKeys.find(
-      fk => fk.columnNames.indexOf('establishment_id') !== -1
-    );
-    await queryRunner.dropForeignKey(this.tableName, foreignKey);
-    await queryRunner.dropTable(this.tableName);
+      fk => fk.columnNames.includes('establishment_id')
+    )
+    await queryRunner.dropForeignKey(this.tableName, foreignKey)
+    await queryRunner.dropTable(this.tableName)
   }
 }

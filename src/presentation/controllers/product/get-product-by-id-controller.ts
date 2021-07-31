@@ -1,31 +1,31 @@
-import { ProductEntity } from '@/data/entities';
-import { GetProductByIdUseCase } from '@/domain/usecases';
+import { ProductEntity } from '@/data/entities'
+import { GetProductByIdUseCase } from '@/domain/usecases'
 import {
   Controller,
   HttpRequest,
   HttpResponse
-} from '@/presentation/protocols';
-import { badRequest, ok, serverError } from '@/utils/http';
+} from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/utils/http'
 
 export class GetProductByIdController implements Controller {
-  private readonly getProductById: GetProductByIdUseCase;
+  private readonly getProductById: GetProductByIdUseCase
 
-  constructor(getProductById: GetProductByIdUseCase) {
-    this.getProductById = getProductById;
+  constructor (getProductById: GetProductByIdUseCase) {
+    this.getProductById = getProductById
   }
 
-  async handle(
+  async handle (
     httpRequest: HttpRequest<
-      GetProductByIdController.DTO,
-      GetProductByIdController.Params
+    GetProductByIdController.DTO,
+    GetProductByIdController.Params
     >
   ): Promise<HttpResponse<GetProductByIdController.Response>> {
     try {
-      const { id } = httpRequest.params;
-      const result = await this.getProductById.getById(id);
-      if (result.isLeft()) return badRequest(result.value);
+      const { id } = httpRequest.params
+      const result = await this.getProductById.getById(id)
+      if (result.isLeft()) return badRequest(result.value)
 
-      const { value } = result;
+      const { value } = result
       const product: GetProductByIdController.Response = {
         id: value.id,
         description: value.description,
@@ -35,13 +35,13 @@ export class GetProductByIdController implements Controller {
         image: value.image,
         createdAt: value.createdAt,
         updatedAt: value.updatedAt
-      };
+      }
 
-      return ok(product);
+      return ok(product)
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(error);
-      return serverError();
+      console.error(error)
+      return serverError()
     }
   }
 }
@@ -50,13 +50,13 @@ export class GetProductByIdController implements Controller {
 export namespace GetProductByIdController {
   export type DTO = {
     authenticated: {
-      id: string;
-    };
-  };
+      id: string
+    }
+  }
 
   export type Params = {
-    id: string;
-  };
+    id: string
+  }
 
-  export type Response = Omit<ProductEntity, 'establishment' | 'deletedAt'>;
+  export type Response = Omit<ProductEntity, 'establishment' | 'deletedAt'>
 }

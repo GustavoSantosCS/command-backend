@@ -1,7 +1,7 @@
-import { AccountEntity } from '@/data/entities';
+import { AccountEntity } from '@/data/entities'
 
 export interface GetAllUserAccountRepository {
-  getAllUserAccount(
+  getAllUserAccount: (
     userId: string
-  ): Promise<Omit<AccountEntity, 'requestsProduct'>[]>;
+  ) => Promise<Array<Omit<AccountEntity, 'requestsProduct'>>>
 }

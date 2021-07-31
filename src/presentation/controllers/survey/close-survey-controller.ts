@@ -1,38 +1,38 @@
-import { SurveyEntity } from '@/data/entities';
-import { CloseSurveyUseCase } from '@/domain/usecases';
+import { SurveyEntity } from '@/data/entities'
+import { CloseSurveyUseCase } from '@/domain/usecases'
 import {
   Controller,
   HttpRequest,
   HttpResponse
-} from '@/presentation/protocols';
-import { badRequest, ok, serverError } from '@/utils/http';
+} from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/utils/http'
 
 export class CloseSurveyController implements Controller {
-  private closeSurvey: CloseSurveyUseCase;
+  private readonly closeSurvey: CloseSurveyUseCase
 
-  constructor(closeSurvey: CloseSurveyUseCase) {
-    this.closeSurvey = closeSurvey;
+  constructor (closeSurvey: CloseSurveyUseCase) {
+    this.closeSurvey = closeSurvey
   }
 
-  async handle(
+  async handle (
     httpRequest: HttpRequest<
-      CloseSurveyController.DTO,
-      CloseSurveyController.Param
+    CloseSurveyController.DTO,
+    CloseSurveyController.Param
     >
   ): Promise<CloseSurveyController.Response> {
     try {
       const resultUsecase = await this.closeSurvey.close(
         httpRequest.params.surveyId,
         httpRequest.body.authenticated.id
-      );
+      )
 
-      if (resultUsecase.isLeft()) return badRequest(resultUsecase.value);
+      if (resultUsecase.isLeft()) return badRequest(resultUsecase.value)
 
-      return ok(resultUsecase.value);
+      return ok(resultUsecase.value)
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(error);
-      return serverError();
+      console.error(error)
+      return serverError()
     }
   }
 }
@@ -41,13 +41,13 @@ export class CloseSurveyController implements Controller {
 export namespace CloseSurveyController {
   export type DTO = {
     authenticated: {
-      id: string;
-    };
-  };
+      id: string
+    }
+  }
 
   export type Param = {
-    surveyId: string;
-  };
+    surveyId: string
+  }
 
-  export type Response = HttpResponse<Omit<SurveyEntity, 'establishment'>>;
+  export type Response = HttpResponse<Omit<SurveyEntity, 'establishment'>>
 }

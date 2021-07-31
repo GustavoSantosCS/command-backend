@@ -10,30 +10,30 @@ import {
   OneToMany,
   PrimaryColumn,
   UpdateDateColumn
-} from 'typeorm';
-import { EstablishmentEntity } from './establishment-entity';
-import { MusicPlaylistEntity } from './music-playlist-entity';
-import { PlaylistEntity } from './playlist-entity';
-import { SurveyEntity } from './survey-entity';
-import { SurveyMusicEntity } from './survey-music-entity';
+} from 'typeorm'
+import { EstablishmentEntity } from './establishment-entity'
+import { MusicPlaylistEntity } from './music-playlist-entity'
+import { PlaylistEntity } from './playlist-entity'
+import { SurveyEntity } from './survey-entity'
+import { SurveyMusicEntity } from './survey-music-entity'
 
 @Entity('musics')
 export class MusicEntity {
   @PrimaryColumn()
-  id: string;
+  id: string
 
   @Column()
-  name: string;
+  name: string
 
   @Column()
-  talent: string;
+  talent: string
 
   @Column()
-  duration: number;
+  duration: number
 
   @ManyToOne(() => EstablishmentEntity, establishment => establishment.musics)
   @JoinColumn({ name: 'establishment_id' })
-  establishment: EstablishmentEntity;
+  establishment: EstablishmentEntity
 
   @ManyToMany(() => PlaylistEntity, playlists => playlists.musics)
   @JoinTable({
@@ -41,7 +41,7 @@ export class MusicEntity {
     joinColumn: { name: 'music_id' },
     inverseJoinColumn: { name: 'playlist_' }
   })
-  playlists: PlaylistEntity[];
+  playlists: PlaylistEntity[]
 
   @ManyToMany(() => SurveyEntity, surveys => surveys.musics)
   @JoinTable({
@@ -49,23 +49,23 @@ export class MusicEntity {
     joinColumn: { name: 'music_id' },
     inverseJoinColumn: { name: 'survey_id' }
   })
-  surveys?: SurveyEntity[];
+  surveys?: SurveyEntity[]
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt?: Date;
+  createdAt?: Date
 
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt?: Date;
+  updatedAt?: Date
 
   @DeleteDateColumn({ name: 'deleted_at' })
-  deletedAt?: Date;
+  deletedAt?: Date
 
   @OneToMany(
     () => MusicPlaylistEntity,
     musicToPlaylist => musicToPlaylist.music
   )
-  musicToPlaylist?: MusicPlaylistEntity[];
+  musicToPlaylist?: MusicPlaylistEntity[]
 
   @OneToMany(() => SurveyMusicEntity, surveyToMusic => surveyToMusic.music)
-  surveyToMusic?: SurveyMusicEntity[];
+  surveyToMusic?: SurveyMusicEntity[]
 }

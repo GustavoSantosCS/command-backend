@@ -1,38 +1,36 @@
 import {
   GetAccountByIdRepository,
   GetAllAccountRequestProductRepository
-} from '@/data/protocols';
-import { AccountNotFoundError } from '@/domain/errors';
-import { GetAllAccountRequestProductUseCase } from '@/domain/usecases';
-import { left, right } from '@/shared/either';
+} from '@/data/protocols'
+import { AccountNotFoundError } from '@/domain/errors'
+import { GetAllAccountRequestProductUseCase } from '@/domain/usecases'
+import { left, right } from '@/shared/either'
 
 export class DbGetAllAccountRequestProduct
-  implements GetAllAccountRequestProductUseCase
-{
-  private readonly getAllRepo: GetAllAccountRequestProductRepository;
-  private readonly getAccountRepo: GetAccountByIdRepository;
+implements GetAllAccountRequestProductUseCase {
+  private readonly getAllRepo: GetAllAccountRequestProductRepository
+  private readonly getAccountRepo: GetAccountByIdRepository
 
-  constructor(
+  constructor (
     getAllRepo: GetAllAccountRequestProductRepository,
     getByIdRepo: GetAccountByIdRepository
   ) {
-    this.getAccountRepo = getByIdRepo;
-    this.getAllRepo = getAllRepo;
+    this.getAccountRepo = getByIdRepo
+    this.getAllRepo = getAllRepo
   }
 
-  async getAllAccountRequestsProduct({
+  async getAllAccountRequestsProduct ({
     accountId,
     userId
   }): Promise<GetAllAccountRequestProductUseCase.Result> {
     const account = await this.getAccountRepo.getById(accountId, {
       withClient: true
-    });
-    if (!account || account?.client.id !== userId)
-      return left(new AccountNotFoundError());
+    })
+    if (!account || account?.client.id !== userId) { return left(new AccountNotFoundError()) }
 
     const requestsProduct = await this.getAllRepo.getAllAccountRequestsProduct(
       accountId
-    );
+    )
 
     const result: GetAllAccountRequestProductUseCase.Return =
       requestsProduct.map(request => ({
@@ -43,8 +41,8 @@ export class DbGetAllAccountRequestProduct
         total: request.total,
         createdAt: request.createdAt,
         updatedAt: request.updatedAt
-      }));
+      }))
 
-    return right(result);
+    return right(result)
   }
 }

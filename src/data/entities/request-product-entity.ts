@@ -7,38 +7,38 @@ import {
   ManyToOne,
   PrimaryColumn,
   UpdateDateColumn
-} from 'typeorm';
-import { AccountEntity } from './account-entity';
-import { ProductEntity } from './product-entity';
+} from 'typeorm'
+import { AccountEntity } from './account-entity'
+import { ProductEntity } from './product-entity'
 
 @Entity('requests_product')
 export class RequestProductEntity {
   @PrimaryColumn()
-  id: string;
+  id: string
 
   @ManyToOne(() => AccountEntity)
   @JoinColumn({ name: 'account_id' })
-  account?: AccountEntity;
+  account?: AccountEntity
 
   @ManyToOne(() => ProductEntity)
   @JoinColumn({ name: 'product_id' })
-  product: ProductEntity;
+  product: ProductEntity
 
   @Column({ name: 'amount_of_product' })
-  amountOfProduct: number;
+  amountOfProduct: number
 
   @Column()
-  total: number;
+  total: number
 
   @Column()
-  obs: string;
+  obs: string
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
+  createdAt: Date
 
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
+  updatedAt: Date
 
   @DeleteDateColumn({ name: 'closed_at' })
-  closedAt: Date;
+  closedAt: Date
 }

@@ -1,27 +1,27 @@
 import {
   GetPlaylistByIdRepository,
   SaveCurrentMusicPlaylistRepository
-} from '@/data/protocols';
+} from '@/data/protocols'
 import {
   PlaylistIsNotActiveError,
   PlaylistNotFoundError
-} from '@/domain/errors';
-import { PreviousPlaylistMusicUseCase } from '@/domain/usecases';
-import { left, right } from '@/shared/either';
+} from '@/domain/errors'
+import { PreviousPlaylistMusicUseCase } from '@/domain/usecases'
+import { left, right } from '@/shared/either'
 
 export class DBPreviousMusicOfPlaylist implements PreviousPlaylistMusicUseCase {
-  private readonly getPlaylistRepo: GetPlaylistByIdRepository;
-  private readonly saveCurrentMusicRepo: SaveCurrentMusicPlaylistRepository;
+  private readonly getPlaylistRepo: GetPlaylistByIdRepository
+  private readonly saveCurrentMusicRepo: SaveCurrentMusicPlaylistRepository
 
-  constructor(
+  constructor (
     getPlaylistRepo: GetPlaylistByIdRepository,
     saveCurrentMusicRepo: SaveCurrentMusicPlaylistRepository
   ) {
-    this.getPlaylistRepo = getPlaylistRepo;
-    this.saveCurrentMusicRepo = saveCurrentMusicRepo;
+    this.getPlaylistRepo = getPlaylistRepo
+    this.saveCurrentMusicRepo = saveCurrentMusicRepo
   }
 
-  async previousMusic({
+  async previousMusic ({
     establishmentId,
     playlistId,
     userId
@@ -30,38 +30,38 @@ export class DBPreviousMusicOfPlaylist implements PreviousPlaylistMusicUseCase {
       includeEstablishmentAndManager: true,
       includeCurrentMusic: true,
       includeMusicToPlaylist: true
-    });
+    })
 
     if (
       !playlist ||
       playlist?.establishment.id !== establishmentId ||
       playlist?.establishment.manager.id !== userId
     ) {
-      return left(new PlaylistNotFoundError());
+      return left(new PlaylistNotFoundError())
     }
 
     if (!playlist.isActive) {
-      return left(new PlaylistIsNotActiveError());
+      return left(new PlaylistIsNotActiveError())
     }
 
-    const { currentMusic, musicToPlaylist } = playlist;
+    const { currentMusic, musicToPlaylist } = playlist
 
     let indexPrevious =
-      (currentMusic?.position ? currentMusic.position : 0) - 1;
-    if (indexPrevious <= 0) indexPrevious = musicToPlaylist.length;
+      (currentMusic?.position ? currentMusic.position : 0) - 1
+    if (indexPrevious <= 0) indexPrevious = musicToPlaylist.length
 
     const previousCurrentMusic = musicToPlaylist.find(
       m => m.position === indexPrevious
-    );
+    )
 
-    previousCurrentMusic.isPlay = true;
-    playlist.currentMusic = previousCurrentMusic;
+    previousCurrentMusic.isPlay = true
+    playlist.currentMusic = previousCurrentMusic
 
     const resultNewCurrent = await this.saveCurrentMusicRepo.saveCurrentMusic(
       playlist,
       previousCurrentMusic
-    );
+    )
 
-    return right(resultNewCurrent);
+    return right(resultNewCurrent)
   }
 }

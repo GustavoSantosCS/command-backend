@@ -1,20 +1,20 @@
-import { SurveyEntity } from '@/data/entities';
+import { SurveyEntity } from '@/data/entities'
 
 export interface GetSurveyByIdRepository {
-  getById(
+  getById: (
     surveyId: string,
     strategy?: GetSurveyByIdRepository.Strategy,
     includeClose?: boolean
-  ): Promise<SurveyEntity>;
+  ) => Promise<SurveyEntity>
 }
 
 // eslint-disable-next-line no-redeclare
 export namespace GetSurveyByIdRepository {
   export type Strategy = {
-    includeEstablishment?: boolean;
-    includeEstablishmentAndManager?: boolean;
-    includeVotes?: boolean;
-    includeMusics?: boolean;
-    includeSurveyToMusic?: boolean;
-  };
+    includeEstablishment?: boolean
+    includeEstablishmentAndManager?: boolean
+    includeVotes?: boolean
+    includeMusics?: boolean
+    includeSurveyToMusic?: boolean
+  }
 }

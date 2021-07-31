@@ -1,45 +1,44 @@
 import {
   GetCurrentEstablishmentPlaylistRepository,
   GetEstablishmentByIdRepository
-} from '@/data/protocols';
-import { GetCurrentEstablishmentPlaylistUseCase } from '@/domain/usecases';
-import { left, right } from '@/shared/either';
+} from '@/data/protocols'
+import { GetCurrentEstablishmentPlaylistUseCase } from '@/domain/usecases'
+import { left, right } from '@/shared/either'
 import {
   EstablishmentNotFoundError,
   EstablishmentNotHavePlaylistError
-} from '@/domain/errors';
+} from '@/domain/errors'
 
 export class DBGetCurrentEstablishmentPlaylist
-  implements GetCurrentEstablishmentPlaylistUseCase
-{
-  private readonly getEstablishmentByIdRepo: GetEstablishmentByIdRepository;
-  private readonly getCurrentEstablishmentPlaylistRepo: GetCurrentEstablishmentPlaylistRepository;
+implements GetCurrentEstablishmentPlaylistUseCase {
+  private readonly getEstablishmentByIdRepo: GetEstablishmentByIdRepository
+  private readonly getCurrentEstablishmentPlaylistRepo: GetCurrentEstablishmentPlaylistRepository
 
-  constructor(
+  constructor (
     getEstablishmentByIdRepo: GetEstablishmentByIdRepository,
     getCurrentEstablishmentPlaylistRepo: GetCurrentEstablishmentPlaylistRepository
   ) {
-    this.getEstablishmentByIdRepo = getEstablishmentByIdRepo;
+    this.getEstablishmentByIdRepo = getEstablishmentByIdRepo
     this.getCurrentEstablishmentPlaylistRepo =
-      getCurrentEstablishmentPlaylistRepo;
+      getCurrentEstablishmentPlaylistRepo
   }
 
-  async getCurrentEstablishmentPlaylist(
+  async getCurrentEstablishmentPlaylist (
     userId: string,
     establishmentId: string
   ): Promise<GetCurrentEstablishmentPlaylistUseCase.Response> {
     const establishmentRepo = await this.getEstablishmentByIdRepo.getById(
       establishmentId
-    );
+    )
 
-    if (!establishmentRepo) return left(new EstablishmentNotFoundError());
+    if (!establishmentRepo) return left(new EstablishmentNotFoundError())
 
     const currentPlaylist =
       await this.getCurrentEstablishmentPlaylistRepo.getCurrentEstablishmentPlaylist(
         establishmentId
-      );
+      )
 
-    if (!currentPlaylist) return left(new EstablishmentNotHavePlaylistError());
+    if (!currentPlaylist) return left(new EstablishmentNotHavePlaylistError())
 
     const result: GetCurrentEstablishmentPlaylistUseCase.Result = {
       id: currentPlaylist.id,
@@ -49,8 +48,8 @@ export class DBGetCurrentEstablishmentPlaylist
       isActive: currentPlaylist.isActive,
       createdAt: currentPlaylist.createdAt,
       updatedAt: currentPlaylist.updatedAt
-    };
+    }
 
-    return right(result);
+    return right(result)
   }
 }

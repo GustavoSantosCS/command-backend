@@ -1,8 +1,8 @@
 export interface HttpResponse<T = any> {
-  statusCode: number;
+  statusCode: number
   body?:
-    | {
-        errors?: { message: string; value: string }[];
-      }
-    | T;
+  | {
+    errors?: Array<{ message: string, value: string }>
+  }
+  | T
 }

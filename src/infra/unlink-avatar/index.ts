@@ -1,2 +1,2 @@
-export * from './unlink-avatar-disk';
-export * from './unlink-avatar-s3';
+export * from './unlink-avatar-disk'
+export * from './unlink-avatar-s3'

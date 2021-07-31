@@ -1,1 +1,1 @@
-export * from './unlink-image-spy';
+export * from './unlink-image-spy'

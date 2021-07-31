@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'path'
 
 const app = {
   env: process.env.NODE_ENV || 'development',
@@ -6,7 +6,7 @@ const app = {
   protocol: process.env.APP_PROTOCOL || 'http',
   host: process.env.APP_HOST || 'localhost',
   port: process.env.PORT || 3333
-};
+}
 
 const db = {
   connection: process.env.DB_CONNECTION || 'postgres',
@@ -15,9 +15,9 @@ const db = {
   host: process.env.DB_HOST || 'docker',
   port: parseInt(process.env.DB_PORT) || 5433,
   password: process.env.DB_PASSWORD || 'docker'
-};
+}
 
-const root = path.resolve(__dirname, '..', '..', '..', 'tmp', 'storage');
+const root = path.resolve(__dirname, '..', '..', '..', 'tmp', 'storage')
 const storage = {
   type: process.env.STORAGE_TYPE || 'local',
   local: {
@@ -33,6 +33,6 @@ const storage = {
       region: process.env.AWS_DEFAULT_REGION
     }
   }
-};
+}
 
-export const env = { app, db, storage };
+export const env = { app, db, storage }

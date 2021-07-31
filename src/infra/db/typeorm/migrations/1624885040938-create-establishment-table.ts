@@ -1,10 +1,9 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import { MigrationInterface, QueryRunner, Table } from 'typeorm'
 
 export class CreateEstablishmentTable1624885040938
-  implements MigrationInterface
-{
-  tableName = 'establishments';
-  public async up(queryRunner: QueryRunner): Promise<void> {
+implements MigrationInterface {
+  tableName = 'establishments'
+  public async up (queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
         name: this.tableName,
@@ -29,15 +28,15 @@ export class CreateEstablishmentTable1624885040938
         ]
       }),
       true
-    );
+    )
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {
-    const table = await queryRunner.getTable(this.tableName);
+  public async down (queryRunner: QueryRunner): Promise<void> {
+    const table = await queryRunner.getTable(this.tableName)
     const foreignKey = table.foreignKeys.find(
-      fk => fk.columnNames.indexOf('establishments_user_fk') !== -1
-    );
-    await queryRunner.dropForeignKey(this.tableName, foreignKey);
-    await queryRunner.dropTable(this.tableName);
+      fk => fk.columnNames.includes('establishments_user_fk')
+    )
+    await queryRunner.dropForeignKey(this.tableName, foreignKey)
+    await queryRunner.dropTable(this.tableName)
   }
 }

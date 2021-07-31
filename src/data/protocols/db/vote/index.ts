@@ -1,1 +1,1 @@
-export * from './save-vote-repository';
+export * from './save-vote-repository'

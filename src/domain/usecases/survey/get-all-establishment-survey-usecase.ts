@@ -1,17 +1,17 @@
-import { SurveyEntity } from '@/data/entities';
-import { EstablishmentNotFoundError } from '@/domain/errors';
-import { Either } from '@/shared/either';
+import { SurveyEntity } from '@/data/entities'
+import { EstablishmentNotFoundError } from '@/domain/errors'
+import { Either } from '@/shared/either'
 
 export interface GetAllEstablishmentSurveyUseCase {
-  getAll(
+  getAll: (
     establishmentId: string
-  ): Promise<GetAllEstablishmentSurveyUseCase.Response>;
+  ) => Promise<GetAllEstablishmentSurveyUseCase.Response>
 }
 
 // eslint-disable-next-line no-redeclare
 export namespace GetAllEstablishmentSurveyUseCase {
   export type Response = Either<
-    EstablishmentNotFoundError,
-    Omit<SurveyEntity, 'establishment' | 'musics'>[]
-  >;
+  EstablishmentNotFoundError,
+  Array<Omit<SurveyEntity, 'establishment' | 'musics'>>
+  >
 }

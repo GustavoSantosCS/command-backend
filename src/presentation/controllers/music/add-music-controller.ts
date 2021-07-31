@@ -1,38 +1,38 @@
-import { MusicEntity } from '@/data/entities';
-import { AddMusicUseCase } from '@/domain/usecases';
+import { MusicEntity } from '@/data/entities'
+import { AddMusicUseCase } from '@/domain/usecases'
 import {
   Controller,
   HttpRequest,
   HttpResponse
-} from '@/presentation/protocols';
-import { badRequest, ok, serverError } from '@/utils/http';
-import { Validator } from '@/validation/protocols';
+} from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/utils/http'
+import { Validator } from '@/validation/protocols'
 
 export class AddMusicController implements Controller {
-  private readonly validator: Validator;
-  private readonly addMusic: AddMusicUseCase;
+  private readonly validator: Validator
+  private readonly addMusic: AddMusicUseCase
 
-  constructor(validator: Validator, addMusic: AddMusicUseCase) {
-    this.validator = validator;
-    this.addMusic = addMusic;
+  constructor (validator: Validator, addMusic: AddMusicUseCase) {
+    this.validator = validator
+    this.addMusic = addMusic
   }
 
-  async handle(
+  async handle (
     httpRequest: HttpRequest<AddMusicController.DTO, null>
   ): Promise<HttpResponse<AddMusicController.Response>> {
     try {
       const { authenticated, name, duration, talent, establishmentId } =
-        httpRequest.body;
+        httpRequest.body
 
       const validation = this.validator.validate({
         name,
         duration,
         talent,
         establishmentId
-      });
+      })
 
       if (validation.isLeft()) {
-        return badRequest(validation.value);
+        return badRequest(validation.value)
       }
 
       const resultAdd = await this.addMusic.add({
@@ -41,9 +41,9 @@ export class AddMusicController implements Controller {
         duration: parseInt(duration),
         talent,
         establishmentId
-      });
+      })
 
-      if (resultAdd.isLeft()) return badRequest(resultAdd.value);
+      if (resultAdd.isLeft()) return badRequest(resultAdd.value)
 
       const music: AddMusicController.Response = {
         id: resultAdd.value.id,
@@ -52,12 +52,12 @@ export class AddMusicController implements Controller {
         duration: resultAdd.value.duration,
         createdAt: resultAdd.value.createdAt,
         updatedAt: resultAdd.value.updatedAt
-      };
-      return ok(music);
+      }
+      return ok(music)
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(error);
-      return serverError();
+      console.error(error)
+      return serverError()
     }
   }
 }
@@ -66,13 +66,13 @@ export class AddMusicController implements Controller {
 export namespace AddMusicController {
   export type DTO = {
     authenticated: {
-      id: string;
-    };
-    name: string;
-    talent: string;
-    duration: string;
-    establishmentId: string;
-  };
+      id: string
+    }
+    name: string
+    talent: string
+    duration: string
+    establishmentId: string
+  }
 
-  export type Response = Omit<MusicEntity, 'establishment' | 'playlists'>;
+  export type Response = Omit<MusicEntity, 'establishment' | 'playlists'>
 }

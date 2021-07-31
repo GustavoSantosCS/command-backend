@@ -1,13 +1,9 @@
-import {
-  AccountEntity,
-  ProductEntity,
-  RequestProductEntity
-} from '@/data/entities';
+import { RequestProductEntity } from '@/data/entities'
 import {
   CreateRequestProductRepository,
   GetAllAccountRequestProductRepository
-} from '@/data/protocols';
-import { TypeORMHelpers } from './typeorm-helper';
+} from '@/data/protocols'
+import { TypeORMHelpers } from './typeorm-helper'
 
 export class RequestProductTypeOrmRepository
   implements
@@ -17,26 +13,26 @@ export class RequestProductTypeOrmRepository
   async save(
     newRequestProduct: CreateRequestProductRepository.Param
   ): Promise<CreateRequestProductRepository.Return> {
-    const queryRunner = await TypeORMHelpers.createQueryRunner();
-    await queryRunner.startTransaction();
+    const queryRunner = await TypeORMHelpers.createQueryRunner()
+    await queryRunner.startTransaction()
     try {
-      const requestProduct = await queryRunner.manager.save(newRequestProduct);
-      await queryRunner.commitTransaction();
-      return requestProduct;
+      const requestProduct = await queryRunner.manager.save(newRequestProduct)
+      await queryRunner.commitTransaction()
+      return requestProduct
     } catch (err) {
-      await queryRunner.rollbackTransaction();
-      throw err;
+      await queryRunner.rollbackTransaction()
+      throw err
     } finally {
-      await queryRunner.release();
+      await queryRunner.release()
     }
   }
 
   async getAllAccountRequestsProduct(
     accountId: string
-  ): Promise<Omit<RequestProductEntity, 'account'>[]> {
+  ): Promise<Array<Omit<RequestProductEntity, 'account'>>> {
     const requestProductRepo = await TypeORMHelpers.getRepository(
       RequestProductEntity
-    );
+    )
     const userRequestProduct = await requestProductRepo
       .createQueryBuilder('requests_product')
       .innerJoin('requests_product.account', 'accounts')
@@ -44,8 +40,8 @@ export class RequestProductTypeOrmRepository
       .innerJoinAndSelect('products.image', 'product_image')
       .where('accounts.id = :accountId', { accountId })
       .orderBy('requests_product.created_at', 'ASC')
-      .getMany();
+      .getMany()
 
-    return userRequestProduct;
+    return userRequestProduct
   }
 }

@@ -1,5 +1,5 @@
 export type ImagePersistenceData = {
-  originalName: string;
-  persistentName: string;
-  target: string;
-};
+  originalName: string
+  persistentName: string
+  target: string
+}

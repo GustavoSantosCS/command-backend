@@ -1,3 +1,3 @@
 export interface ClosesAllEstablishmentPlaylistsRepository {
-  closesAllEstablishmentPlaylist(establishmentId: string): Promise<void>;
+  closesAllEstablishmentPlaylist: (establishmentId: string) => Promise<void>
 }

@@ -10,20 +10,20 @@ import {
   OneToMany,
   PrimaryColumn,
   UpdateDateColumn
-} from 'typeorm';
-import { EstablishmentEntity } from './establishment-entity';
-import { MusicEntity } from './music-entity';
-import { SurveyMusicEntity } from './survey-music-entity';
-import { VoteEntity } from './vote-entity';
+} from 'typeorm'
+import { EstablishmentEntity } from './establishment-entity'
+import { MusicEntity } from './music-entity'
+import { SurveyMusicEntity } from './survey-music-entity'
+import { VoteEntity } from './vote-entity'
 
 @Entity('surveys')
 export class SurveyEntity {
   @PrimaryColumn()
-  id: string;
+  id: string
 
   @ManyToOne(() => EstablishmentEntity, establishment => establishment.surveys)
   @JoinColumn({ name: 'establishment_id' })
-  establishment: EstablishmentEntity;
+  establishment: EstablishmentEntity
 
   @ManyToMany(() => MusicEntity, musics => musics.surveys)
   @JoinTable({
@@ -31,23 +31,23 @@ export class SurveyEntity {
     joinColumn: { name: 'survey_id' },
     inverseJoinColumn: { name: 'music_id' }
   })
-  musics: MusicEntity[];
+  musics: MusicEntity[]
 
   @Column()
-  question: string;
+  question: string
 
   @OneToMany(() => VoteEntity, vote => vote.survey)
-  pollVotes?: VoteEntity[];
+  pollVotes?: VoteEntity[]
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
+  createdAt: Date
 
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
+  updatedAt: Date
 
   @DeleteDateColumn({ name: 'closed_at' })
-  closedAt: Date;
+  closedAt: Date
 
   @OneToMany(() => SurveyMusicEntity, surveyToMusic => surveyToMusic.survey)
-  surveyToMusic?: SurveyMusicEntity[];
+  surveyToMusic?: SurveyMusicEntity[]
 }

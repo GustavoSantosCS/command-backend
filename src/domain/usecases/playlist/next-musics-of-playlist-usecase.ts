@@ -1,27 +1,27 @@
-import { MusicPlaylistEntity } from '@/data/entities';
+import { MusicPlaylistEntity } from '@/data/entities'
 import {
   PlaylistIsNotActiveError,
   PlaylistNotFoundError
-} from '@/domain/errors';
-import { Either } from '@/shared/either';
+} from '@/domain/errors'
+import { Either } from '@/shared/either'
 
 export interface NextPlaylistMusicUseCase {
-  nextMusic(
+  nextMusic: (
     data: NextPlaylistMusicUseCase.Param
-  ): Promise<NextPlaylistMusicUseCase.Result>;
+  ) => Promise<NextPlaylistMusicUseCase.Result>
 }
 
 // eslint-disable-next-line no-redeclare
 export namespace NextPlaylistMusicUseCase {
   export type Param = {
-    playlistId: string;
-    userId: string;
-    establishmentId: string;
-  };
+    playlistId: string
+    userId: string
+    establishmentId: string
+  }
 
-  export type Return = MusicPlaylistEntity | null;
+  export type Return = MusicPlaylistEntity | null
   export type Result = Either<
-    PlaylistNotFoundError | PlaylistIsNotActiveError,
-    Return
-  >;
+  PlaylistNotFoundError | PlaylistIsNotActiveError,
+  Return
+  >
 }

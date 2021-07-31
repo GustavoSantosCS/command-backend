@@ -1,2 +1,2 @@
-export * from './user-mock';
-export * from './avatar-mock';
+export * from './user-mock'
+export * from './avatar-mock'

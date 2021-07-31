@@ -1,13 +1,13 @@
-import { RequestProductEntity } from '@/data/entities';
+import { RequestProductEntity } from '@/data/entities'
 
 export interface CreateRequestProductRepository {
-  save(
+  save: (
     newRequestProduct: CreateRequestProductRepository.Param
-  ): Promise<CreateRequestProductRepository.Return>;
+  ) => Promise<CreateRequestProductRepository.Return>
 }
 
 // eslint-disable-next-line no-redeclare
 export namespace CreateRequestProductRepository {
-  export type Param = RequestProductEntity;
-  export type Return = RequestProductEntity;
+  export type Param = RequestProductEntity
+  export type Return = RequestProductEntity
 }

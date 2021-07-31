@@ -1,16 +1,16 @@
-import { GetAllUserAccountRepository } from '@/data/protocols';
-import { GetAllUserAccountUseCase } from '@/domain/usecases';
+import { GetAllUserAccountRepository } from '@/data/protocols'
+import { GetAllUserAccountUseCase } from '@/domain/usecases'
 
 export class DBGetAllUserAccount implements GetAllUserAccountUseCase {
-  private getAllUserAccountRepo: GetAllUserAccountRepository;
+  private readonly getAllUserAccountRepo: GetAllUserAccountRepository
 
-  constructor(getAllUserAccountRepo: GetAllUserAccountRepository) {
-    this.getAllUserAccountRepo = getAllUserAccountRepo;
+  constructor (getAllUserAccountRepo: GetAllUserAccountRepository) {
+    this.getAllUserAccountRepo = getAllUserAccountRepo
   }
 
-  async getAllUserAccount(
+  async getAllUserAccount (
     userId: string
   ): Promise<GetAllUserAccountUseCase.Result> {
-    return this.getAllUserAccountRepo.getAllUserAccount(userId);
+    return this.getAllUserAccountRepo.getAllUserAccount(userId)
   }
 }

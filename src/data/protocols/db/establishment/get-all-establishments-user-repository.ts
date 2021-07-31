@@ -1,15 +1,15 @@
-import { EstablishmentEntity } from '@/data/entities';
+import { EstablishmentEntity } from '@/data/entities'
 
 export interface GetAllEstablishmentsUserRepository {
-  getAllEstablishmentsUser(
+  getAllEstablishmentsUser: (
     userId: string
-  ): Promise<GetAllEstablishmentsUserRepository.Result>;
+  ) => Promise<GetAllEstablishmentsUserRepository.Result>
 }
 
 // eslint-disable-next-line no-redeclare
 export namespace GetAllEstablishmentsUserRepository {
-  export type Result = Omit<
-    EstablishmentEntity,
-    'manager' | 'products' | 'playlists' | 'accounts' | 'surveys' | 'musics'
-  >[];
+  export type Result = Array<Omit<
+  EstablishmentEntity,
+  'manager' | 'products' | 'playlists' | 'accounts' | 'surveys' | 'musics'
+  >>
 }

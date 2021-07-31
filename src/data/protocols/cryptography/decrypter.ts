@@ -1,5 +1,5 @@
-import { PayloadModel } from '@/domain/models';
+import { PayloadModel } from '@/domain/models'
 
 export interface Decrypter {
-  decrypt(ciphertext: string): Promise<PayloadModel>;
+  decrypt: (ciphertext: string) => Promise<PayloadModel>
 }

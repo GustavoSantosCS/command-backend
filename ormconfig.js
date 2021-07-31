@@ -1,4 +1,5 @@
-require('dotenv').config();
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('dotenv').config()
 
 const config = [
   {
@@ -10,7 +11,7 @@ const config = [
     password: 'docker',
     database: 'docker',
     synchronize: false,
-    logging: true,
+    logging: false,
     entities: ['./dist/data/entities/**.*'],
     migrations: ['./dist/infra/db/typeorm/migrations/**.*'],
     cli: {
@@ -43,13 +44,13 @@ const config = [
     database: './tmp/command/database.sqlite',
     synchronize: false,
     dropSchema: false,
-    logging: true,
+    logging: false,
     entities: ['./src/data/entities/**.*'],
     migrations: ['./src/infra/db/typeorm/migrations/**.*'],
     cli: {
       migrationsDir: './src/infra/db/typeorm/migrations'
     }
   }
-];
+]
 
-module.exports = config;
+module.exports = config

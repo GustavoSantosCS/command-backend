@@ -1,13 +1,13 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn } from 'typeorm'
 
 @Entity('product_image')
 export class ProductImageEntity {
   @PrimaryColumn()
-  persistentName: string;
+  persistentName: string
 
   @Column()
-  originalName: string;
+  originalName: string
 
   @Column()
-  target: string;
+  target: string
 }

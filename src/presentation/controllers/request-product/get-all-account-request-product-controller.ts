@@ -1,39 +1,39 @@
-import { RequestProductEntity } from '@/data/entities';
-import { GetAllAccountRequestProductUseCase } from '@/domain/usecases';
+import { RequestProductEntity } from '@/data/entities'
+import { GetAllAccountRequestProductUseCase } from '@/domain/usecases'
 import {
   Controller,
   HttpRequest,
   HttpResponse
-} from '@/presentation/protocols';
-import { badRequest, ok, serverError } from '@/utils/http';
+} from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/utils/http'
 
 export class GetAllAccountRequestProductController implements Controller {
-  private readonly getAllAccountRsP: GetAllAccountRequestProductUseCase;
+  private readonly getAllAccountRsP: GetAllAccountRequestProductUseCase
 
-  constructor(getAllAccountRequestProduct: GetAllAccountRequestProductUseCase) {
-    this.getAllAccountRsP = getAllAccountRequestProduct;
+  constructor (getAllAccountRequestProduct: GetAllAccountRequestProductUseCase) {
+    this.getAllAccountRsP = getAllAccountRequestProduct
   }
 
-  async handle(
+  async handle (
     httpRequest: HttpRequest<
-      GetAllAccountRequestProductController.DTO,
-      GetAllAccountRequestProductController.Param
+    GetAllAccountRequestProductController.DTO,
+    GetAllAccountRequestProductController.Param
     >
   ): Promise<HttpResponse<GetAllAccountRequestProductController.Result>> {
     try {
-      const { accountId } = httpRequest.params;
-      const { id: userId } = httpRequest.body.authenticated;
+      const { accountId } = httpRequest.params
+      const { id: userId } = httpRequest.body.authenticated
       const resultGetAll =
         await this.getAllAccountRsP.getAllAccountRequestsProduct({
           userId,
           accountId
-        });
+        })
 
-      if (resultGetAll.isLeft()) return badRequest(resultGetAll.value);
+      if (resultGetAll.isLeft()) return badRequest(resultGetAll.value)
 
-      const { value } = resultGetAll;
+      const { value } = resultGetAll
       const data: GetAllAccountRequestProductController.Result = value.map(
-        request => ({
+        (request: Omit<RequestProductEntity, 'account' | 'closedAt'>) => ({
           id: request.id,
           amountOfProduct: request.amountOfProduct,
           obs: request.obs,
@@ -42,13 +42,13 @@ export class GetAllAccountRequestProductController implements Controller {
           createdAt: request.createdAt,
           updatedAt: request.updatedAt
         })
-      );
+      )
 
-      return ok(data);
+      return ok(data)
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(error);
-      return serverError();
+      console.error(error)
+      return serverError()
     }
   }
 }
@@ -57,13 +57,13 @@ export class GetAllAccountRequestProductController implements Controller {
 export namespace GetAllAccountRequestProductController {
   export type DTO = {
     authenticated: {
-      id: string;
-    };
-  };
+      id: string
+    }
+  }
 
   export type Param = {
-    accountId: string;
-  };
+    accountId: string
+  }
 
-  export type Result = Omit<RequestProductEntity, 'account' | 'closedAt'>[];
+  export type Result = Array<Omit<RequestProductEntity, 'account' | 'closedAt'>>
 }

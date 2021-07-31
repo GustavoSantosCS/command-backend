@@ -1,23 +1,23 @@
-import { PlaylistEntity } from '@/data/entities';
-import { Either } from '@/shared/either';
+import { PlaylistEntity } from '@/data/entities'
+import { Either } from '@/shared/either'
 import {
   EstablishmentNotFoundError,
   EstablishmentNotHavePlaylistError
-} from '@/domain/errors';
+} from '@/domain/errors'
 
 export interface GetCurrentEstablishmentPlaylistUseCase {
-  getCurrentEstablishmentPlaylist(
+  getCurrentEstablishmentPlaylist: (
     userId: string,
     establishmentId: string
-  ): Promise<GetCurrentEstablishmentPlaylistUseCase.Response>;
+  ) => Promise<GetCurrentEstablishmentPlaylistUseCase.Response>
 }
 
 // eslint-disable-next-line no-redeclare
 export namespace GetCurrentEstablishmentPlaylistUseCase {
-  export type Result = Omit<PlaylistEntity, 'establishment' | 'musics'>;
+  export type Result = Omit<PlaylistEntity, 'establishment' | 'musics'>
 
   export type Response = Either<
-    EstablishmentNotFoundError | EstablishmentNotHavePlaylistError,
-    Result
-  >;
+  EstablishmentNotFoundError | EstablishmentNotHavePlaylistError,
+  Result
+  >
 }

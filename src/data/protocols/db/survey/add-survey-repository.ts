@@ -1,5 +1,5 @@
-import { SurveyEntity } from '@/data/entities';
+import { SurveyEntity } from '@/data/entities'
 
 export interface AddSurveyRepository {
-  save(survey: SurveyEntity): Promise<SurveyEntity>;
+  save: (survey: SurveyEntity) => Promise<SurveyEntity>
 }

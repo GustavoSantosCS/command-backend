@@ -1,16 +1,16 @@
-import { GetSurveyByIdRepository } from '@/data/protocols';
-import { SurveyNotFoundError } from '@/domain/errors';
-import { GetSurveyByIdUseCase } from '@/domain/usecases';
-import { left, right } from '@/shared/either';
+import { GetSurveyByIdRepository } from '@/data/protocols'
+import { SurveyNotFoundError } from '@/domain/errors'
+import { GetSurveyByIdUseCase } from '@/domain/usecases'
+import { left, right } from '@/shared/either'
 
 export class DBGetSurveyById implements GetSurveyByIdUseCase {
-  private readonly getSurveyByIdRepo: GetSurveyByIdRepository;
+  private readonly getSurveyByIdRepo: GetSurveyByIdRepository
 
-  constructor(getSurveyByIdRepo: GetSurveyByIdRepository) {
-    this.getSurveyByIdRepo = getSurveyByIdRepo;
+  constructor (getSurveyByIdRepo: GetSurveyByIdRepository) {
+    this.getSurveyByIdRepo = getSurveyByIdRepo
   }
 
-  async getById(surveyId: string): Promise<GetSurveyByIdUseCase.Result> {
+  async getById (surveyId: string): Promise<GetSurveyByIdUseCase.Result> {
     const trackedSurvey = await this.getSurveyByIdRepo.getById(
       surveyId,
       {
@@ -18,12 +18,12 @@ export class DBGetSurveyById implements GetSurveyByIdUseCase {
         includeVotes: true
       },
       true
-    );
+    )
 
     if (!trackedSurvey) {
-      return left(new SurveyNotFoundError());
+      return left(new SurveyNotFoundError())
     }
 
-    return right(trackedSurvey);
+    return right(trackedSurvey)
   }
 }

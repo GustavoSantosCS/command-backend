@@ -4,14 +4,13 @@ import {
   Table,
   TableColumn,
   TableForeignKey
-} from 'typeorm';
+} from 'typeorm'
 
 export class CreateProductImageTable1625019640290
-  implements MigrationInterface
-{
-  tableName = 'product_image';
-  fatherTableName = 'products';
-  public async up(queryRunner: QueryRunner): Promise<void> {
+implements MigrationInterface {
+  tableName = 'product_image'
+  fatherTableName = 'products'
+  public async up (queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
         name: this.tableName,
@@ -22,12 +21,12 @@ export class CreateProductImageTable1625019640290
         ]
       }),
       true
-    );
+    )
 
     await queryRunner.addColumn(
       this.fatherTableName,
       new TableColumn({ name: 'image', type: 'varchar' })
-    );
+    )
 
     await queryRunner.createForeignKey(
       this.fatherTableName, // Tabela pai
@@ -37,16 +36,16 @@ export class CreateProductImageTable1625019640290
         referencedColumnNames: ['persistentName'], // Coluna referenciada
         name: 'product_image_fk' // Nome da ForeignKey
       })
-    );
+    )
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {
-    const table = await queryRunner.getTable(this.fatherTableName);
+  public async down (queryRunner: QueryRunner): Promise<void> {
+    const table = await queryRunner.getTable(this.fatherTableName)
     const foreignKey = table.foreignKeys.find(
-      fk => fk.columnNames.indexOf('image') !== -1
-    );
-    await queryRunner.dropForeignKey(this.fatherTableName, foreignKey);
-    await queryRunner.dropColumn(this.fatherTableName, 'image');
-    await queryRunner.dropTable(this.tableName);
+      fk => fk.columnNames.includes('image')
+    )
+    await queryRunner.dropForeignKey(this.fatherTableName, foreignKey)
+    await queryRunner.dropColumn(this.fatherTableName, 'image')
+    await queryRunner.dropTable(this.tableName)
   }
 }

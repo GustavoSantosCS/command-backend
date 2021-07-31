@@ -2,22 +2,22 @@ import {
   MusicEntity,
   MusicPlaylistEntity,
   PlaylistEntity
-} from '@/data/entities';
+} from '@/data/entities'
 
 export interface UpdatePlaylistAndMusicsRepository {
-  updateMusics(
+  updateMusics: (
     playlist: PlaylistEntity,
     newMusics: MusicPlaylistEntity[]
-  ): Promise<UpdatePlaylistAndMusicsRepository.Result>;
+  ) => Promise<UpdatePlaylistAndMusicsRepository.Result>
 }
 
 // eslint-disable-next-line no-redeclare
 export namespace UpdatePlaylistAndMusicsRepository {
-  export type Musics = {
-    id: string;
-    position: number;
-    music: MusicEntity;
-    playlist: PlaylistEntity;
-  }[];
-  export type Result = Omit<PlaylistEntity, 'musics'>;
+  export type Musics = Array<{
+    id: string
+    position: number
+    music: MusicEntity
+    playlist: PlaylistEntity
+  }>
+  export type Result = Omit<PlaylistEntity, 'musics'>
 }
