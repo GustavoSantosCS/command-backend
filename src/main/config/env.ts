@@ -1,7 +1,6 @@
 import path from 'path';
 
 const app = {
-  name: 'Command',
   env: process.env.NODE_ENV || 'development',
   key: process.env.APP_KEY || 'key app',
   protocol: process.env.APP_PROTOCOL || 'http',

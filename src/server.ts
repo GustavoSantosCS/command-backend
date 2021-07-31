@@ -1,6 +1,9 @@
+/* eslint-disable import/first */
+/* eslint-disable import/newline-after-import */
 /* eslint-disable no-console */
 import 'reflect-metadata';
 import 'module-alias/register';
+require('dotenv').config();
 import { TypeORMHelpers } from '@/infra/db/typeorm';
 import { env } from '@/main/config/env';
 import app from '@/main/config/app';

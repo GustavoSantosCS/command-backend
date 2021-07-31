@@ -4,6 +4,7 @@ services:
   postgres:
     image: postgres
     restart: always
+    container_name: postgres
     environment:
       POSTGRES_PASSWORD: docker
       POSTGRES_USER: docker
@@ -16,14 +17,12 @@ services:
     working_dir: /usr/command
     restart: always
     command: bash -c "npm install && yarn typeorm migration:run && npm run debug"
-    environment:
-      - APP_PORT=3333
-      - DB_HOST=postgres
-      - APP_HOST=192.168.0.108
     volumes:
       - ./dist:/usr/command/src
+      - /tmp/command/node_modules:/usr/command/node_modules
       - ./package.json:/usr/command/package.json
-      - ./ormconfig.json:/usr/command/ormconfig.json
+      - ./ormconfig.js:/usr/command/ormconfig.js
+      - ./.env:/usr/command/.env
     ports:
       - 3333:3333
     links:
