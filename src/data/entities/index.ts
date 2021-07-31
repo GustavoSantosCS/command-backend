@@ -5,7 +5,7 @@ export * from './establishment-entity';
 export * from './music-entity';
 export * from './playlist-entity';
 export * from './product-entity';
-export * from './request-music-entity';
+
 export * from './request-product-entity';
 export * from './user-entity';
 export * from './survey-entity';

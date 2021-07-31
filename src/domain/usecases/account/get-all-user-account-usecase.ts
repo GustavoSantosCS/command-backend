@@ -6,8 +6,5 @@ export interface GetAllUserAccountUseCase {
 
 // eslint-disable-next-line no-redeclare
 export namespace GetAllUserAccountUseCase {
-  export type Result = Omit<
-    AccountEntity,
-    'user' | 'requestsProduct' | 'requestsMusic'
-  >[];
+  export type Result = Omit<AccountEntity, 'user' | 'requestsProduct'>[];
 }

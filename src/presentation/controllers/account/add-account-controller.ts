@@ -47,7 +47,6 @@ export class CreateAccountController implements Controller {
 
       const newAccount: CreateAccountController.Response = {
         id: result.value.id,
-        requestsMusic: [],
         requestsProduct: [],
         establishment: result.value.establishment,
         createdAt: result.value.createdAt,

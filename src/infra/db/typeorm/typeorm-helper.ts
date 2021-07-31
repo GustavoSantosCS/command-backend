@@ -18,8 +18,14 @@ export class TypeORMHelpers {
   }
 
   static async connect(): Promise<Connection> {
-    const nameConnected = env.app.env === 'test' ? 'dev' : 'default';
-    TypeORMHelpers.connection = await createConnection(nameConnected);
+    let database = 'default';
+    if (env.app.env === 'test') {
+      database = 'test';
+    } else if (env.app.env === 'production') {
+      database = 'production';
+    }
+
+    TypeORMHelpers.connection = await createConnection(database);
     return TypeORMHelpers.connection;
   }
 

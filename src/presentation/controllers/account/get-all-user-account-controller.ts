@@ -37,8 +37,5 @@ export namespace GetUserAccountController {
     };
   };
 
-  export type Response = Omit<
-    AccountEntity,
-    'client' | 'requestsProduct' | 'requestsMusic'
-  >[];
+  export type Response = Omit<AccountEntity, 'client' | 'requestsProduct'>[];
 }

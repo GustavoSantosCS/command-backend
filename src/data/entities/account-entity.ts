@@ -10,7 +10,6 @@ import {
 } from 'typeorm';
 import { EstablishmentEntity } from './establishment-entity';
 import { RequestProductEntity } from './request-product-entity';
-import { RequestMusicEntity } from './request-music-entity';
 import { UserEntity } from './user-entity';
 
 @Entity('accounts')
@@ -31,9 +30,6 @@ export class AccountEntity {
     requestsProduct => requestsProduct.account
   )
   requestsProduct: RequestProductEntity[];
-
-  @OneToMany(() => RequestMusicEntity, requestsMusic => requestsMusic.account)
-  requestsMusic: RequestMusicEntity[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

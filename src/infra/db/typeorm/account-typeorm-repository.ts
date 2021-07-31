@@ -61,7 +61,7 @@ export class AccountTypeOrmRepository
 
   async getAllUserAccount(
     userId: string
-  ): Promise<Omit<AccountEntity, 'requestsProduct' | 'requestsMusic'>[]> {
+  ): Promise<Omit<AccountEntity, 'requestsProduct'>[]> {
     const repo = await TypeORMHelpers.getRepository(AccountEntity);
     const query = repo
       .createQueryBuilder('accounts')

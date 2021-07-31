@@ -42,7 +42,6 @@ export class DBCreateAccount implements CreateAccountUseCase {
     newAccount.id = this.idGenerator.generate();
     newAccount.client = userRepo;
     newAccount.establishment = establishmentRepo;
-    newAccount.requestsMusic = [];
     newAccount.requestsProduct = [];
 
     const accountRepo = await this.addAccountRepo.save(newAccount);
