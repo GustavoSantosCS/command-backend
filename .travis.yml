@@ -3,7 +3,7 @@ language: node_js
 node_js:
   - 14
 script:
-  - yarn eslint 'src/**'
+  - yarn eslint './src/**' './tests/**'
   - yarn typeorm migration:run -c test
   - yarn test:coveralls
 notifications:
