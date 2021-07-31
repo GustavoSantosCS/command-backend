@@ -1,16 +1,16 @@
-import { Either, left, right } from '@/shared/either';
-import { Validator } from '@/validation/protocols';
-import { MissingParamError } from '@/validation/errors';
+import { Either, left, right } from '@/shared/either'
+import { Validator } from '@/validation/protocols'
+import { MissingParamError } from '@/validation/errors'
 
 export class RequiredFieldValidator implements Validator {
-  constructor(
+  constructor (
     private readonly fieldName: string,
-    private readonly customMessage = null
+    private readonly customMessage: string
   ) {}
 
-  validate(value: any): Either<MissingParamError, true> {
-    return value[this.fieldName]
+  validate (value: any): Either<MissingParamError, true> {
+    return value[this.fieldName] !== undefined && value[this.fieldName] !== null
       ? right(true)
-      : left(new MissingParamError(this.fieldName,this.customMessage));
+      : left(new MissingParamError(this.customMessage, this.fieldName))
   }
 }

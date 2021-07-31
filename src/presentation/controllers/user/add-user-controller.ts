@@ -1,39 +1,56 @@
-import { AddUserUseCase } from '@/domain/usecases/user';
-import { InternalServerError } from '@/presentation/errors';
-import { Controller, HttpResponse } from '@/presentation/protocols';
-import { badRequest, ok, serverError } from '@/utils/http';
-import { Validator } from '@/validation/protocols';
+import { UserEntity } from '@/data/entities'
+import { AddUserUseCase } from '@/domain/usecases'
+import {
+  Controller,
+  HttpRequest,
+  HttpResponse
+} from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/utils/http'
+import { Validator } from '@/validation/protocols'
 
 export class AddUserController implements Controller {
-  constructor(
-    private readonly validator: Validator,
-    private readonly addUserUseCase: AddUserUseCase
-  ) {}
+  private readonly validator: Validator
+  private readonly addUser: AddUserUseCase
 
-  async handle(httpRequest: AddUserController.DTO): Promise<HttpResponse> {
+  constructor (validator: Validator, addUserUseCase: AddUserUseCase) {
+    this.validator = validator
+    this.addUser = addUserUseCase
+  }
+
+  async handle (
+    httpRequest: HttpRequest<AddUserController.DTO>
+  ): Promise<HttpResponse<AddUserController.Response>> {
     try {
-      const { body } = httpRequest;
-
-      const validatorResult = this.validator.validate(body);
-      if (validatorResult.isLeft()) {
-        return badRequest(validatorResult.value);
+      const validation = this.validator.validate(httpRequest.body)
+      if (validation.isLeft()) {
+        return badRequest(validation.value)
       }
 
-      const resultAddUser = await this.addUserUseCase.add(body);
+      const { name, email, password } = httpRequest.body
+      const resultAddUser = await this.addUser.save({
+        name,
+        email: email.toLowerCase(),
+        password
+      })
+
       if (resultAddUser.isLeft()) {
-        if (resultAddUser.value.name === 'PersistencyError') {
-          // eslint-disable-next-line no-console
-          console.error(resultAddUser.value);
-          return serverError(new InternalServerError());
-        }
-        return badRequest(resultAddUser.value);
+        return badRequest(resultAddUser.value)
       }
 
-      return ok(resultAddUser.value);
+      const { value: newUserEntity } = resultAddUser
+      const user: AddUserController.Response = {
+        id: newUserEntity.id,
+        name: newUserEntity.name,
+        email: newUserEntity.email,
+        createdAt: newUserEntity.createdAt,
+        updatedAt: newUserEntity.updatedAt
+      }
+
+      return ok(user)
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(error);
-      return serverError(error);
+      console.error(error)
+      return serverError()
     }
   }
 }
@@ -41,8 +58,14 @@ export class AddUserController implements Controller {
 // eslint-disable-next-line no-redeclare
 export namespace AddUserController {
   export type DTO = {
-    body: {
-      confirmPassword: string;
-    } & AddUserUseCase.DTO;
-  };
+    name: string
+    email: string
+    password: string
+    confirmPassword: string
+  }
+
+  export type Response = Omit<
+  UserEntity,
+  'password' | 'avatar' | 'establishments'
+  >
 }

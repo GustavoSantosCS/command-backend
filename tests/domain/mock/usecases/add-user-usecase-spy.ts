@@ -1,38 +1,36 @@
-import { Either, left, right } from '@/shared/either';
-import { EmailAlreadyUseError } from '@/domain/errors';
-import { UserModel } from '@/domain/models';
-import { makeMockUserModel } from '@tests/domain/mock/models';
-import { AddUserUseCase } from '@/domain/usecases/user';
-import { AppError } from '@/shared/app-error';
+import { left, right } from '@/shared/either'
+import { EmailAlreadyUseError } from '@/domain/errors'
+import { makeMockUser } from '@tests/domain/mock/models'
+import { AddUserUseCase } from '@/domain/usecases'
+import { AppError } from '@/shared/errors'
 
 type Returns = {
-  right: Either<EmailAlreadyUseError, UserModel>;
-  left: Either<EmailAlreadyUseError, UserModel>;
-};
+  right: AddUserUseCase.Response
+  left: AddUserUseCase.Response
+}
 
 export class AddUserUseCaseSpy implements AddUserUseCase {
   returns: Returns = {
-    right: right(makeMockUserModel()),
+    right: right(makeMockUser({ id: true, avatar: false })),
     left: left(new EmailAlreadyUseError(''))
-  };
-  return = this.returns.right;
-  parameters = null;
-  error: AppError;
-
-  throwError() {
-    this.error = new AppError('any_message', 'any_value');
   }
 
-  async add(
-    newUser: AddUserUseCase.DTO
-  ): Promise<Either<EmailAlreadyUseError, UserModel>> {
-    if (this.error) throw this.error;
-    this.parameters = newUser;
+  return = this.returns.right
+  parameters = null
+  error: AppError
+
+  throwError() {
+    this.error = new AppError('any_message')
+  }
+
+  async save(newUser: AddUserUseCase.Params): Promise<AddUserUseCase.Response> {
+    if (this.error) throw this.error
+    this.parameters = newUser
 
     if (this.return.isLeft()) {
-      this.return.value.value = newUser.email;
+      this.return = left(new EmailAlreadyUseError(newUser.email))
     }
 
-    return this.return;
+    return this.return
   }
 }

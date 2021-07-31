@@ -1,3 +1,3 @@
 export const throwError = () => {
-  throw new Error();
-};
+  throw new Error()
+}

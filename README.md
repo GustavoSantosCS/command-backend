@@ -65,12 +65,17 @@ Este projeto foi desenvolvido com as seguintes tecnologias
 
 <h2 id="funcionalidades">:clipboard: Funcionalidades </h2>
 
-- [ ] Manter conta <strong><small>(em desenvolvimento)</small></strong>
-- [ ] Autenticar usuário
-- [ ] Manter estabelecimento
-- [ ] Manter produtos
-- [ ] Manter musicas
-- [ ] Manter lista de reprodução do estabelecimento
+- [x] Manter conta <strong><small>(em desenvolvimento)</small></strong>
+  - [x] Criar Conta;
+  - [0] Alterar Conta;
+- [x] Autenticar usuário
+- [x] Create estabelecimento
+- [x] Manter produtos
+- [ ] Create Produtos
+- [ ] Obter Produto Por id
+- [ ] Obter Todos os Produtos do Estabelecimento
+- [x] Manter musicas
+- [x] Manter lista de reprodução do estabelecimento
 - [ ] Criar e manter enquetes
 - [ ] Responder enquetes
 - [ ] Fazer pedidos de produto
@@ -117,4 +122,5 @@ $ npm run up / yarn up
 </p>
 
 ---
+
 <p align="center">Desenvolvido por Gustavo Santos com 💚</p>

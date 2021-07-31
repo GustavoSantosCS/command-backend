@@ -1,8 +1,8 @@
-export class ValidatorError extends Error {
-  value: any;
+import { AppError } from '@/shared/errors'
 
-  constructor(message: string, value?: any) {
-    super(message);
-    this.value = value;
+export class ValidatorError extends AppError {
+  constructor (message: string, filed: string) {
+    super(message, { filed })
+    this.name = 'ValidatorError'
   }
 }

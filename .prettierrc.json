@@ -1,5 +1,13 @@
 {
   "singleQuote": true,
   "trailingComma": "none",
-  "arrowParens": "avoid"
+  "semi": false,
+  "arrowParens": "avoid",
+  "requirePaddingNewLinesBeforeKeywords": [
+    "do",
+    "for",
+    "if",
+    "else",
+    "constructor"
+  ]
 }

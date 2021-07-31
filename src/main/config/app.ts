@@ -1,12 +1,22 @@
-import express from 'express';
-import routes from '@/main/config/routes';
-import middleware from '@/main/config/middlewares';
+import express from 'express'
+import { env } from '@/main/config/env'
+import routes from '@/main/config/routes'
+import middleware from '@/main/config/middlewares'
 
-const app = express();
+const app = express()
 
-middleware(app);
-routes(app);
+middleware(app)
+routes(app)
 
-app.get('/', (_, response) => response.send('Hello World'));
+if (env.storage.type === 'local') {
+  app.use('/files/avatar', express.static(env.storage.local.avatar))
+  app.use(
+    '/files/establishment',
+    express.static(env.storage.local.establishment)
+  )
+  app.use('/files/product', express.static(env.storage.local.product))
+}
 
-export default app;
+app.get('/', (_, response) => response.send('Hello World'))
+
+export default app

@@ -1,30 +1,24 @@
-import { UserEntity } from '@/data/entities';
-import { SearchUserByEmailRepository } from '@/data/protocols';
-import { Either, left, right } from '@/shared/either';
-import { makeMockUserEntity } from '@tests/data/mock/entities';
+import { UserEntity } from '@/data/entities'
+import { SearchUserByEmailRepository } from '@/data/protocols'
+import { makeMockUser } from '@tests/domain/mock/models'
 
-type Returns = {
-  right: Either<null, UserEntity>;
-  left: Either<null, UserEntity>;
-};
 export class SearchUserByEmailRepositorySpy
-  implements SearchUserByEmailRepository
-{
-  parameters: string;
-  error: Error;
-  returns: Returns = {
-    right: right(makeMockUserEntity()),
-    left: left(null)
-  };
-  return: Either<null, UserEntity> = this.returns.left;
+implements SearchUserByEmailRepository {
+  parameters: string
+  error: Error
+  return: UserEntity | null = makeMockUser({ id: true })
+  calls = 0
 
-  throwsError() {
-    this.error = new Error('any_message');
+  throwsError () {
+    this.error = new Error('any_message')
   }
 
-  async searchByEmail(email: string): Promise<Either<null, UserEntity>> {
-    this.parameters = email;
-    if (this.error) throw this.error;
-    return this.return;
+  async searchByEmail (
+    email: SearchUserByEmailRepository.Params
+  ): Promise<SearchUserByEmailRepository.Result> {
+    this.calls += 1
+    this.parameters = email
+    if (this.error) throw this.error
+    return this.return
   }
 }

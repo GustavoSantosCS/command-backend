@@ -1,33 +1,33 @@
-import { UserEntity } from '@/data/entities';
-import { AddUserRepository } from '@/data/protocols';
-import { TypeORMHelpers, UserTypeOrmRepository } from '@/infra/db/typeorm';
-import { makeMockUserEntity } from '@tests/data/mock/entities';
+import { UserEntity } from '@/data/entities'
+import { AddUserRepository } from '@/data/protocols'
+import { TypeORMHelpers, UserTypeOrmRepository } from '@/infra/db/typeorm'
+import { makeMockUser } from '@tests/domain/mock/models'
 
-let sut: AddUserRepository;
-
+let sut: AddUserRepository
+let userEntity: UserEntity
 describe('Test Integration', () => {
   beforeAll(async () => {
-    await TypeORMHelpers.connect();
-  });
+    await TypeORMHelpers.connect()
+  })
 
   afterAll(async () => {
-    await TypeORMHelpers.clearDataBase();
-    await TypeORMHelpers.disconnect();
-  });
+    await TypeORMHelpers.clearDataBase()
+    await TypeORMHelpers.disconnect()
+  })
 
   beforeEach(async () => {
-    await TypeORMHelpers.clearDataBase();
-    sut = new UserTypeOrmRepository();
-  });
+    userEntity = makeMockUser({ id: true })
+
+    await TypeORMHelpers.clearDataBase()
+    sut = new UserTypeOrmRepository()
+  })
 
   it('should return an entity is add successfully', async () => {
-    const entityToSave = makeMockUserEntity();
-    const result = await sut.save(entityToSave);
+    const result = await sut.save(userEntity)
 
-    expect(result.isRight()).toBeTruthy();
-    expect((result.value as UserEntity).id).toBe(entityToSave.id);
-    expect((result.value as UserEntity).nome).toBe(entityToSave.nome);
-    expect((result.value as UserEntity).email).toBe(entityToSave.email);
-    expect((result.value as UserEntity).password).toBe(entityToSave.password);
-  });
-});
+    expect(result.id).toBe(userEntity.id)
+    expect(result.name).toBe(userEntity.name)
+    expect(result.email).toBe(userEntity.email)
+    expect(result.password).toBe(userEntity.password)
+  })
+})

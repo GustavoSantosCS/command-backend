@@ -4,37 +4,49 @@ import {
   PrimaryColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  DeleteDateColumn
-} from 'typeorm';
-import { UserModel } from '@/domain/models';
+  DeleteDateColumn,
+  OneToOne,
+  JoinColumn,
+  OneToMany
+} from 'typeorm'
+import { AvatarEntity } from './avatar-entity'
+import { EstablishmentEntity } from './establishment-entity'
+import { VoteEntity } from './vote-entity'
+import { AccountEntity } from './account-entity'
 
 @Entity('users')
 export class UserEntity {
   @PrimaryColumn()
-  id: string;
+  id: string
 
   @Column()
-  nome: string;
+  name: string
 
   @Column()
-  email: string;
+  email: string
 
   @Column()
-  password: string;
+  password: string
 
-  @Column({ name: 'account_type' })
-  accountType: number;
+  @OneToOne(() => AvatarEntity, avatar => avatar.user)
+  @JoinColumn({ name: 'avatar' })
+  avatar?: AvatarEntity
+
+  @OneToMany(() => EstablishmentEntity, establishment => establishment.manager)
+  establishments?: EstablishmentEntity[]
+
+  @OneToMany(() => AccountEntity, account => account.client)
+  accounts?: AccountEntity[]
+
+  @OneToMany(() => VoteEntity, vote => vote.client)
+  pollVotes?: VoteEntity[]
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
+  createdAt: Date
 
-  @UpdateDateColumn({ name: 'update_at' })
-  updateAt: Date;
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date
 
-  @DeleteDateColumn({ name: 'delete_at' })
-  deleteAt: Date;
-
-  constructor(user: UserModel) {
-    Object.assign(this, user);
-  }
+  @DeleteDateColumn({ name: 'deleted_at' })
+  deletedAt?: Date
 }

@@ -1,10 +1,10 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express'
 
 export const contentType = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  res.type('json');
-  next();
-};
+  res.type('json')
+  next()
+}

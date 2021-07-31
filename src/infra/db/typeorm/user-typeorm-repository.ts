@@ -1,41 +1,88 @@
-import { Repository } from 'typeorm';
-import { TypeORMHelpers } from '@/infra/db/typeorm';
-import { UserEntity } from '@/data/entities';
+import { TypeORMHelpers } from '@/infra/db/typeorm'
+import { AvatarEntity, UserEntity } from '@/data/entities'
 import {
   AddUserRepository,
-  SearchUserByEmailRepository
-} from '@/data/protocols';
-import { UserModel } from '@/domain/models';
-import { Either, left, right } from '@/shared/either';
-import { PersistencyError } from '@/infra/errors';
+  SearchUserByEmailRepository,
+  UserAvatarRepository,
+  GetUserByIdRepository,
+  UpdateUserRepository
+} from '@/data/protocols'
 
 export class UserTypeOrmRepository
-  implements AddUserRepository, SearchUserByEmailRepository
+  implements
+    AddUserRepository,
+    SearchUserByEmailRepository,
+    UserAvatarRepository,
+    GetUserByIdRepository,
+    UpdateUserRepository
 {
-  private repository: Repository<UserEntity>;
-
-  async searchByEmail(email: string): Promise<Either<null, UserEntity>> {
-    this.repository = await TypeORMHelpers.getRepository(UserEntity);
-    const findUser = await this.repository.findOne({
+  async searchByEmail(email: string): Promise<UserEntity> {
+    const repository = await TypeORMHelpers.getRepository(UserEntity)
+    const findUser = await repository.findOne({
       where: [{ email }],
-      withDeleted: false
-    });
+      withDeleted: false,
+      relations: ['avatar']
+    })
 
-    return findUser ? right(findUser) : left(null);
+    return findUser
   }
 
-  async save(user: UserModel): Promise<Either<PersistencyError, UserEntity>> {
-    this.repository = await TypeORMHelpers.getRepository(UserEntity);
-    const userEntity = new UserEntity(user);
-    const result = await this.repository.save(userEntity);
-    return !result
-      ? left(
-          new PersistencyError(
-            'Erro ao Persistir No Banco de Dados',
-            user,
-            'UserTypeOrmRepository'
-          )
-        )
-      : right(result);
+  async save(user: UserEntity): Promise<UserEntity> {
+    const repository = await TypeORMHelpers.getRepository(UserEntity)
+    const userRepo = await repository.save(user)
+    return userRepo
+  }
+
+  async saveAvatar(avatar: AvatarEntity): Promise<AvatarEntity> {
+    const queryRunner = await TypeORMHelpers.createQueryRunner()
+    await queryRunner.startTransaction()
+
+    try {
+      const userEntity = await queryRunner.manager.findOne(
+        UserEntity,
+        avatar.user.id,
+        { relations: ['avatar'] }
+      )
+
+      const oldAvatar = userEntity.avatar
+      userEntity.avatar = avatar
+
+      const avatarEntity = await queryRunner.manager.save(avatar)
+      if (oldAvatar) await queryRunner.manager.remove(oldAvatar)
+
+      await queryRunner.manager.save(userEntity)
+      await queryRunner.commitTransaction()
+
+      return avatarEntity
+    } catch (error) {
+      await queryRunner.rollbackTransaction()
+      throw error
+    } finally {
+      await queryRunner.release()
+    }
+  }
+
+  async getById(id: string): Promise<UserEntity> {
+    const repository = await TypeORMHelpers.getRepository(UserEntity)
+    const userEntity = await repository.findOne(id, {
+      relations: ['avatar']
+    })
+
+    return userEntity
+  }
+
+  async update(
+    newUserData: Omit<UserEntity, 'email'>
+  ): Promise<UpdateUserRepository.Result> {
+    const repository = await TypeORMHelpers.getRepository(UserEntity)
+
+    const userEntity = await repository.findOne(newUserData.id, {
+      relations: ['avatar']
+    })
+
+    const newUserEntity: UserEntity = Object.assign(userEntity, newUserData)
+    await repository.save(newUserEntity)
+
+    return newUserEntity
   }
 }

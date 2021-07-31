@@ -1,23 +1,26 @@
-import { PersistencyError } from '@/infra/errors';
-import { EmailAlreadyUseError } from '@/domain/errors';
-import { UserModel, AccountType } from '@/domain/models';
-import { Either } from '@/shared/either';
+import { UserEntity } from '@/data/entities'
+import { EmailAlreadyUseError } from '@/domain/errors'
+import { Either } from '@/shared/either'
 
 export interface AddUserUseCase {
-  add(newUser: AddUserUseCase.DTO): Promise<AddUserUseCase.Response>;
+  save: (newUser: AddUserUseCase.Params) => Promise<AddUserUseCase.Response>
 }
 
 // eslint-disable-next-line no-redeclare
 export namespace AddUserUseCase {
-  export type DTO = {
-    nome: string;
-    email: string;
-    password: string;
-    accountType: AccountType;
-  };
-
-  export type Response = Either<
-    EmailAlreadyUseError | PersistencyError,
-    UserModel
-  >;
+  export type Params = {
+    name: string
+    email: string
+    password: string
+  }
+  export type Result = Omit<
+  UserEntity,
+  | 'password'
+  | 'avatar'
+  | 'establishments'
+  | 'accounts'
+  | 'pollVotes'
+  | 'deletedAt'
+  >
+  export type Response = Either<EmailAlreadyUseError, Result>
 }
