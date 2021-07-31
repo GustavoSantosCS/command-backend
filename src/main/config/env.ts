@@ -17,36 +17,22 @@ const db = {
   password: process.env.DB_PASSWORD || 'docker'
 };
 
-const multer = {
-  destinationRoot: {
-    avatar: path.resolve(
-      __dirname,
-      '..',
-      '..',
-      '..',
-      'tmp',
-      'storage',
-      'avatar'
-    ),
-    establishment: path.resolve(
-      __dirname,
-      '..',
-      '..',
-      '..',
-      'tmp',
-      'storage',
-      'establishment'
-    ),
-    product: path.resolve(
-      __dirname,
-      '..',
-      '..',
-      '..',
-      'tmp',
-      'storage',
-      'product'
-    )
+const root = path.resolve(__dirname, '..', '..', '..', 'tmp', 'storage');
+const storage = {
+  type: process.env.STORAGE_TYPE || 'local',
+  local: {
+    avatar: `${root}/avatar`,
+    establishment: `${root}/establishment`,
+    product: `${root}/product`
+  },
+  bucket: {
+    name: process.env.BUCKET_NAME,
+    aws: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      region: process.env.AWS_DEFAULT_REGION
+    }
   }
 };
 
-export const env = { app, db, multer };
+export const env = { app, db, storage };

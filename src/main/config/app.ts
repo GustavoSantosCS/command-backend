@@ -8,12 +8,14 @@ const app = express();
 middleware(app);
 routes(app);
 
-app.use('/files/avatar', express.static(env.multer.destinationRoot.avatar));
-app.use(
-  '/files/establishment',
-  express.static(env.multer.destinationRoot.establishment)
-);
-app.use('/files/product', express.static(env.multer.destinationRoot.product));
+if (env.storage.type === 'local') {
+  app.use('/files/avatar', express.static(env.storage.local.avatar));
+  app.use(
+    '/files/establishment',
+    express.static(env.storage.local.establishment)
+  );
+  app.use('/files/product', express.static(env.storage.local.product));
+}
 
 app.get('/', (_, response) => response.send('Hello World'));
 

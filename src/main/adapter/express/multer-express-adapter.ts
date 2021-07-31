@@ -1,8 +1,11 @@
+/* eslint-disable no-param-reassign */
 import { v4 as uuid } from 'uuid';
-import multer, { Options } from 'multer';
+import multer, { StorageEngine } from 'multer';
+import multerS3 from 'multer-s3';
+import aws from 'aws-sdk';
 import { Request, Response, NextFunction } from 'express';
-import { env } from '@/main/config/env';
 import { HttpRequest } from '@/presentation/protocols';
+import { env } from '@/main/config/env';
 
 type Config = {
   target: string;
@@ -20,32 +23,70 @@ export const adapterMulter =
       query: req.query,
       headers: req.headers
     };
-    const config = {
-      storage: multer.diskStorage({
+
+    const nameHandler = (originName: string) =>
+      `${uuid()}-${originName}`.split(' ').join('_');
+
+    const config: { local: StorageEngine; s3: StorageEngine } = {
+      local: multer.diskStorage({
         destination: configPersister.destination,
         filename(_, file, callback) {
-          const fileName = `${uuid()}-${file.originalname}`
-            .split(' ')
-            .join('_');
+          const fileName = nameHandler(file.originalname);
+          (file as any).key = fileName;
 
-          httpRequest.body[configPersister.resultObjectName] = {
-            originalName: file.originalname,
-            persistentName: fileName,
-            target: `${configPersister.target}/${fileName}`
-          };
+          (
+            file as any
+          ).location = `${env.app.protocol}://${env.app.host}:${env.app.port}/files/${configPersister.target}/${fileName}`;
+
+          callback(null, fileName);
+        }
+      }),
+      s3: multerS3({
+        s3: new aws.S3(),
+
+        bucket: `${env.storage.bucket.name}/${configPersister.target}`,
+        contentType: multerS3.AUTO_CONTENT_TYPE,
+        acl: 'public-read',
+        key: (_, file, callback) => {
+          const fileName = nameHandler(file.originalname);
+
           callback(null, fileName);
         }
       })
-    } as Options;
-    const update = multer(config).single(fieldLabel);
+    };
+
+    const update = multer({
+      dest: configPersister.destination,
+      storage: config[env.storage.type],
+      limits: {
+        fileSize: 2 * 1024 * 1024
+      },
+      fileFilter: (_, file, cb) => {
+        const allowedMimes = ['image/jpeg', 'image/png'];
+
+        if (allowedMimes.includes(file.mimetype)) {
+          cb(null, true);
+        } else {
+          cb(new Error(configPersister.errorMessage));
+        }
+      }
+    }).single(fieldLabel);
 
     return update(req, res, error => {
-      if (error) {
+      if (error || !req.file) {
+        console.error(error);
         return res.status(500).json({
           errors: [{ message: configPersister.errorMessage }]
         });
       }
+      const { originalname, key, location } = req.file as any;
+      httpRequest.body[configPersister.resultObjectName] = {
+        originalName: originalname,
+        persistentName: key,
+        target: location
+      };
       Object.assign(req.body, httpRequest.body);
-      return next();
+
+      next();
     });
   };

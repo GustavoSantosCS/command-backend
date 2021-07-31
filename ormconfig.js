@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const extensionFile = process.env.NODE_ENV === 'development' ? 'ts' : 'js';
 
-module.exports = {
+const config = {
   type: process.env.DB_CONNECTION,
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
@@ -10,12 +10,6 @@ module.exports = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   synchronize: false,
-  extra: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false
-    }
-  },
   logging: false,
   entities: [`./dist/data/entities/**.${extensionFile}`],
   migrations: [`./dist/infra/db/typeorm/migrations/**.${extensionFile}`],
@@ -23,3 +17,14 @@ module.exports = {
     migrationsDir: './dist/infra/db/typeorm/migrations'
   }
 };
+
+if (process.env.DB_ENV === 'production') {
+  config.extra = {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false
+    }
+  };
+}
+
+module.exports = config;

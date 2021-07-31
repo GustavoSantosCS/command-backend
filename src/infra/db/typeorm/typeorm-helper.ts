@@ -1,3 +1,4 @@
+import { env } from '@/shared/config';
 import {
   createConnection,
   Connection,
@@ -17,8 +18,7 @@ export class TypeORMHelpers {
   }
 
   static async connect(): Promise<Connection> {
-    const nameConnected =
-      String(process.env.NODE_ENV) === 'test' ? 'dev' : 'default';
+    const nameConnected = env.app.env === 'test' ? 'dev' : 'default';
     TypeORMHelpers.connection = await createConnection(nameConnected);
     return TypeORMHelpers.connection;
   }

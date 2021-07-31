@@ -12,6 +12,7 @@ TypeORMHelpers.connect()
   .then(() => {
     app.listen(env.app.port, () => {
       console.clear();
+
       console.log('Backend Online');
       console.log(
         `Click para acessar: ${env.app.protocol}://${env.app.host}:${env.app.port}`

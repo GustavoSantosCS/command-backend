@@ -12,7 +12,7 @@ services:
       - 5432:5432
 
   api:
-    container_name: api-container
+    container_name: api
     image: node:14
     working_dir: /usr/command
     restart: always

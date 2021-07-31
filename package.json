@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node dist/server.js",
-    "debug": "nodemon -L --watch ./src --inspect=0.0.0.0:9222 --nolazy ./dist/server.js",
+    "debug": "nodemon -L --watch ./dist --inspect=0.0.0.0:9222 ./dist/server.js",
     "prebuild": "rimraf dist",
     "build": "tsc -p tsconfig-build.json",
     "dev": "tsc -p tsconfig-build.json -w",
@@ -21,12 +21,14 @@
     "typeorm": "tsnd ./node_modules/typeorm/cli.js"
   },
   "dependencies": {
+    "aws-sdk": "^2.958.0",
     "bcrypt": "^5.0.1",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "module-alias": "^2.2.2",
     "multer": "^1.4.2",
+    "multer-s3": "^2.9.0",
     "pg": "^8.6.0",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.2.33",

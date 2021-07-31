@@ -5,8 +5,6 @@ import fs from 'fs';
 
 export class UnlinkAvatarDisc implements UnlinkAvatar {
   async removeAvatar(oldAvatar: AvatarEntity): Promise<void> {
-    fs.unlinkSync(
-      `${env.multer.destinationRoot.avatar}/${oldAvatar.persistentName}`
-    );
+    fs.unlinkSync(`${env.storage.local.avatar}/${oldAvatar.persistentName}`);
   }
 }
