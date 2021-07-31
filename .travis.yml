@@ -4,6 +4,7 @@ node_js:
   - 14
 script:
   - yarn eslint 'src/**'
+  - yarn typeorm migration:run -c test
   - yarn test
 notifications:
   email:

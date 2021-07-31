@@ -9,13 +9,14 @@ import {
 } from '@/data/protocols'
 
 export class UserTypeOrmRepository
-implements
+  implements
     AddUserRepository,
     SearchUserByEmailRepository,
     UserAvatarRepository,
     GetUserByIdRepository,
-    UpdateUserRepository {
-  async searchByEmail (email: string): Promise<UserEntity> {
+    UpdateUserRepository
+{
+  async searchByEmail(email: string): Promise<UserEntity> {
     const repository = await TypeORMHelpers.getRepository(UserEntity)
     const findUser = await repository.findOne({
       where: [{ email }],
@@ -26,13 +27,13 @@ implements
     return findUser
   }
 
-  async save (user: UserEntity): Promise<UserEntity> {
+  async save(user: UserEntity): Promise<UserEntity> {
     const repository = await TypeORMHelpers.getRepository(UserEntity)
     const userRepo = await repository.save(user)
     return userRepo
   }
 
-  async saveAvatar (avatar: AvatarEntity): Promise<AvatarEntity> {
+  async saveAvatar(avatar: AvatarEntity): Promise<AvatarEntity> {
     const queryRunner = await TypeORMHelpers.createQueryRunner()
     await queryRunner.startTransaction()
 
@@ -61,7 +62,7 @@ implements
     }
   }
 
-  async getById (id: string): Promise<UserEntity> {
+  async getById(id: string): Promise<UserEntity> {
     const repository = await TypeORMHelpers.getRepository(UserEntity)
     const userEntity = await repository.findOne(id, {
       relations: ['avatar']
@@ -70,7 +71,7 @@ implements
     return userEntity
   }
 
-  async update (
+  async update(
     newUserData: Omit<UserEntity, 'email'>
   ): Promise<UpdateUserRepository.Result> {
     const repository = await TypeORMHelpers.getRepository(UserEntity)
