@@ -4,12 +4,12 @@ import { AvatarEntity } from '@/data/entities'
 import { env } from '@/shared/config'
 
 export class UnlinkAvatarS3 implements UnlinkAvatar {
-  async removeAvatar (oldAvatar: AvatarEntity): Promise<void> {
+  async removeAvatar(oldAvatar: AvatarEntity): Promise<void> {
     const s3 = new aws.S3()
     await s3
       .deleteObject({
         Bucket: `${env.storage.bucket.name}/avatar`,
-        Key: oldAvatar.target
+        Key: oldAvatar.persistentName
       })
       .promise()
   }
