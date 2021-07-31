@@ -5,7 +5,7 @@ const app = {
   key: process.env.APP_KEY || 'key app',
   protocol: process.env.APP_PROTOCOL || 'http',
   host: process.env.APP_HOST || 'localhost',
-  port: process.env.APP_PORT || 3333
+  port: process.env.PORT || 3333
 };
 
 const db = {

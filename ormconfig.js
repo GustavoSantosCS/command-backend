@@ -1,5 +1,7 @@
 require('dotenv').config();
 
+const extensionFile = process.env.NODE_ENV === 'development' ? 'ts' : 'js';
+
 module.exports = {
   type: process.env.DB_CONNECTION,
   host: process.env.DB_HOST,
@@ -15,9 +17,9 @@ module.exports = {
     }
   },
   logging: false,
-  entities: ['./src/data/entities/**.*'],
-  migrations: ['./src/infra/db/typeorm/migrations/**.*'],
+  entities: [`./dist/data/entities/**.${extensionFile}`],
+  migrations: [`./dist/infra/db/typeorm/migrations/**.${extensionFile}`],
   cli: {
-    migrationsDir: './src/infra/db/typeorm/migrations'
+    migrationsDir: './dist/infra/db/typeorm/migrations'
   }
 };

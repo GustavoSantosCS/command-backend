@@ -18,7 +18,7 @@ services:
     restart: always
     command: bash -c "npm install && yarn typeorm migration:run && npm run debug"
     volumes:
-      - ./dist:/usr/command/src
+      - ./dist:/usr/command/dist
       - /tmp/command/node_modules:/usr/command/node_modules
       - ./package.json:/usr/command/package.json
       - ./ormconfig.js:/usr/command/ormconfig.js
