@@ -30,7 +30,7 @@ export class DBCreateSession implements CreateSessionUseCase {
     const user = await this.searchUserByEmailRepo.searchByEmail(email)
 
     if (!user) return left(new FailedLoginError({ password, email }))
-    console.log(user)
+
     if (!(await this.comparatorHasher.compare(password, user.password))) {
       return left(new FailedLoginError({ password, email }))
     }

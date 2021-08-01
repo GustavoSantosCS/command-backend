@@ -28,8 +28,6 @@ export class UserAuthorizationMiddleware implements Middleware {
         withPassword: true
       })
 
-      console.log(`authorization ${JSON.stringify(user, null, 4)}`)
-
       if (!user) {
         return notAuthorizedErro()
       }
