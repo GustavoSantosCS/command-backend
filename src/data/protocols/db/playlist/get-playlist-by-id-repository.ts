@@ -9,11 +9,11 @@ export interface GetPlaylistByIdRepository {
 
 export namespace GetPlaylistByIdRepository {
   export type Config = {
-    includeEstablishment?: boolean
-    includeEstablishmentAndManager?: boolean
-    includeMusics?: boolean
-    includeCurrentMusic?: boolean
-    includeMusicToPlaylist?: boolean
+    withEstablishment?: boolean
+    withEstablishmentAndManager?: boolean
+    withMusics?: boolean
+    withCurrentMusic?: boolean
+    withMusicToPlaylist?: boolean
   }
   export type Result = PlaylistEntity
 }

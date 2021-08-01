@@ -35,6 +35,7 @@ export class CreateSessionController implements Controller {
 
       return ok({ token, user })
     } catch (error) {
+      console.error(error)
       return serverError()
     }
   }

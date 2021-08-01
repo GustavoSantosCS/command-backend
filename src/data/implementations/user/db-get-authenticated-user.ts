@@ -6,27 +6,19 @@ import { left, right } from '@/shared/either'
 export class DBGetAuthenticatedUser implements GetAuthenticatedUserUseCase {
   private readonly getByIdRepo: GetUserByIdRepository
 
-  constructor (getByIdRepo: GetUserByIdRepository) {
+  constructor(getByIdRepo: GetUserByIdRepository) {
     this.getByIdRepo = getByIdRepo
   }
 
-  async getAuthenticatedUser (
+  async getAuthenticatedUser(
     userId: string
   ): Promise<GetAuthenticatedUserUseCase.Result> {
-    const user = await this.getByIdRepo.getById(userId)
+    const user = await this.getByIdRepo.getById(userId, { withAvatar: true })
 
     if (!user) {
       return left(new UserNotFoundError())
     }
 
-    const result: GetAuthenticatedUserUseCase.Return = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      avatar: user.avatar,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt
-    }
-    return right(result)
+    return right(user)
   }
 }

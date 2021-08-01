@@ -57,15 +57,6 @@ export class MusicEntity {
   })
   surveys?: SurveyEntity[]
 
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date
-
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date
-
-  @DeleteDateColumn({ name: 'deleted_at' })
-  deletedAt?: Date
-
   @OneToMany(
     () => MusicPlaylistEntity,
     musicToPlaylist => musicToPlaylist.music
@@ -74,4 +65,13 @@ export class MusicEntity {
 
   @OneToMany(() => SurveyMusicEntity, surveyToMusic => surveyToMusic.music)
   surveyToMusic?: SurveyMusicEntity[]
+
+  @CreateDateColumn({ name: 'created_at', select: false })
+  createdAt: Date
+
+  @UpdateDateColumn({ name: 'updated_at', select: false })
+  updatedAt: Date
+
+  @DeleteDateColumn({ name: 'deleted_at', select: false })
+  deletedAt?: Date
 }

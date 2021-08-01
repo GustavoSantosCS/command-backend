@@ -39,15 +39,15 @@ export class SurveyEntity {
   @OneToMany(() => VoteEntity, vote => vote.survey)
   pollVotes?: VoteEntity[]
 
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date
-
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date
-
-  @DeleteDateColumn({ name: 'closed_at' })
-  closedAt: Date
-
   @OneToMany(() => SurveyMusicEntity, surveyToMusic => surveyToMusic.survey)
   surveyToMusic?: SurveyMusicEntity[]
+
+  @CreateDateColumn({ name: 'created_at', select: false })
+  createdAt: Date
+
+  @UpdateDateColumn({ name: 'updated_at', select: false })
+  updatedAt: Date
+
+  @DeleteDateColumn({ name: 'closed_at', select: false })
+  closedAt: Date
 }

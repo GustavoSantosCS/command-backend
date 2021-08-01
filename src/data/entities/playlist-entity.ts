@@ -37,12 +37,6 @@ export class PlaylistEntity {
   @JoinColumn({ name: 'establishment_id' })
   establishment: EstablishmentEntity
 
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date
-
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date
-
   @OneToMany(
     () => MusicPlaylistEntity,
     musicToPlaylist => musicToPlaylist.playlist
@@ -52,4 +46,10 @@ export class PlaylistEntity {
   @ManyToOne(() => MusicPlaylistEntity)
   @JoinColumn({ name: 'current_music_id' })
   currentMusic!: MusicPlaylistEntity
+
+  @CreateDateColumn({ name: 'created_at', select: false })
+  createdAt: Date
+
+  @UpdateDateColumn({ name: 'updated_at', select: false })
+  updatedAt: Date
 }

@@ -1,3 +1,5 @@
+/* eslint-disable import/first */
+
 import 'reflect-metadata'
 import 'module-alias/register'
 import { TypeORMHelpers } from '@/infra/db/typeorm'

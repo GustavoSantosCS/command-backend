@@ -11,15 +11,16 @@ import {
 import { TypeORMHelpers } from './typeorm-helper'
 
 export class PlaylistTypeOrmRepository
-implements
+  implements
     AddPlayListRepository,
     GetCurrentEstablishmentPlaylistRepository,
     GetPlaylistByIdRepository,
     UpdatePlaylistRepository,
     ClosesAllEstablishmentPlaylistsRepository,
     UpdatePlaylistAndMusicsRepository,
-    SaveCurrentMusicPlaylistRepository {
-  async save (
+    SaveCurrentMusicPlaylistRepository
+{
+  async save(
     playlist: PlaylistEntity,
     musics: MusicPlaylistEntity[]
   ): Promise<Omit<PlaylistEntity, 'establishment' | 'musics'>> {
@@ -54,7 +55,7 @@ implements
     }
   }
 
-  async getCurrentEstablishmentPlaylist (
+  async getCurrentEstablishmentPlaylist(
     establishmentId: string
   ): Promise<PlaylistEntity> {
     const playlistRepo = await TypeORMHelpers.getRepository(PlaylistEntity)
@@ -69,8 +70,8 @@ implements
         )
       const playlist = await queryBuilder.getOne()
       const playlistComplete = await this.getById(playlist.id, {
-        includeCurrentMusic: true,
-        includeMusicToPlaylist: true
+        withCurrentMusic: true,
+        withMusicToPlaylist: true
       })
       return playlistComplete
     } catch (err) {
@@ -78,7 +79,7 @@ implements
     }
   }
 
-  async getById (
+  async getById(
     playlistId: string,
     strategy?: GetPlaylistByIdRepository.Config
   ): Promise<PlaylistEntity> {
@@ -89,29 +90,26 @@ implements
 
     let queryBuilder = playlistRepo.createQueryBuilder('playlists')
 
-    if (strategy.includeMusicToPlaylist) {
+    if (strategy.withMusicToPlaylist) {
       queryBuilder = queryBuilder
         .innerJoinAndSelect('playlists.musicToPlaylist', 'playlist_music')
         .innerJoinAndSelect('playlist_music.music', 'musics')
     }
 
-    if (strategy.includeMusics) {
+    if (strategy.withMusics) {
       queryBuilder = queryBuilder.innerJoinAndSelect(
         'playlists.musics',
         'musics'
       )
     }
 
-    if (
-      strategy.includeEstablishment ||
-      strategy.includeEstablishmentAndManager
-    ) {
+    if (strategy.withEstablishment || strategy.withEstablishmentAndManager) {
       queryBuilder = queryBuilder.innerJoinAndSelect(
         'playlists.establishment',
         'establishments'
       )
 
-      if (strategy.includeEstablishmentAndManager) {
+      if (strategy.withEstablishmentAndManager) {
         queryBuilder = queryBuilder.innerJoinAndSelect(
           'establishments.manager',
           'users'
@@ -123,7 +121,7 @@ implements
       .where('playlists.id = :playlistId', { playlistId })
       .getOne()
 
-    if (strategy.includeCurrentMusic) {
+    if (strategy.withCurrentMusic) {
       const { currentMusic } = await playlistRepo
         .createQueryBuilder('playlists')
         .innerJoinAndSelect('playlists.currentMusic', 'playlist_music')
@@ -136,7 +134,7 @@ implements
     return playlist
   }
 
-  async update (
+  async update(
     newDate: PlaylistEntity
   ): Promise<UpdatePlaylistRepository.Result> {
     const playlistRepo = await TypeORMHelpers.getRepository(PlaylistEntity)
@@ -144,7 +142,7 @@ implements
     return updatePlaylist
   }
 
-  async closesAllEstablishmentPlaylist (establishmentId: string): Promise<void> {
+  async closesAllEstablishmentPlaylist(establishmentId: string): Promise<void> {
     const playlistRepo = await TypeORMHelpers.getRepository(PlaylistEntity)
     await playlistRepo
       .createQueryBuilder()
@@ -154,7 +152,7 @@ implements
       .execute()
   }
 
-  async updateMusics (
+  async updateMusics(
     playlist: PlaylistEntity,
     newMusics: MusicPlaylistEntity[]
   ): Promise<UpdatePlaylistAndMusicsRepository.Result> {
@@ -163,7 +161,7 @@ implements
     await queryRunner.startTransaction()
     try {
       const trackedPlaylist = await this.getById(playlist.id, {
-        includeMusicToPlaylist: true
+        withMusicToPlaylist: true
       })
 
       trackedPlaylist.currentMusic = null
@@ -207,7 +205,7 @@ implements
     }
   }
 
-  async saveCurrentMusic (
+  async saveCurrentMusic(
     playlist: PlaylistEntity,
     newCurrentPlaylist: MusicPlaylistEntity
   ): Promise<MusicPlaylistEntity> {

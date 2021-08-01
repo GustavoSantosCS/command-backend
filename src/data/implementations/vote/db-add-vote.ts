@@ -39,7 +39,7 @@ export class DBAddVote implements AddVoteUseCase {
   ): Promise<AddVoteUseCase.Result> {
     const surveyRepo = await this.getSurveyIdRepo.getById(
       surveyId,
-      { includeMusics: true, includeVotes: true },
+      { withMusics: true, withVotes: true, withClosed: true },
       true
     )
 

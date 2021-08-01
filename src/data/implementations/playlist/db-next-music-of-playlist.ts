@@ -13,7 +13,7 @@ export class DBNextMusicOfPlaylist implements NextPlaylistMusicUseCase {
   private readonly getPlaylistRepo: GetPlaylistByIdRepository
   private readonly saveCurrentMusicRepo: SaveCurrentMusicPlaylistRepository
 
-  constructor (
+  constructor(
     getPlaylistRepo: GetPlaylistByIdRepository,
     saveCurrentMusicRepo: SaveCurrentMusicPlaylistRepository
   ) {
@@ -21,15 +21,15 @@ export class DBNextMusicOfPlaylist implements NextPlaylistMusicUseCase {
     this.saveCurrentMusicRepo = saveCurrentMusicRepo
   }
 
-  async nextMusic ({
+  async nextMusic({
     establishmentId,
     playlistId,
     userId
   }: NextPlaylistMusicUseCase.Param): Promise<NextPlaylistMusicUseCase.Result> {
     const playlist = await this.getPlaylistRepo.getById(playlistId, {
-      includeEstablishmentAndManager: true,
-      includeCurrentMusic: true,
-      includeMusicToPlaylist: true
+      withEstablishmentAndManager: true,
+      withCurrentMusic: true,
+      withMusicToPlaylist: true
     })
 
     if (
@@ -48,9 +48,7 @@ export class DBNextMusicOfPlaylist implements NextPlaylistMusicUseCase {
 
     let indexNext = (currentMusic?.position ? currentMusic.position : 0) + 1
     if (musicToPlaylist.length < indexNext) indexNext = 1
-    const nextCurrentMusic = musicToPlaylist.find(
-      m => m.position === indexNext
-    )
+    const nextCurrentMusic = musicToPlaylist.find(m => m.position === indexNext)
 
     nextCurrentMusic.isPlay = true
     playlist.currentMusic = nextCurrentMusic

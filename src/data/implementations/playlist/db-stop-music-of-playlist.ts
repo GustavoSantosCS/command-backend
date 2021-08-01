@@ -13,7 +13,7 @@ export class DBStopMusicOfPlaylist implements StopPlaylistMusicUseCase {
   private readonly getPlaylistRepo: GetPlaylistByIdRepository
   private readonly saveCurrentMusicRepo: SaveCurrentMusicPlaylistRepository
 
-  constructor (
+  constructor(
     getPlaylistRepo: GetPlaylistByIdRepository,
     saveCurrentMusicRepo: SaveCurrentMusicPlaylistRepository
   ) {
@@ -21,14 +21,14 @@ export class DBStopMusicOfPlaylist implements StopPlaylistMusicUseCase {
     this.saveCurrentMusicRepo = saveCurrentMusicRepo
   }
 
-  async stopMusic ({
+  async stopMusic({
     establishmentId,
     playlistId,
     userId
   }: StopPlaylistMusicUseCase.Param): Promise<StopPlaylistMusicUseCase.Result> {
     const playlist = await this.getPlaylistRepo.getById(playlistId, {
-      includeEstablishmentAndManager: true,
-      includeCurrentMusic: true
+      withEstablishmentAndManager: true,
+      withCurrentMusic: true
     })
 
     if (

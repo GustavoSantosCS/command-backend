@@ -1,5 +1,5 @@
 export type PayloadModel = {
-  body: { id: string | number }
+  body: { id: string }
   iat: number
   exp: number
 }

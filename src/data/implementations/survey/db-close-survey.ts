@@ -10,7 +10,7 @@ export class DBCloseSurvey implements CloseSurveyUseCase {
   private readonly getSurveyByIdRepo: GetSurveyByIdRepository
   private readonly closeSurveyRepo: CloseSurveyRepository
 
-  constructor (
+  constructor(
     getSurveyByIdRepo: GetSurveyByIdRepository,
     closeSurveyRepo: CloseSurveyRepository
   ) {
@@ -18,13 +18,13 @@ export class DBCloseSurvey implements CloseSurveyUseCase {
     this.getSurveyByIdRepo = getSurveyByIdRepo
   }
 
-  async close (
+  async close(
     surveyId: string,
     userId: string
   ): Promise<CloseSurveyUseCase.Result> {
     const surveyRepo = await this.getSurveyByIdRepo.getById(surveyId, {
-      includeEstablishmentAndManager: true,
-      includeVotes: true
+      withEstablishmentAndManager: true,
+      withVotes: true
     })
 
     if (surveyRepo?.establishment.manager.id !== userId) {

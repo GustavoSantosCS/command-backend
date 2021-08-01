@@ -16,13 +16,16 @@ export class UserTypeOrmRepository
     GetUserByIdRepository,
     UpdateUserRepository
 {
-  async searchByEmail(email: string): Promise<UserEntity> {
-    const repository = await TypeORMHelpers.getRepository(UserEntity)
-    const findUser = await repository.findOne({
-      where: [{ email }],
-      withDeleted: false,
-      relations: ['avatar']
-    })
+  async searchByEmail(
+    email: SearchUserByEmailRepository.Params
+  ): Promise<SearchUserByEmailRepository.Result> {
+    const userRepo = await TypeORMHelpers.getRepository(UserEntity)
+
+    const findUser = await userRepo
+      .createQueryBuilder('users')
+      .addSelect('users.password')
+      .where('users.email = :email', { email })
+      .getOne()
 
     return findUser
   }
@@ -62,13 +65,27 @@ export class UserTypeOrmRepository
     }
   }
 
-  async getById(id: string): Promise<UserEntity> {
-    const repository = await TypeORMHelpers.getRepository(UserEntity)
-    const userEntity = await repository.findOne(id, {
-      relations: ['avatar']
-    })
+  async getById(
+    userId: GetUserByIdRepository.Params,
+    config?: GetUserByIdRepository.Config
+  ): Promise<GetUserByIdRepository.Result> {
+    const userRepo = await TypeORMHelpers.getRepository(UserEntity)
 
-    return userEntity
+    let queryBuilder = userRepo.createQueryBuilder('users')
+
+    if (config?.withPassword) {
+      queryBuilder = queryBuilder.addSelect('users.password')
+    }
+
+    if (config?.withAvatar) {
+      queryBuilder = queryBuilder.leftJoinAndSelect('users.avatar', 'avatars')
+    }
+
+    const findUser = await queryBuilder
+      .where('users.id = :userId', { userId })
+      .getOne()
+
+    return findUser
   }
 
   async update(

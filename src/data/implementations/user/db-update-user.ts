@@ -17,7 +17,7 @@ export class DBUpdateUser implements UpdateUserUseCase {
   private readonly searchByEmailRepo: SearchUserByEmailRepository
   private readonly updateUserRepo: UpdateUserRepository
 
-  constructor (
+  constructor(
     getUserByIdRepo: GetUserByIdRepository,
     hasher: Hasher,
     hashComparer: HashComparer,
@@ -31,24 +31,30 @@ export class DBUpdateUser implements UpdateUserUseCase {
     this.updateUserRepo = updateUserRepo
   }
 
-  async update (
+  async update(
     updateUserData: UserEntity
   ): Promise<UpdateUserUseCase.Response> {
-    const userRepo = await this.getUserByIdRepo.getById(updateUserData.id)
+    const userRepo = await this.getUserByIdRepo.getById(updateUserData.id, {
+      withPassword: true
+    })
 
     if (
       !(await this.hashComparer.compare(
         updateUserData.password,
         userRepo.password
       ))
-    ) { return left(new IncorrectPasswordError(updateUserData.password)) }
+    ) {
+      return left(new IncorrectPasswordError(updateUserData.password))
+    }
 
     if (userRepo.email !== updateUserData.email) {
       const foundUser = await this.searchByEmailRepo.searchByEmail(
         updateUserData.email
       )
 
-      if (foundUser) { return left(new EmailAlreadyUseError(updateUserData.email)) }
+      if (foundUser) {
+        return left(new EmailAlreadyUseError(updateUserData.email))
+      }
     }
 
     const updateUser = new UserEntity()
@@ -60,13 +66,13 @@ export class DBUpdateUser implements UpdateUserUseCase {
     const result = await this.updateUserRepo.update(updateUser)
 
     const userReturn: Omit<
-    UserEntity,
-    | 'password'
-    | 'establishments'
-    | 'accounts'
-    | 'password'
-    | 'pollVotes'
-    | 'deletedAt'
+      UserEntity,
+      | 'password'
+      | 'establishments'
+      | 'accounts'
+      | 'password'
+      | 'pollVotes'
+      | 'deletedAt'
     > = {
       id: result.id,
       name: result.name,

@@ -34,7 +34,7 @@ export class DBUpdateMusicsOfPlaylist implements UpdateMusicsOfPlaylistUseCase {
     establishmentId
   }: UpdateMusicsOfPlaylistUseCase.Param): Promise<UpdateMusicsOfPlaylistUseCase.Response> {
     const playlist = await this.getPlaylistRepo.getById(playlistId, {
-      includeEstablishmentAndManager: true
+      withEstablishmentAndManager: true
     })
 
     if (

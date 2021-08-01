@@ -21,18 +21,9 @@ export class GetAuthenticatedUserController implements Controller {
         return badRequest(resultRevalidate.value)
       }
 
-      const { value: user } = resultRevalidate
-      const result: GetAuthenticatedUserController.Response = {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        avatar: user.avatar,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt
-      }
-
-      return ok(result)
+      return ok(resultRevalidate.value)
     } catch (error) {
+      console.error(error)
       return serverError()
     }
   }

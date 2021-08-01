@@ -25,7 +25,7 @@ export class UserEntity {
   @Column()
   email: string
 
-  @Column()
+  @Column({ select: false })
   password: string
 
   @OneToOne(() => AvatarEntity, avatar => avatar.user)
@@ -47,6 +47,6 @@ export class UserEntity {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date
 
-  @DeleteDateColumn({ name: 'deleted_at' })
+  @DeleteDateColumn({ name: 'deleted_at', select: false })
   deletedAt?: Date
 }

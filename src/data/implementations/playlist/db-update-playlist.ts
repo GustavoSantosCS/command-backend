@@ -12,7 +12,7 @@ export class DBUpdatePlaylist implements UpdatePlaylistUseCase {
   private readonly updatePlaylistRepo: UpdatePlaylistRepository
   private readonly closesAllPlaylist: ClosesAllEstablishmentPlaylistsRepository
 
-  constructor (
+  constructor(
     getPlaylistRepo: GetPlaylistByIdRepository,
     closesAllPlaylist: ClosesAllEstablishmentPlaylistsRepository,
     updatePlaylistRepo: UpdatePlaylistRepository
@@ -22,7 +22,7 @@ export class DBUpdatePlaylist implements UpdatePlaylistUseCase {
     this.updatePlaylistRepo = updatePlaylistRepo
   }
 
-  async update ({
+  async update({
     name,
     id: playlistId,
     userId,
@@ -30,7 +30,7 @@ export class DBUpdatePlaylist implements UpdatePlaylistUseCase {
     establishmentId
   }: UpdatePlaylistUseCase.Param): Promise<UpdatePlaylistUseCase.Response> {
     const playlist = await this.getPlaylistRepo.getById(playlistId, {
-      includeEstablishmentAndManager: true
+      withEstablishmentAndManager: true
     })
 
     if (

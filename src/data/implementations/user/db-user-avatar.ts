@@ -12,7 +12,7 @@ export class DBUserAvatar implements UpdateUserAvatarUseCase {
   private readonly unlinkAvatar: UnlinkAvatar
   private readonly avatarRepo: UserAvatarRepository
 
-  constructor (
+  constructor(
     getUserByIdRepository: GetUserByIdRepository,
     unlinkAvatar: UnlinkAvatar,
     avatarRepository: UserAvatarRepository
@@ -22,11 +22,13 @@ export class DBUserAvatar implements UpdateUserAvatarUseCase {
     this.avatarRepo = avatarRepository
   }
 
-  async saveAvatar ({
+  async saveAvatar({
     userId,
     avatar
   }: UpdateUserAvatarUseCase.Params): Promise<UpdateUserAvatarUseCase.Response> {
-    const userRepo = await this.getUserByIdRepo.getById(userId)
+    const userRepo = await this.getUserByIdRepo.getById(userId, {
+      withAvatar: true
+    })
     const oldAvatar = userRepo.avatar
 
     const newAvatar = new AvatarEntity()

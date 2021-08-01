@@ -13,7 +13,7 @@ export class DBPreviousMusicOfPlaylist implements PreviousPlaylistMusicUseCase {
   private readonly getPlaylistRepo: GetPlaylistByIdRepository
   private readonly saveCurrentMusicRepo: SaveCurrentMusicPlaylistRepository
 
-  constructor (
+  constructor(
     getPlaylistRepo: GetPlaylistByIdRepository,
     saveCurrentMusicRepo: SaveCurrentMusicPlaylistRepository
   ) {
@@ -21,15 +21,15 @@ export class DBPreviousMusicOfPlaylist implements PreviousPlaylistMusicUseCase {
     this.saveCurrentMusicRepo = saveCurrentMusicRepo
   }
 
-  async previousMusic ({
+  async previousMusic({
     establishmentId,
     playlistId,
     userId
   }: PreviousPlaylistMusicUseCase.Param): Promise<PreviousPlaylistMusicUseCase.Result> {
     const playlist = await this.getPlaylistRepo.getById(playlistId, {
-      includeEstablishmentAndManager: true,
-      includeCurrentMusic: true,
-      includeMusicToPlaylist: true
+      withEstablishmentAndManager: true,
+      withCurrentMusic: true,
+      withMusicToPlaylist: true
     })
 
     if (
@@ -46,8 +46,7 @@ export class DBPreviousMusicOfPlaylist implements PreviousPlaylistMusicUseCase {
 
     const { currentMusic, musicToPlaylist } = playlist
 
-    let indexPrevious =
-      (currentMusic?.position ? currentMusic.position : 0) - 1
+    let indexPrevious = (currentMusic?.position ? currentMusic.position : 0) - 1
     if (indexPrevious <= 0) indexPrevious = musicToPlaylist.length
 
     const previousCurrentMusic = musicToPlaylist.find(

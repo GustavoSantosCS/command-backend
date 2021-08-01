@@ -8,12 +8,13 @@ import {
 import { TypeORMHelpers } from './typeorm-helper'
 
 export class SurveyTypeOrmRepository
-implements
+  implements
     AddSurveyRepository,
     GetAllEstablishmentSurveyRepository,
     GetSurveyByIdRepository,
-    CloseSurveyRepository {
-  async save (survey: SurveyEntity): Promise<SurveyEntity> {
+    CloseSurveyRepository
+{
+  async save(survey: SurveyEntity): Promise<SurveyEntity> {
     const queryRunner = await TypeORMHelpers.createQueryRunner()
     await queryRunner.startTransaction()
 
@@ -45,7 +46,7 @@ implements
     }
   }
 
-  async getAllEstablishmentSurvey (
+  async getAllEstablishmentSurvey(
     establishmentId: string
   ): Promise<SurveyEntity[]> {
     try {
@@ -71,29 +72,26 @@ implements
     }
   }
 
-  async getById (
+  async getById(
     surveyId: string,
     strategy?: GetSurveyByIdRepository.Strategy,
-    includeClose?: boolean
+    withClose?: boolean
   ): Promise<SurveyEntity> {
     const surveyRepo = await TypeORMHelpers.getRepository(SurveyEntity)
     if (!strategy) {
       return surveyRepo.findOne(surveyId, {
-        withDeleted: includeClose
+        withDeleted: withClose
       })
     }
 
     let queryBuilder = surveyRepo.createQueryBuilder('surveys')
-    if (
-      strategy.includeEstablishment ||
-      strategy.includeEstablishmentAndManager
-    ) {
+    if (strategy.withEstablishment || strategy.withEstablishmentAndManager) {
       queryBuilder = queryBuilder.innerJoinAndSelect(
         'surveys.establishment',
         'establishments'
       )
 
-      if (strategy.includeEstablishmentAndManager) {
+      if (strategy.withEstablishmentAndManager) {
         queryBuilder = queryBuilder.innerJoinAndSelect(
           'establishments.manager',
           'users'
@@ -101,7 +99,7 @@ implements
       }
     }
 
-    if (strategy.includeSurveyToMusic) {
+    if (strategy.withSurveyToMusic) {
       queryBuilder = queryBuilder
         .innerJoinAndSelect('surveys.surveyToMusic', 'survey_music')
         .innerJoinAndSelect('survey_music.music', 'musics')
@@ -109,27 +107,31 @@ implements
 
     queryBuilder = queryBuilder.where('surveys.id = :surveyId', { surveyId })
 
-    if (includeClose) {
+    if (withClose) {
       queryBuilder = queryBuilder.withDeleted()
+    }
+
+    if (strategy.withClosed) {
+      queryBuilder = queryBuilder.addSelect('surveys.closedAt')
     }
 
     const survey = await queryBuilder.getOne()
 
     if (!survey) return null
 
-    if (strategy.includeMusics) {
+    if (strategy.withMusics) {
       let musicQueryBuilder = surveyRepo
         .createQueryBuilder('surveys')
         .innerJoinAndSelect('surveys.musics', 'musics')
         .where('surveys.id = :surveyId', { surveyId })
 
-      if (includeClose) musicQueryBuilder = musicQueryBuilder.withDeleted()
+      if (withClose) musicQueryBuilder = musicQueryBuilder.withDeleted()
       const surveyAndMusics = await musicQueryBuilder.getOne()
 
       Object.assign(survey, { musics: surveyAndMusics.musics || [] })
     }
 
-    if (strategy.includeVotes) {
+    if (strategy.withVotes) {
       const votesQueryBuilder = surveyRepo
         .createQueryBuilder('surveys')
         .leftJoinAndSelect('surveys.pollVotes', 'votes')
@@ -147,7 +149,7 @@ implements
     return survey
   }
 
-  async remove (
+  async remove(
     survey: SurveyEntity,
     softDelete: boolean
   ): Promise<SurveyEntity> {
@@ -159,7 +161,7 @@ implements
         await queryRunner.manager.softRemove(survey)
       } else {
         const { surveyToMusic } = await this.getById(survey.id, {
-          includeSurveyToMusic: true
+          withSurveyToMusic: true
         })
 
         await Promise.all(

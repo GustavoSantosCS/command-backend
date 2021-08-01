@@ -6,16 +6,16 @@ import { left, right } from '@/shared/either'
 export class DBGetSurveyById implements GetSurveyByIdUseCase {
   private readonly getSurveyByIdRepo: GetSurveyByIdRepository
 
-  constructor (getSurveyByIdRepo: GetSurveyByIdRepository) {
+  constructor(getSurveyByIdRepo: GetSurveyByIdRepository) {
     this.getSurveyByIdRepo = getSurveyByIdRepo
   }
 
-  async getById (surveyId: string): Promise<GetSurveyByIdUseCase.Result> {
+  async getById(surveyId: string): Promise<GetSurveyByIdUseCase.Result> {
     const trackedSurvey = await this.getSurveyByIdRepo.getById(
       surveyId,
       {
-        includeSurveyToMusic: true,
-        includeVotes: true
+        withSurveyToMusic: true,
+        withVotes: true
       },
       true
     )

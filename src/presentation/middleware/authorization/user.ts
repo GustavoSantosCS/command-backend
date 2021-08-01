@@ -31,7 +31,11 @@ export class UserAuthorizationMiddleware implements Middleware {
           return notAuthorizedErro()
         }
 
-        const user = await this.getUserRepo.getById(payload.body.id as string)
+        const user = await this.getUserRepo.getById(payload.body.id, {
+          withPassword: true
+        })
+
+        console.log(`authorization ${JSON.stringify(user, null, 4)}`)
 
         if (!user) {
           return notAuthorizedErro()

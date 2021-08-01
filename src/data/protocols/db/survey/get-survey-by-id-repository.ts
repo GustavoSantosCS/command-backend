@@ -4,16 +4,17 @@ export interface GetSurveyByIdRepository {
   getById: (
     surveyId: string,
     strategy?: GetSurveyByIdRepository.Strategy,
-    includeClose?: boolean
+    withClose?: boolean
   ) => Promise<SurveyEntity>
 }
 
 export namespace GetSurveyByIdRepository {
   export type Strategy = {
-    includeEstablishment?: boolean
-    includeEstablishmentAndManager?: boolean
-    includeVotes?: boolean
-    includeMusics?: boolean
-    includeSurveyToMusic?: boolean
+    withEstablishment?: boolean
+    withEstablishmentAndManager?: boolean
+    withVotes?: boolean
+    withMusics?: boolean
+    withSurveyToMusic?: boolean
+    withClosed?: boolean
   }
 }
