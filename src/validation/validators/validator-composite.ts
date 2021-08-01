@@ -3,10 +3,13 @@ import { Validator } from '@/validation/protocols'
 import { ValidatorError } from '@/validation/errors'
 
 export class ValidationComposite implements Validator {
-  constructor (private readonly validators: Validator[]) {}
+  private readonly validators: Validator[]
 
-  validate (value: any): Either<ValidatorError, true> {
-    // eslint-disable-next-line no-restricted-syntax
+  constructor(validators: Validator[]) {
+    this.validators = validators
+  }
+
+  validate(value: any): Either<ValidatorError, true> {
     for (const validator of this.validators) {
       const result = validator.validate(value)
       if (result.isLeft()) {

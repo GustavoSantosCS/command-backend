@@ -2,7 +2,7 @@ import { VoteEntity } from '@/data/entities'
 import {
   GetSurveyByIdRepository,
   GetUserByIdRepository,
-  IDGenerator,
+  UniqueIdGenerator,
   SaveVoteRepository
 } from '@/data/protocols'
 import {
@@ -18,13 +18,13 @@ export class DBAddVote implements AddVoteUseCase {
   private readonly getSurveyIdRepo: GetSurveyByIdRepository
   private readonly getUserIdRepo: GetUserByIdRepository
   private readonly saveVoteRepo: SaveVoteRepository
-  private readonly idGenerator: IDGenerator
+  private readonly idGenerator: UniqueIdGenerator
 
-  constructor (
+  constructor(
     getSurveyIdRepo: GetSurveyByIdRepository,
     getUserIdRepo: GetUserByIdRepository,
     saveVoteRepo: SaveVoteRepository,
-    idGenerator: IDGenerator
+    idGenerator: UniqueIdGenerator
   ) {
     this.getSurveyIdRepo = getSurveyIdRepo
     this.getUserIdRepo = getUserIdRepo
@@ -32,7 +32,7 @@ export class DBAddVote implements AddVoteUseCase {
     this.idGenerator = idGenerator
   }
 
-  async saveVote (
+  async saveVote(
     userId: string,
     surveyId: string,
     musicId: string
@@ -57,9 +57,7 @@ export class DBAddVote implements AddVoteUseCase {
     if (!clientChosenMusic) return left(new MusicNotFoundError())
 
     // - Cannot vote more the one time
-    const clientVoted = !!surveyRepo.pollVotes.find(
-      p => p.client.id === userId
-    )
+    const clientVoted = !!surveyRepo.pollVotes.find(p => p.client.id === userId)
     if (clientVoted) return left(new ClientAlreadyVotedError(surveyRepo))
     // Validations End
 

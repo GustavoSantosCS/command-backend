@@ -1,3 +1,3 @@
-export interface IDGenerator {
+export interface UniqueIdGenerator {
   generate: () => string
 }

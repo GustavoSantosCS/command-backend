@@ -1,23 +1,19 @@
 import { ProductEntity } from '@/data/entities'
 import { GetAllEstablishmentProductsUseCase } from '@/domain/usecases'
-import {
-  Controller,
-  HttpRequest,
-  HttpResponse
-} from '@/presentation/protocols'
-import { badRequest, ok, serverError } from '@/utils/http'
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/presentation/helpers/http'
 
 export class GetAllEstablishmentProductsController implements Controller {
   private readonly getAllEstablishmentProducts: GetAllEstablishmentProductsUseCase
 
-  constructor (getAllEstablishmentProducts: GetAllEstablishmentProductsUseCase) {
+  constructor(getAllEstablishmentProducts: GetAllEstablishmentProductsUseCase) {
     this.getAllEstablishmentProducts = getAllEstablishmentProducts
   }
 
-  async handle (
+  async handle(
     httpRequest: HttpRequest<
-    GetAllEstablishmentProductsController.DTO,
-    GetAllEstablishmentProductsController.Params
+      GetAllEstablishmentProductsController.DTO,
+      GetAllEstablishmentProductsController.Params
     >
   ): Promise<HttpResponse<GetAllEstablishmentProductsController.DTO>> {
     try {
@@ -45,14 +41,12 @@ export class GetAllEstablishmentProductsController implements Controller {
         }))
       return ok(products)
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(error)
       return serverError()
     }
   }
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace GetAllEstablishmentProductsController {
   export type DTO = {
     authenticated: {
@@ -64,5 +58,7 @@ export namespace GetAllEstablishmentProductsController {
     id: string
   }
 
-  export type Response = Array<Omit<ProductEntity, 'establishment' | 'deletedAt'>>
+  export type Response = Array<
+    Omit<ProductEntity, 'establishment' | 'deletedAt'>
+  >
 }

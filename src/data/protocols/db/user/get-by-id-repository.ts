@@ -6,7 +6,6 @@ export interface GetUserByIdRepository {
   ) => Promise<GetUserByIdRepository.Result>
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace GetUserByIdRepository {
   export type Params = string
   export type Result = UserEntity

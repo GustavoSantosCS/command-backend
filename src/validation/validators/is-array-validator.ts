@@ -4,12 +4,15 @@ import { IsNotArrayError } from '../errors/is-not-array-error'
 import { Validator } from '../protocols'
 
 export class IsArrayValidator implements Validator {
-  constructor (
-    private readonly fieldName: string,
-    private readonly customMessage: string
-  ) {}
+  private readonly fieldName: string
+  private readonly customMessage: string
 
-  validate (value: any): Either<ValidatorError, true> {
+  constructor(fieldName: string, customMessage: string) {
+    this.fieldName = fieldName
+    this.customMessage = customMessage
+  }
+
+  validate(value: any): Either<ValidatorError, true> {
     const fieldValue = value[this.fieldName]
 
     return Array.isArray(fieldValue)

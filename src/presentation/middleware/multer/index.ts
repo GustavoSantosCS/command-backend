@@ -21,3 +21,10 @@ export const productImageMulter = adapterMulter('image', {
   resultObjectName: 'productImage',
   target: 'product'
 })
+
+export const musicImageMulter = adapterMulter('image', {
+  destination: env.storage.local.music,
+  errorMessage: 'Não foi possível salvar a imagem da musica',
+  resultObjectName: 'musicImage',
+  target: 'music'
+})

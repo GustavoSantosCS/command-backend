@@ -1,18 +1,18 @@
 import { EstablishmentEntity, EstablishmentImageEntity } from '@/data/entities'
 import {
-  IDGenerator,
+  UniqueIdGenerator,
   AddEstablishmentRepository,
   GetUserByIdRepository
 } from '@/data/protocols'
 import { AddEstablishmentUseCase } from '@/domain/usecases'
 
 export class DBAddEstablishment implements AddEstablishmentUseCase {
-  private readonly idGenerator: IDGenerator
+  private readonly idGenerator: UniqueIdGenerator
   private readonly getUserRepo: GetUserByIdRepository
   private readonly saveEstablishmentRepo: AddEstablishmentRepository
 
-  constructor (
-    idGenerator: IDGenerator,
+  constructor(
+    idGenerator: UniqueIdGenerator,
     getUserRepo: GetUserByIdRepository,
     saveEstablishmentRepo: AddEstablishmentRepository
   ) {
@@ -21,7 +21,7 @@ export class DBAddEstablishment implements AddEstablishmentUseCase {
     this.saveEstablishmentRepo = saveEstablishmentRepo
   }
 
-  async add ({
+  async add({
     userId,
     establishment,
     establishmentImage

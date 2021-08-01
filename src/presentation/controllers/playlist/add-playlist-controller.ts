@@ -1,11 +1,7 @@
 import { PlaylistEntity } from '@/data/entities'
 import { AddPlayListUseCase } from '@/domain/usecases'
-import {
-  Controller,
-  HttpRequest,
-  HttpResponse
-} from '@/presentation/protocols'
-import { badRequest, ok, serverError } from '@/utils/http'
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/presentation/helpers/http'
 import { MissingParamError } from '@/validation/errors'
 import { Validator } from '@/validation/protocols'
 
@@ -13,12 +9,12 @@ export class AddPlayListController implements Controller {
   private readonly validator: Validator
   private readonly addPlayer: AddPlayListUseCase
 
-  constructor (validator: Validator, addPlayerUseCase: AddPlayListUseCase) {
+  constructor(validator: Validator, addPlayerUseCase: AddPlayListUseCase) {
     this.validator = validator
     this.addPlayer = addPlayerUseCase
   }
 
-  async handle (
+  async handle(
     httpRequest: HttpRequest<AddPlayListController.DTO>
   ): Promise<HttpResponse<AddPlayListController.Response>> {
     try {
@@ -60,14 +56,12 @@ export class AddPlayListController implements Controller {
 
       return ok(playerList)
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(error)
       return serverError()
     }
   }
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace AddPlayListController {
   export type DTO = {
     authenticated: {

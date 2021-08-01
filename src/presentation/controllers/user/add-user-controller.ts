@@ -1,23 +1,19 @@
 import { UserEntity } from '@/data/entities'
 import { AddUserUseCase } from '@/domain/usecases'
-import {
-  Controller,
-  HttpRequest,
-  HttpResponse
-} from '@/presentation/protocols'
-import { badRequest, ok, serverError } from '@/utils/http'
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/presentation/helpers/http'
 import { Validator } from '@/validation/protocols'
 
 export class AddUserController implements Controller {
   private readonly validator: Validator
   private readonly addUser: AddUserUseCase
 
-  constructor (validator: Validator, addUserUseCase: AddUserUseCase) {
+  constructor(validator: Validator, addUserUseCase: AddUserUseCase) {
     this.validator = validator
     this.addUser = addUserUseCase
   }
 
-  async handle (
+  async handle(
     httpRequest: HttpRequest<AddUserController.DTO>
   ): Promise<HttpResponse<AddUserController.Response>> {
     try {
@@ -48,14 +44,12 @@ export class AddUserController implements Controller {
 
       return ok(user)
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(error)
       return serverError()
     }
   }
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace AddUserController {
   export type DTO = {
     name: string
@@ -65,7 +59,7 @@ export namespace AddUserController {
   }
 
   export type Response = Omit<
-  UserEntity,
-  'password' | 'avatar' | 'establishments'
+    UserEntity,
+    'password' | 'avatar' | 'establishments'
   >
 }

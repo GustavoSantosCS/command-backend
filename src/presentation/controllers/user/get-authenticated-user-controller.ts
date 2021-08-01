@@ -1,19 +1,15 @@
 import { UserEntity } from '@/data/entities'
 import { GetAuthenticatedUserUseCase } from '@/domain/usecases'
-import {
-  Controller,
-  HttpRequest,
-  HttpResponse
-} from '@/presentation/protocols'
-import { badRequest, ok, serverError } from '@/utils/http'
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/presentation/helpers/http'
 
 export class GetAuthenticatedUserController implements Controller {
   private readonly getAuthenticatedUser: GetAuthenticatedUserUseCase
-  constructor (getAuthenticatedUserUseCase: GetAuthenticatedUserUseCase) {
+  constructor(getAuthenticatedUserUseCase: GetAuthenticatedUserUseCase) {
     this.getAuthenticatedUser = getAuthenticatedUserUseCase
   }
 
-  async handle (
+  async handle(
     httpRequest: HttpRequest<GetAuthenticatedUserController.DTO>
   ): Promise<HttpResponse<GetAuthenticatedUserController.Response>> {
     try {
@@ -42,7 +38,6 @@ export class GetAuthenticatedUserController implements Controller {
   }
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace GetAuthenticatedUserController {
   export type DTO = {
     authenticated: {

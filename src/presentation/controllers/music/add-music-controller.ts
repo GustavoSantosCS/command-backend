@@ -1,32 +1,35 @@
 import { MusicEntity } from '@/data/entities'
 import { AddMusicUseCase } from '@/domain/usecases'
-import {
-  Controller,
-  HttpRequest,
-  HttpResponse
-} from '@/presentation/protocols'
-import { badRequest, ok, serverError } from '@/utils/http'
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/presentation/helpers/http'
 import { Validator } from '@/validation/protocols'
+import { ImagePersistenceData } from '@/domain/models'
 
 export class AddMusicController implements Controller {
   private readonly validator: Validator
   private readonly addMusic: AddMusicUseCase
 
-  constructor (validator: Validator, addMusic: AddMusicUseCase) {
+  constructor(validator: Validator, addMusic: AddMusicUseCase) {
     this.validator = validator
     this.addMusic = addMusic
   }
 
-  async handle (
+  async handle(
     httpRequest: HttpRequest<AddMusicController.DTO, null>
   ): Promise<HttpResponse<AddMusicController.Response>> {
     try {
-      const { authenticated, name, duration, talent, establishmentId } =
-        httpRequest.body
+      const {
+        authenticated,
+        name,
+        duration,
+        talent,
+        establishmentId,
+        musicImage
+      } = httpRequest.body
 
       const validation = this.validator.validate({
         name,
-        duration,
+        duration: parseInt(duration),
         talent,
         establishmentId
       })
@@ -40,7 +43,8 @@ export class AddMusicController implements Controller {
         name,
         duration: parseInt(duration),
         talent,
-        establishmentId
+        establishmentId,
+        musicImage
       })
 
       if (resultAdd.isLeft()) return badRequest(resultAdd.value)
@@ -49,20 +53,19 @@ export class AddMusicController implements Controller {
         id: resultAdd.value.id,
         name: resultAdd.value.name,
         talent: resultAdd.value.talent,
+        image: resultAdd.value.image,
         duration: resultAdd.value.duration,
         createdAt: resultAdd.value.createdAt,
         updatedAt: resultAdd.value.updatedAt
       }
       return ok(music)
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(error)
       return serverError()
     }
   }
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace AddMusicController {
   export type DTO = {
     authenticated: {
@@ -72,6 +75,7 @@ export namespace AddMusicController {
     talent: string
     duration: string
     establishmentId: string
+    musicImage: ImagePersistenceData
   }
 
   export type Response = Omit<MusicEntity, 'establishment' | 'playlists'>

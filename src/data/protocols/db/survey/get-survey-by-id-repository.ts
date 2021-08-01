@@ -8,7 +8,6 @@ export interface GetSurveyByIdRepository {
   ) => Promise<SurveyEntity>
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace GetSurveyByIdRepository {
   export type Strategy = {
     includeEstablishment?: boolean

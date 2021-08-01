@@ -7,9 +7,10 @@ import {
 } from 'typeorm'
 
 export class CreateEstablishmentImage1624885207494
-implements MigrationInterface {
+  implements MigrationInterface
+{
   tableName = 'establishment_image'
-  public async up (queryRunner: QueryRunner): Promise<void> {
+  public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
         name: this.tableName,
@@ -19,7 +20,7 @@ implements MigrationInterface {
           { name: 'target', type: 'varchar' }
         ]
       }),
-      true
+      false
     )
 
     await queryRunner.addColumn(
@@ -33,15 +34,15 @@ implements MigrationInterface {
         columnNames: ['image'], // Coluna pai da Tabela pai
         referencedTableName: this.tableName, // Tabela referenciada
         referencedColumnNames: ['persistentName'], // Coluna referenciada
-        name: 'establishment_image_fk' // Nome da ForeignKey
+        name: 'image_establishment_fk' // Nome da ForeignKey
       })
     )
   }
 
-  public async down (queryRunner: QueryRunner): Promise<void> {
+  public async down(queryRunner: QueryRunner): Promise<void> {
     const table = await queryRunner.getTable('establishments')
-    const foreignKey = table.foreignKeys.find(
-      fk => fk.columnNames.includes('image')
+    const foreignKey = table.foreignKeys.find(fk =>
+      fk.columnNames.includes('image_establishment_fk')
     )
     await queryRunner.dropForeignKey('establishments', foreignKey)
     await queryRunner.dropColumn('establishments', 'image')

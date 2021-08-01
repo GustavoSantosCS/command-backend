@@ -1,23 +1,19 @@
 import { ProductEntity } from '@/data/entities'
 import { GetProductByIdUseCase } from '@/domain/usecases'
-import {
-  Controller,
-  HttpRequest,
-  HttpResponse
-} from '@/presentation/protocols'
-import { badRequest, ok, serverError } from '@/utils/http'
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/presentation/helpers/http'
 
 export class GetProductByIdController implements Controller {
   private readonly getProductById: GetProductByIdUseCase
 
-  constructor (getProductById: GetProductByIdUseCase) {
+  constructor(getProductById: GetProductByIdUseCase) {
     this.getProductById = getProductById
   }
 
-  async handle (
+  async handle(
     httpRequest: HttpRequest<
-    GetProductByIdController.DTO,
-    GetProductByIdController.Params
+      GetProductByIdController.DTO,
+      GetProductByIdController.Params
     >
   ): Promise<HttpResponse<GetProductByIdController.Response>> {
     try {
@@ -39,14 +35,12 @@ export class GetProductByIdController implements Controller {
 
       return ok(product)
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(error)
       return serverError()
     }
   }
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace GetProductByIdController {
   export type DTO = {
     authenticated: {

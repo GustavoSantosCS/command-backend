@@ -1,9 +1,10 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm'
 
 export class CreateEstablishmentTable1624885040938
-implements MigrationInterface {
+  implements MigrationInterface
+{
   tableName = 'establishments'
-  public async up (queryRunner: QueryRunner): Promise<void> {
+  public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
         name: this.tableName,
@@ -23,18 +24,18 @@ implements MigrationInterface {
             columnNames: ['manager'],
             referencedTableName: 'users',
             referencedColumnNames: ['id'],
-            name: 'establishments_user_fk'
+            name: 'user_establishments_fk'
           }
         ]
       }),
-      true
+      false
     )
   }
 
-  public async down (queryRunner: QueryRunner): Promise<void> {
+  public async down(queryRunner: QueryRunner): Promise<void> {
     const table = await queryRunner.getTable(this.tableName)
-    const foreignKey = table.foreignKeys.find(
-      fk => fk.columnNames.includes('establishments_user_fk')
+    const foreignKey = table.foreignKeys.find(fk =>
+      fk.columnNames.includes('user_establishments_fk')
     )
     await queryRunner.dropForeignKey(this.tableName, foreignKey)
     await queryRunner.dropTable(this.tableName)

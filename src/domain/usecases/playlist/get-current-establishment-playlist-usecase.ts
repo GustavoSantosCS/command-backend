@@ -12,12 +12,11 @@ export interface GetCurrentEstablishmentPlaylistUseCase {
   ) => Promise<GetCurrentEstablishmentPlaylistUseCase.Response>
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace GetCurrentEstablishmentPlaylistUseCase {
   export type Result = Omit<PlaylistEntity, 'establishment' | 'musics'>
 
   export type Response = Either<
-  EstablishmentNotFoundError | EstablishmentNotHavePlaylistError,
-  Result
+    EstablishmentNotFoundError | EstablishmentNotHavePlaylistError,
+    Result
   >
 }

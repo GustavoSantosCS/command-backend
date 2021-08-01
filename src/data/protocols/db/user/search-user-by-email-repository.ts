@@ -6,7 +6,6 @@ export interface SearchUserByEmailRepository {
   ) => Promise<SearchUserByEmailRepository.Result>
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace SearchUserByEmailRepository {
   export type Params = string
   export type Result = UserEntity

@@ -2,7 +2,7 @@ import { MigrationInterface, QueryRunner, Table } from 'typeorm'
 
 export class CreatePlaylistTable1625200448321 implements MigrationInterface {
   tableName = 'playlists'
-  public async up (queryRunner: QueryRunner): Promise<void> {
+  public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
         name: this.tableName,
@@ -19,17 +19,18 @@ export class CreatePlaylistTable1625200448321 implements MigrationInterface {
             columnNames: ['establishment_id'],
             referencedColumnNames: ['id'],
             referencedTableName: 'establishments',
-            name: 'establishment_playlist_fk' // Nome da ForeignKey
+            name: 'playlist_establishment_fk' // Nome da ForeignKey
           }
         ]
-      })
+      }),
+      false
     )
   }
 
-  public async down (queryRunner: QueryRunner): Promise<void> {
+  public async down(queryRunner: QueryRunner): Promise<void> {
     const table = await queryRunner.getTable(this.tableName)
-    const foreignKey = table.foreignKeys.find(
-      fk => fk.columnNames.includes('establishment_playlist_fk')
+    const foreignKey = table.foreignKeys.find(fk =>
+      fk.columnNames.includes('playlist_establishment_fk')
     )
     await queryRunner.dropForeignKey(this.tableName, foreignKey)
     await queryRunner.dropTable(this.tableName)

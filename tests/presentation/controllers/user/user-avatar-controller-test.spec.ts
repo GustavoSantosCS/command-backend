@@ -3,7 +3,7 @@ import { UpdateUserAvatarController } from '@/presentation/controllers/user'
 import { HttpRequest } from '@/presentation/protocols'
 import { makeMockAvatarUser } from '@tests/domain/mock/models'
 import { UserAvatarUseCaseSpy } from '@tests/domain/mock/usecases'
-import { serverError } from '@/utils/http'
+import { serverError } from '@/presentation/helpers/http'
 
 let sut: UpdateUserAvatarController
 let userAvatarUseCaseSpy: UserAvatarUseCaseSpy

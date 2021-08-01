@@ -15,14 +15,13 @@ export interface AddVoteUseCase {
   ) => Promise<AddVoteUseCase.Result>
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace AddVoteUseCase {
   export type Return = VoteEntity
   export type Result = Either<
-  | SurveyNotFoundError
-  | SurveyIsCloseError
-  | MusicNotFoundError
-  | ClientAlreadyVotedError,
-  Return
+    | SurveyNotFoundError
+    | SurveyIsCloseError
+    | MusicNotFoundError
+    | ClientAlreadyVotedError,
+    Return
   >
 }

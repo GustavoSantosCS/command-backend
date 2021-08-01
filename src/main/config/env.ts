@@ -1,4 +1,6 @@
 import path from 'path'
+import dotenv from 'dotenv'
+dotenv.config()
 
 const app = {
   env: process.env.NODE_ENV || 'development',
@@ -23,7 +25,8 @@ const storage = {
   local: {
     avatar: `${root}/avatar`,
     establishment: `${root}/establishment`,
-    product: `${root}/product`
+    product: `${root}/product`,
+    music: `${root}/music`
   },
   bucket: {
     name: process.env.BUCKET_NAME,

@@ -1,26 +1,22 @@
 import { MusicPlaylistEntity } from '@/data/entities'
 import { StopPlaylistMusicUseCase } from '@/domain/usecases'
-import {
-  Controller,
-  HttpRequest,
-  HttpResponse
-} from '@/presentation/protocols'
-import { badRequest, ok, serverError } from '@/utils/http'
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/presentation/helpers/http'
 import { Validator } from '@/validation/protocols'
 
 export class StopPlaylistMusicController implements Controller {
   private readonly validate: Validator
   private readonly stopMusic: StopPlaylistMusicUseCase
 
-  constructor (validate: Validator, stopMusic: StopPlaylistMusicUseCase) {
+  constructor(validate: Validator, stopMusic: StopPlaylistMusicUseCase) {
     this.validate = validate
     this.stopMusic = stopMusic
   }
 
-  async handle (
+  async handle(
     httpRequest: HttpRequest<
-    StopPlaylistMusicController.DTO,
-    StopPlaylistMusicController.Param
+      StopPlaylistMusicController.DTO,
+      StopPlaylistMusicController.Param
     >
   ): Promise<StopPlaylistMusicController.Response> {
     try {
@@ -45,14 +41,12 @@ export class StopPlaylistMusicController implements Controller {
       const { value: musicPlaylistEntity } = resultUseCase
       return ok(musicPlaylistEntity)
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(error)
       return serverError()
     }
   }
 }
 
-// eslint-disable-Stop-line no-redeclare
 export namespace StopPlaylistMusicController {
   export type DTO = {
     authenticated: {

@@ -8,10 +8,9 @@ export interface GetAllEstablishmentSurveyUseCase {
   ) => Promise<GetAllEstablishmentSurveyUseCase.Response>
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace GetAllEstablishmentSurveyUseCase {
   export type Response = Either<
-  EstablishmentNotFoundError,
-  Array<Omit<SurveyEntity, 'establishment' | 'musics'>>
+    EstablishmentNotFoundError,
+    Array<Omit<SurveyEntity, 'establishment' | 'musics'>>
   >
 }

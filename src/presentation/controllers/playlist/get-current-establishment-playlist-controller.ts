@@ -1,18 +1,14 @@
 import { PlaylistEntity } from '@/data/entities'
 import { GetCurrentEstablishmentPlaylistUseCase } from '@/domain/usecases'
-import {
-  Controller,
-  HttpRequest,
-  HttpResponse
-} from '@/presentation/protocols'
-import { badRequest, ok, serverError } from '@/utils/http'
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/presentation/helpers/http'
 import { Validator } from '@/validation/protocols'
 
 export class GetCurrentEstablishmentPlaylistController implements Controller {
   private readonly validator: Validator
   private readonly getCurrentPlaylist: GetCurrentEstablishmentPlaylistUseCase
 
-  constructor (
+  constructor(
     validator: Validator,
     getCurrentPlaylistUseCase: GetCurrentEstablishmentPlaylistUseCase
   ) {
@@ -20,10 +16,10 @@ export class GetCurrentEstablishmentPlaylistController implements Controller {
     this.getCurrentPlaylist = getCurrentPlaylistUseCase
   }
 
-  async handle (
+  async handle(
     httpRequest: HttpRequest<
-    GetCurrentEstablishmentPlaylistController.DTO,
-    GetCurrentEstablishmentPlaylistController.Param
+      GetCurrentEstablishmentPlaylistController.DTO,
+      GetCurrentEstablishmentPlaylistController.Param
     >
   ): Promise<HttpResponse<GetCurrentEstablishmentPlaylistController.Response>> {
     try {
@@ -57,14 +53,12 @@ export class GetCurrentEstablishmentPlaylistController implements Controller {
 
       return ok(playerList)
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(error)
       return serverError()
     }
   }
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace GetCurrentEstablishmentPlaylistController {
   export type DTO = {
     authenticated: {

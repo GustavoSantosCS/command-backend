@@ -8,7 +8,6 @@ export interface GetAllAccountRequestProductUseCase {
   ) => Promise<GetAllAccountRequestProductUseCase.Result>
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace GetAllAccountRequestProductUseCase {
   export type Params = {
     accountId: string

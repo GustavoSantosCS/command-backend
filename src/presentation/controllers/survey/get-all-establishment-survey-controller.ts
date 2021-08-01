@@ -1,23 +1,19 @@
 import { SurveyEntity } from '@/data/entities'
 import { GetAllEstablishmentSurveyUseCase } from '@/domain/usecases'
-import {
-  Controller,
-  HttpRequest,
-  HttpResponse
-} from '@/presentation/protocols'
-import { ok, serverError } from '@/utils/http'
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import { ok, serverError } from '@/presentation/helpers/http'
 
 export class GetAllEstablishmentSurveyController implements Controller {
   private readonly usecase: GetAllEstablishmentSurveyUseCase
 
-  constructor (usecase: GetAllEstablishmentSurveyUseCase) {
+  constructor(usecase: GetAllEstablishmentSurveyUseCase) {
     this.usecase = usecase
   }
 
-  async handle (
+  async handle(
     httpRequest: HttpRequest<
-    GetAllEstablishmentSurveyController.DTO,
-    GetAllEstablishmentSurveyController.Param
+      GetAllEstablishmentSurveyController.DTO,
+      GetAllEstablishmentSurveyController.Param
     >
   ): Promise<HttpResponse<GetAllEstablishmentSurveyController.Response>> {
     try {
@@ -25,14 +21,12 @@ export class GetAllEstablishmentSurveyController implements Controller {
       const establishments = await this.usecase.getAll(establishmentId)
       return ok(establishments.value)
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(error)
       return serverError()
     }
   }
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace GetAllEstablishmentSurveyController {
   export type DTO = {
     authenticated: {

@@ -1,20 +1,16 @@
 import { EstablishmentEntity } from '@/data/entities'
 import { GetAllUserEstablishmentsUseCase } from '@/domain/usecases'
-import {
-  Controller,
-  HttpRequest,
-  HttpResponse
-} from '@/presentation/protocols'
-import { ok, serverError } from '@/utils/http'
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import { ok, serverError } from '@/presentation/helpers/http'
 
 export class GetAllUserEstablishmentsController implements Controller {
   private readonly getEstablishmentsOfUser: GetAllUserEstablishmentsUseCase
 
-  constructor (getEstablishmentsOfUserUseCase: GetAllUserEstablishmentsUseCase) {
+  constructor(getEstablishmentsOfUserUseCase: GetAllUserEstablishmentsUseCase) {
     this.getEstablishmentsOfUser = getEstablishmentsOfUserUseCase
   }
 
-  async handle (
+  async handle(
     httpRequest: HttpRequest<GetAllUserEstablishmentsController.DTO>
   ): Promise<HttpResponse<GetAllUserEstablishmentsController.Response>> {
     try {
@@ -25,14 +21,12 @@ export class GetAllUserEstablishmentsController implements Controller {
 
       return ok(establishments)
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(error)
       return serverError()
     }
   }
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace GetAllUserEstablishmentsController {
   export type DTO = {
     authenticated: {

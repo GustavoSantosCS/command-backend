@@ -1,23 +1,19 @@
 import { SurveyEntity } from '@/data/entities'
 import { CloseSurveyUseCase } from '@/domain/usecases'
-import {
-  Controller,
-  HttpRequest,
-  HttpResponse
-} from '@/presentation/protocols'
-import { badRequest, ok, serverError } from '@/utils/http'
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/presentation/helpers/http'
 
 export class CloseSurveyController implements Controller {
   private readonly closeSurvey: CloseSurveyUseCase
 
-  constructor (closeSurvey: CloseSurveyUseCase) {
+  constructor(closeSurvey: CloseSurveyUseCase) {
     this.closeSurvey = closeSurvey
   }
 
-  async handle (
+  async handle(
     httpRequest: HttpRequest<
-    CloseSurveyController.DTO,
-    CloseSurveyController.Param
+      CloseSurveyController.DTO,
+      CloseSurveyController.Param
     >
   ): Promise<CloseSurveyController.Response> {
     try {
@@ -30,14 +26,12 @@ export class CloseSurveyController implements Controller {
 
       return ok(resultUsecase.value)
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(error)
       return serverError()
     }
   }
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace CloseSurveyController {
   export type DTO = {
     authenticated: {

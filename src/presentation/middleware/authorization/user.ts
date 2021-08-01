@@ -1,22 +1,18 @@
 import jwt from 'jsonwebtoken'
 import { env } from '@/shared/config'
-import { notAuthorizedErro, ok } from '@/utils/http'
+import { notAuthorizedErro, ok } from '@/presentation/helpers/http'
 import { PayloadModel } from '@/domain/models'
 import { GetUserByIdRepository } from '@/data/protocols'
-import {
-  HttpRequest,
-  HttpResponse,
-  Middleware
-} from '@/presentation/protocols'
+import { HttpRequest, HttpResponse, Middleware } from '@/presentation/protocols'
 
 export class UserAuthorizationMiddleware implements Middleware {
   private readonly getUserRepo: GetUserByIdRepository
 
-  constructor (getUserRepo: GetUserByIdRepository) {
+  constructor(getUserRepo: GetUserByIdRepository) {
     this.getUserRepo = getUserRepo
   }
 
-  async handle (req: HttpRequest): Promise<HttpResponse> {
+  async handle(req: HttpRequest): Promise<HttpResponse> {
     const authHeader = req.headers.authorization
     try {
       const [bearer, token] = authHeader.split(' ')

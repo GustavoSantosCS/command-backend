@@ -1,18 +1,14 @@
 import { AccountEntity } from '@/data/entities'
 import { CreateAccountUseCase } from '@/domain/usecases'
-import {
-  Controller,
-  HttpRequest,
-  HttpResponse
-} from '@/presentation/protocols'
-import { badRequest, ok, serverError } from '@/utils/http'
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/presentation/helpers/http'
 import { Validator } from '@/validation/protocols'
 
 export class CreateAccountController implements Controller {
   private readonly validator: Validator
   private readonly createAccount: CreateAccountUseCase
 
-  constructor (
+  constructor(
     validator: Validator,
     createAccountUseCase: CreateAccountUseCase
   ) {
@@ -20,7 +16,7 @@ export class CreateAccountController implements Controller {
     this.createAccount = createAccountUseCase
   }
 
-  async handle (
+  async handle(
     httpRequest: HttpRequest<CreateAccountController.DTO>
   ): Promise<HttpResponse<CreateAccountController.Response>> {
     try {
@@ -55,14 +51,12 @@ export class CreateAccountController implements Controller {
 
       return ok(newAccount)
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(error)
       return serverError()
     }
   }
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace CreateAccountController {
   export type DTO = {
     authenticated: {

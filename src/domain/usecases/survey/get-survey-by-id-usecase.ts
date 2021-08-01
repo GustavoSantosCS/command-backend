@@ -5,7 +5,7 @@ import { Either } from '@/shared/either'
 export interface GetSurveyByIdUseCase {
   getById: (userId: string) => Promise<GetSurveyByIdUseCase.Result>
 }
-// eslint-disable-next-line no-redeclare
+
 export namespace GetSurveyByIdUseCase {
   export type Return = Omit<SurveyEntity, 'establishment'>
 

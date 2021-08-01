@@ -7,7 +7,7 @@ export interface CreateSessionUseCase {
     userData: CreateSessionUseCase.Params
   ) => Promise<CreateSessionUseCase.Result>
 }
-// eslint-disable-next-line no-redeclare
+
 export namespace CreateSessionUseCase {
   export type Params = {
     email: string

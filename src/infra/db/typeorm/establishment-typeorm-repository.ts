@@ -8,12 +8,13 @@ import {
 import { TypeORMHelpers } from './typeorm-helper'
 
 export class EstablishmentTypeOrmRepository
-implements
+  implements
     AddEstablishmentRepository,
     GetAllEstablishmentsUserRepository,
     GetEstablishmentByIdRepository,
-    GetAllEstablishmentsRepository {
-  async save (
+    GetAllEstablishmentsRepository
+{
+  async save(
     establishment: EstablishmentEntity
   ): Promise<AddEstablishmentRepository.Result> {
     const queryRunner = await TypeORMHelpers.createQueryRunner()
@@ -28,7 +29,6 @@ implements
       await queryRunner.commitTransaction()
       return establishmentRepo
     } catch (err) {
-      // eslint-disable-next-line no-console
       await queryRunner.rollbackTransaction()
       throw err
     } finally {
@@ -36,7 +36,7 @@ implements
     }
   }
 
-  async getAllEstablishmentsUser (
+  async getAllEstablishmentsUser(
     userId: string
   ): Promise<GetAllEstablishmentsUserRepository.Result> {
     const establishmentRepository = await TypeORMHelpers.getRepository(
@@ -55,7 +55,7 @@ implements
     return establishmentsUser
   }
 
-  async getById (
+  async getById(
     establishmentId: string,
     config?: GetEstablishmentByIdRepository.Config
   ): Promise<GetEstablishmentByIdRepository.Result> {
@@ -88,13 +88,12 @@ implements
       const establishmentsUser = await queryBuilder.getOne()
       return establishmentsUser
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(error)
       throw error
     }
   }
 
-  async getAll (): Promise<EstablishmentEntity[]> {
+  async getAll(): Promise<EstablishmentEntity[]> {
     const establishmentRepo = await TypeORMHelpers.getRepository(
       EstablishmentEntity
     )

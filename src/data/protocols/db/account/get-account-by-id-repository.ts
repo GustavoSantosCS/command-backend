@@ -7,7 +7,6 @@ export interface GetAccountByIdRepository {
   ) => Promise<AccountEntity>
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace GetAccountByIdRepository {
   export type Config = {
     withClient?: boolean

@@ -1,14 +1,11 @@
 import { SurveyEntity, SurveyMusicEntity } from '@/data/entities'
 import {
-  IDGenerator,
+  UniqueIdGenerator,
   AddSurveyRepository,
   GetEstablishmentByIdRepository,
   GetMusicByIdRepository
 } from '@/data/protocols'
-import {
-  EstablishmentNotFoundError,
-  MusicNotFoundError
-} from '@/domain/errors'
+import { EstablishmentNotFoundError, MusicNotFoundError } from '@/domain/errors'
 import { AddSurveyUseCase } from '@/domain/usecases'
 import { left, right } from '@/shared/either'
 
@@ -16,13 +13,13 @@ export class DBAddSurvey implements AddSurveyUseCase {
   private readonly getEstablishment: GetEstablishmentByIdRepository
   private readonly getMusic: GetMusicByIdRepository
   private readonly addSurveyRepo: AddSurveyRepository
-  private readonly idGenerator: IDGenerator
+  private readonly idGenerator: UniqueIdGenerator
 
-  constructor (
+  constructor(
     getEstablishment: GetEstablishmentByIdRepository,
     getMusic: GetMusicByIdRepository,
     addSurveyRepo: AddSurveyRepository,
-    idGenerator: IDGenerator
+    idGenerator: UniqueIdGenerator
   ) {
     this.getEstablishment = getEstablishment
     this.getMusic = getMusic
@@ -30,7 +27,7 @@ export class DBAddSurvey implements AddSurveyUseCase {
     this.idGenerator = idGenerator
   }
 
-  async add ({
+  async add({
     userId,
     establishmentId,
     musics,
@@ -41,7 +38,9 @@ export class DBAddSurvey implements AddSurveyUseCase {
       { withManager: true }
     )
 
-    if (establishmentRepo?.manager.id !== userId) { return left(new EstablishmentNotFoundError()) }
+    if (establishmentRepo?.manager.id !== userId) {
+      return left(new EstablishmentNotFoundError())
+    }
 
     const musicsResult = await Promise.all(
       musics.map(async musicId => this.getMusic.getById(musicId))

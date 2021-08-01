@@ -3,13 +3,17 @@ import { Validator } from '@/validation/protocols'
 import { MinimumSizeError } from '@/validation/errors'
 
 export class MaxSizeValidator implements Validator {
-  constructor (
-    private readonly fieldName: string,
-    private readonly maxSize: number,
-    private readonly customMessage: string
-  ) {}
+  private readonly fieldName: string
+  private readonly maxSize: number
+  private readonly customMessage: string
 
-  validate (value: any): Either<MinimumSizeError, true> {
+  constructor(fieldName: string, maxSize: number, customMessage: string) {
+    this.fieldName = fieldName
+    this.maxSize = maxSize
+    this.customMessage = customMessage
+  }
+
+  validate(value: any): Either<MinimumSizeError, true> {
     const fieldValue: string = value[this.fieldName]
     return fieldValue?.length <= this.maxSize
       ? right(true)

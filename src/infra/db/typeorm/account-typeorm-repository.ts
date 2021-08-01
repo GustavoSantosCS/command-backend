@@ -7,11 +7,12 @@ import {
 import { TypeORMHelpers } from './typeorm-helper'
 
 export class AccountTypeOrmRepository
-implements
+  implements
     AddAccountRepository,
     GetAccountByIdRepository,
-    GetAllUserAccountRepository {
-  async save (account: AccountEntity): Promise<AccountEntity> {
+    GetAllUserAccountRepository
+{
+  async save(account: AccountEntity): Promise<AccountEntity> {
     const queryRunner = await TypeORMHelpers.createQueryRunner()
     try {
       await queryRunner.startTransaction()
@@ -21,7 +22,6 @@ implements
 
       return account
     } catch (err) {
-      // eslint-disable-next-line no-console
       await queryRunner.rollbackTransaction()
       throw err
     } finally {
@@ -29,7 +29,7 @@ implements
     }
   }
 
-  async getById (
+  async getById(
     accountId: string,
     config?: GetAccountByIdRepository.Config
   ): Promise<AccountEntity> {
@@ -37,10 +37,7 @@ implements
     let queryBuilder = repository.createQueryBuilder('accounts')
 
     if (config?.withClient) {
-      queryBuilder = queryBuilder.innerJoinAndSelect(
-        'accounts.client',
-        'users'
-      )
+      queryBuilder = queryBuilder.innerJoinAndSelect('accounts.client', 'users')
     }
 
     if (config?.withEstablishment) {
@@ -58,7 +55,7 @@ implements
     return account
   }
 
-  async getAllUserAccount (
+  async getAllUserAccount(
     userId: string
   ): Promise<Array<Omit<AccountEntity, 'requestsProduct'>>> {
     const repo = await TypeORMHelpers.getRepository(AccountEntity)

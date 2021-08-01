@@ -7,9 +7,11 @@ import {
 } from 'typeorm'
 
 export class CreatePlaylistMusicTable1625200947671
-implements MigrationInterface {
+  implements MigrationInterface
+{
   tableName = 'playlist_music'
-  public async up (queryRunner: QueryRunner): Promise<void> {
+  fatherTableName = 'playlists'
+  public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
         name: this.tableName,
@@ -25,20 +27,21 @@ implements MigrationInterface {
             columnNames: ['playlist_id'],
             referencedColumnNames: ['id'],
             referencedTableName: 'playlists',
-            name: 'playlists_music_fk'
+            name: 'playlist_music_playlists_fk'
           },
           {
             columnNames: ['music_id'],
             referencedColumnNames: ['id'],
             referencedTableName: 'musics',
-            name: 'music_playlists_fk'
+            name: 'playlist_music_music_fk'
           }
         ]
-      })
+      }),
+      false
     )
 
     await queryRunner.addColumn(
-      'playlists',
+      this.fatherTableName,
       new TableColumn({
         name: 'current_music_id',
         type: 'uuid',
@@ -47,39 +50,40 @@ implements MigrationInterface {
     )
 
     await queryRunner.createForeignKey(
-      'playlists',
+      this.fatherTableName,
       new TableForeignKey({
         columnNames: ['current_music_id'],
-        referencedTableName: 'playlist_music',
+        referencedTableName: this.tableName,
         referencedColumnNames: ['id'],
-        name: 'current_music_playlist_fk'
+        name: 'playlist_current_music_fk'
       })
     )
   }
 
-  public async down (queryRunner: QueryRunner): Promise<void> {
+  public async down(queryRunner: QueryRunner): Promise<void> {
     const table = await queryRunner.getTable(this.tableName)
+    const fatherTable = await queryRunner.getTable(this.fatherTableName)
 
-    // Remove Chave Estrangeria 1
-    const foreignKey1 = table.foreignKeys.find(
-      fk => fk.columnNames.includes('playlist_music_fk')
-    )
-    // Remove Chave Estrangeria 2
-    const foreignKey2 = table.foreignKeys.find(
-      fk => fk.columnNames.includes('music_playlist_fk')
+    const foreignKey1 = table.foreignKeys.find(fk =>
+      fk.columnNames.includes('playlist_music_playlists_fk')
     )
 
-    // Remove Chave Estrangeria 2
-    const foreignKey3 = table.foreignKeys.find(
-      fk => fk.columnNames.includes('current_music_playlist_fk')
+    const foreignKey2 = table.foreignKeys.find(fk =>
+      fk.columnNames.includes('playlist_music_music_fk')
     )
+
+    const foreignKey3 = fatherTable.foreignKeys.find(fk =>
+      fk.columnNames.includes('playlist_current_music_fk')
+    )
+
     await queryRunner.dropForeignKeys(this.tableName, [
       foreignKey1,
-      foreignKey2,
-      foreignKey3
+      foreignKey2
     ])
-    await queryRunner.dropColumn('playlists', 'current_music_id')
 
+    await queryRunner.dropForeignKey(this.fatherTableName, foreignKey3)
+
+    await queryRunner.dropColumn(this.fatherTableName, 'current_music_id')
     await queryRunner.dropTable(this.tableName)
   }
 }

@@ -9,17 +9,16 @@ export interface GetUserEstablishmentByIdUseCase {
   ) => Promise<GetUserEstablishmentByIdUseCase.Response>
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace GetUserEstablishmentByIdUseCase {
   export type Result = Omit<
-  EstablishmentEntity,
-  | 'manager'
-  | 'products'
-  | 'playlists'
-  | 'accounts'
-  | 'surveys'
-  | 'musics'
-  | 'deletedAt'
+    EstablishmentEntity,
+    | 'manager'
+    | 'products'
+    | 'playlists'
+    | 'accounts'
+    | 'surveys'
+    | 'musics'
+    | 'deletedAt'
   >
   export type Response = Either<EstablishmentNotFoundError, Result>
 }

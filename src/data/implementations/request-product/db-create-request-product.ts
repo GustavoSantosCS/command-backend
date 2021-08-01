@@ -2,7 +2,7 @@ import {
   CreateRequestProductRepository,
   GetAccountByIdRepository,
   GetProductByIdRepository,
-  IDGenerator
+  UniqueIdGenerator
 } from '@/data/protocols'
 import { CreateRequestProductUseCase } from '@/domain/usecases'
 import { left, right } from '@/shared/either'
@@ -10,13 +10,13 @@ import { AccountNotFoundError, ProductNotFoundError } from '@/domain/errors'
 import { RequestProductEntity } from '@/data/entities'
 
 export class DBCreateRequestProduct implements CreateRequestProductUseCase {
-  private readonly idGenerator: IDGenerator
+  private readonly idGenerator: UniqueIdGenerator
   private readonly accountRepo: GetAccountByIdRepository
   private readonly productRepo: GetProductByIdRepository
   private readonly requestProductRepo: CreateRequestProductRepository
 
-  constructor (
-    idGenerator: IDGenerator,
+  constructor(
+    idGenerator: UniqueIdGenerator,
     accountRepository: GetAccountByIdRepository,
     productRepository: GetProductByIdRepository,
     requestProductRepository: CreateRequestProductRepository
@@ -27,7 +27,7 @@ export class DBCreateRequestProduct implements CreateRequestProductUseCase {
     this.requestProductRepo = requestProductRepository
   }
 
-  async add ({
+  async add({
     userId,
     productId,
     accountId,
@@ -41,7 +41,9 @@ export class DBCreateRequestProduct implements CreateRequestProductUseCase {
     })
 
     // the account exists and belongs to a client
-    if (!accountRepo || accountRepo?.client.id !== userId) { return left(new AccountNotFoundError()) }
+    if (!accountRepo || accountRepo?.client.id !== userId) {
+      return left(new AccountNotFoundError())
+    }
 
     // the product exists
     const productRepo = await this.productRepo.getById(productId, {
@@ -50,7 +52,9 @@ export class DBCreateRequestProduct implements CreateRequestProductUseCase {
     if (!productRepo) return left(new ProductNotFoundError())
 
     // the product belongs to the establishment of the account
-    if (accountRepo.establishment.id !== productRepo.establishment.id) { return left(new ProductNotFoundError()) }
+    if (accountRepo.establishment.id !== productRepo.establishment.id) {
+      return left(new ProductNotFoundError())
+    }
 
     const newRequestProduct = new RequestProductEntity()
     newRequestProduct.id = this.idGenerator.generate()

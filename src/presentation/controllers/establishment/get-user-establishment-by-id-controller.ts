@@ -1,24 +1,20 @@
 import { EstablishmentEntity } from '@/data/entities'
 import { EstablishmentNotFoundError } from '@/domain/errors'
 import { GetUserEstablishmentByIdUseCase } from '@/domain/usecases'
-import {
-  Controller,
-  HttpRequest,
-  HttpResponse
-} from '@/presentation/protocols'
-import { badRequest, ok, serverError } from '@/utils/http'
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/presentation/helpers/http'
 
 export class GetUserEstablishmentByIdController implements Controller {
   private readonly getUserEstablishment: GetUserEstablishmentByIdUseCase
 
-  constructor (getUserEstablishment: GetUserEstablishmentByIdUseCase) {
+  constructor(getUserEstablishment: GetUserEstablishmentByIdUseCase) {
     this.getUserEstablishment = getUserEstablishment
   }
 
-  async handle (
+  async handle(
     httpRequest: HttpRequest<
-    GetUserEstablishmentByIdController.DTO,
-    GetUserEstablishmentByIdController.Param
+      GetUserEstablishmentByIdController.DTO,
+      GetUserEstablishmentByIdController.Param
     >
   ): Promise<HttpResponse<GetUserEstablishmentByIdController.Response>> {
     try {
@@ -30,7 +26,9 @@ export class GetUserEstablishmentByIdController implements Controller {
         establishmentId
       )
 
-      if (response.isLeft()) { return badRequest(new EstablishmentNotFoundError()) }
+      if (response.isLeft()) {
+        return badRequest(new EstablishmentNotFoundError())
+      }
 
       const establishment: GetUserEstablishmentByIdController.Return = {
         id: response.value.id,
@@ -45,14 +43,12 @@ export class GetUserEstablishmentByIdController implements Controller {
 
       return ok(establishment)
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(error)
       return serverError()
     }
   }
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace GetUserEstablishmentByIdController {
   export type DTO = {
     authenticated: {
@@ -65,14 +61,14 @@ export namespace GetUserEstablishmentByIdController {
   }
 
   export type Return = Omit<
-  EstablishmentEntity,
-  | 'manager'
-  | 'products'
-  | 'playlists'
-  | 'accounts'
-  | 'surveys'
-  | 'musics'
-  | 'deletedAt'
+    EstablishmentEntity,
+    | 'manager'
+    | 'products'
+    | 'playlists'
+    | 'accounts'
+    | 'surveys'
+    | 'musics'
+    | 'deletedAt'
   >
 
   export type Response = Return

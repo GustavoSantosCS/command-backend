@@ -1,24 +1,20 @@
 import { ProductEntity } from '@/data/entities'
 import { ImagePersistenceData } from '@/domain/models'
 import { AddProductUseCase } from '@/domain/usecases'
-import {
-  Controller,
-  HttpRequest,
-  HttpResponse
-} from '@/presentation/protocols'
-import { badRequest, ok, serverError } from '@/utils/http'
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/presentation/helpers/http'
 import { Validator } from '@/validation/protocols'
 
 export class AddProductController implements Controller {
   private readonly validator: Validator
   private readonly addProduct: AddProductUseCase
 
-  constructor (validator: Validator, addProductUseCase: AddProductUseCase) {
+  constructor(validator: Validator, addProductUseCase: AddProductUseCase) {
     this.validator = validator
     this.addProduct = addProductUseCase
   }
 
-  async handle (
+  async handle(
     httpRequest: HttpRequest<AddProductController.DTO>
   ): Promise<HttpResponse<AddProductController.Response>> {
     try {
@@ -60,14 +56,12 @@ export class AddProductController implements Controller {
 
       return ok(newProduct)
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(error)
       return serverError()
     }
   }
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace AddProductController {
   export type DTO = {
     authenticated: {

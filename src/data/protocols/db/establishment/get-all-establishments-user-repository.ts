@@ -6,10 +6,11 @@ export interface GetAllEstablishmentsUserRepository {
   ) => Promise<GetAllEstablishmentsUserRepository.Result>
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace GetAllEstablishmentsUserRepository {
-  export type Result = Array<Omit<
-  EstablishmentEntity,
-  'manager' | 'products' | 'playlists' | 'accounts' | 'surveys' | 'musics'
-  >>
+  export type Result = Array<
+    Omit<
+      EstablishmentEntity,
+      'manager' | 'products' | 'playlists' | 'accounts' | 'surveys' | 'musics'
+    >
+  >
 }

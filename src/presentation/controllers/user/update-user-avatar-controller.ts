@@ -1,20 +1,16 @@
 import { AvatarEntity } from '@/data/entities'
 import { UpdateUserAvatarUseCase } from '@/domain/usecases'
-import {
-  Controller,
-  HttpRequest,
-  HttpResponse
-} from '@/presentation/protocols'
-import { ok, serverError } from '@/utils/http'
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import { ok, serverError } from '@/presentation/helpers/http'
 
 export class UpdateUserAvatarController implements Controller {
   private readonly updateUserAvatar: UpdateUserAvatarUseCase
 
-  constructor (updateUserAvatarUseCase: UpdateUserAvatarUseCase) {
+  constructor(updateUserAvatarUseCase: UpdateUserAvatarUseCase) {
     this.updateUserAvatar = updateUserAvatarUseCase
   }
 
-  async handle (
+  async handle(
     httpRequest: HttpRequest<UpdateUserAvatarController.DTO>
   ): Promise<HttpResponse<UpdateUserAvatarController.Response>> {
     const { avatar, authenticated } = httpRequest.body
@@ -36,14 +32,12 @@ export class UpdateUserAvatarController implements Controller {
 
       return ok(updateAvatar)
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(error)
       return serverError()
     }
   }
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace UpdateUserAvatarController {
   export type DTO = {
     authenticated: {

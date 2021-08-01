@@ -1,25 +1,21 @@
 import { MusicEntity } from '@/data/entities'
 import { GetAllEstablishmentMusicsUseCase } from '@/domain/usecases'
-import {
-  Controller,
-  HttpRequest,
-  HttpResponse
-} from '@/presentation/protocols'
-import { badRequest, ok, serverError } from '@/utils/http'
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/presentation/helpers/http'
 
 export class GetAllEstablishmentMusicsController implements Controller {
   private readonly getAllEstablishmentMusics: GetAllEstablishmentMusicsUseCase
 
-  constructor (
+  constructor(
     getAllEstablishmentMusicsUseCase: GetAllEstablishmentMusicsUseCase
   ) {
     this.getAllEstablishmentMusics = getAllEstablishmentMusicsUseCase
   }
 
-  async handle (
+  async handle(
     httpRequest: HttpRequest<
-    GetAllEstablishmentMusicsController.DTO,
-    GetAllEstablishmentMusicsController.Params
+      GetAllEstablishmentMusicsController.DTO,
+      GetAllEstablishmentMusicsController.Params
     >
   ): Promise<HttpResponse<GetAllEstablishmentMusicsController.DTO>> {
     try {
@@ -33,14 +29,12 @@ export class GetAllEstablishmentMusicsController implements Controller {
       if (usecaseResult.isLeft()) return badRequest(usecaseResult.value)
       return ok(usecaseResult.value)
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(error)
       return serverError()
     }
   }
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace GetAllEstablishmentMusicsController {
   export type DTO = {
     authenticated: {

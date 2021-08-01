@@ -8,7 +8,6 @@ export interface UpdatePlaylistUseCase {
   ) => Promise<UpdatePlaylistUseCase.Response>
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace UpdatePlaylistUseCase {
   export type Param = {
     userId: string
@@ -19,8 +18,8 @@ export namespace UpdatePlaylistUseCase {
   }
 
   export type Return = Omit<
-  PlaylistEntity,
-  'establishment' | 'musics' | 'musicToPlaylist'
+    PlaylistEntity,
+    'establishment' | 'musics' | 'musicToPlaylist'
   >
 
   export type Response = Either<PlaylistNotFoundError, Return>

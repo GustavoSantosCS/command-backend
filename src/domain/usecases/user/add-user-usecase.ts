@@ -6,7 +6,6 @@ export interface AddUserUseCase {
   save: (newUser: AddUserUseCase.Params) => Promise<AddUserUseCase.Response>
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace AddUserUseCase {
   export type Params = {
     name: string
@@ -14,13 +13,13 @@ export namespace AddUserUseCase {
     password: string
   }
   export type Result = Omit<
-  UserEntity,
-  | 'password'
-  | 'avatar'
-  | 'establishments'
-  | 'accounts'
-  | 'pollVotes'
-  | 'deletedAt'
+    UserEntity,
+    | 'password'
+    | 'avatar'
+    | 'establishments'
+    | 'accounts'
+    | 'pollVotes'
+    | 'deletedAt'
   >
   export type Response = Either<EmailAlreadyUseError, Result>
 }

@@ -8,7 +8,6 @@ export interface GetAllEstablishmentProductsUseCase {
   ) => Promise<GetAllEstablishmentProductsUseCase.Result>
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace GetAllEstablishmentProductsUseCase {
   export type Return = Array<Omit<ProductEntity, 'establishment'>>
 

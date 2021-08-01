@@ -11,7 +11,6 @@ export interface UpdatePlaylistAndMusicsRepository {
   ) => Promise<UpdatePlaylistAndMusicsRepository.Result>
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace UpdatePlaylistAndMusicsRepository {
   export type Musics = Array<{
     id: string

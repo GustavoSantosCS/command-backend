@@ -7,7 +7,6 @@ export interface GetProductByIdRepository {
   ) => Promise<ProductEntity>
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace GetProductByIdRepository {
   export type Config = {
     whitEstablishment: boolean

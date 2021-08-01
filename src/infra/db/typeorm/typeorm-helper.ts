@@ -8,7 +8,7 @@ import {
 } from 'typeorm'
 
 export class TypeORMHelpers {
-  private static connection: Connection = null
+  private static connection: Connection
 
   static async getConnection(): Promise<Connection> {
     if (!TypeORMHelpers.connection?.isConnected) {
@@ -32,14 +32,14 @@ export class TypeORMHelpers {
   static async getRepository<Entity>(
     entity: EntityTarget<Entity>
   ): Promise<Repository<Entity>> {
-    if (!TypeORMHelpers.connection) {
+    if (!TypeORMHelpers.connection?.isConnected) {
       await TypeORMHelpers.connect()
     }
     return TypeORMHelpers.connection.getRepository(entity)
   }
 
   static async createQueryRunner(): Promise<QueryRunner> {
-    if (!TypeORMHelpers.connection) {
+    if (!TypeORMHelpers.connection?.isConnected) {
       await TypeORMHelpers.connect()
     }
     const queryRunner = TypeORMHelpers.connection.createQueryRunner()
@@ -49,7 +49,7 @@ export class TypeORMHelpers {
   }
 
   static async disconnect(): Promise<void> {
-    if (TypeORMHelpers.connection) {
+    if (!TypeORMHelpers.connection?.isConnected) {
       await TypeORMHelpers.connection.close()
       TypeORMHelpers.connection = null
     }

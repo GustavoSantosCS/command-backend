@@ -2,19 +2,15 @@ import { EstablishmentEntity, EstablishmentImageEntity } from '@/data/entities'
 import { CATEGORY } from '@/domain/models'
 
 import { AddEstablishmentUseCase } from '@/domain/usecases'
-import {
-  Controller,
-  HttpRequest,
-  HttpResponse
-} from '@/presentation/protocols'
-import { badRequest, ok, serverError } from '@/utils/http'
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/presentation/helpers/http'
 import { Validator } from '@/validation/protocols'
 
 export class AddEstablishmentController implements Controller {
   private readonly validator: Validator
   private readonly addEstablishment: AddEstablishmentUseCase
 
-  constructor (
+  constructor(
     validator: Validator,
     addEstablishmentUseCase: AddEstablishmentUseCase
   ) {
@@ -22,7 +18,7 @@ export class AddEstablishmentController implements Controller {
     this.addEstablishment = addEstablishmentUseCase
   }
 
-  async handle (
+  async handle(
     httpRequest: HttpRequest<AddEstablishmentController.DTO>
   ): Promise<HttpResponse<AddEstablishmentController.Response>> {
     const { body } = httpRequest
@@ -48,14 +44,12 @@ export class AddEstablishmentController implements Controller {
 
       return ok(newEstablishment)
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(error)
       return serverError()
     }
   }
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace AddEstablishmentController {
   export type DTO = {
     authenticated: {

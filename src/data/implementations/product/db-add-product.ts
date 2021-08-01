@@ -1,6 +1,6 @@
 import {
   GetEstablishmentByIdRepository,
-  IDGenerator,
+  UniqueIdGenerator,
   AddProductRepository
 } from '@/data/protocols'
 import { AddProductUseCase } from '@/domain/usecases'
@@ -9,12 +9,12 @@ import { EstablishmentNotFoundError } from '@/domain/errors'
 import { ProductEntity, ProductImageEntity } from '@/data/entities'
 
 export class DBAddProduct implements AddProductUseCase {
-  private readonly idGenerator: IDGenerator
+  private readonly idGenerator: UniqueIdGenerator
   private readonly getEstablishmentByIdRepo: GetEstablishmentByIdRepository
   private readonly addProductRepo: AddProductRepository
 
-  constructor (
-    idGenerator: IDGenerator,
+  constructor(
+    idGenerator: UniqueIdGenerator,
     getEstablishmentByIdRepo: GetEstablishmentByIdRepository,
     addProductRepo: AddProductRepository
   ) {
@@ -23,7 +23,7 @@ export class DBAddProduct implements AddProductUseCase {
     this.addProductRepo = addProductRepo
   }
 
-  async save ({
+  async save({
     establishmentId,
     userId,
     name,
@@ -36,7 +36,9 @@ export class DBAddProduct implements AddProductUseCase {
       { withManager: true }
     )
 
-    if (establishmentRepo?.manager.id !== userId) { return left(new EstablishmentNotFoundError()) }
+    if (establishmentRepo?.manager.id !== userId) {
+      return left(new EstablishmentNotFoundError())
+    }
 
     const newProduct = new ProductEntity()
     newProduct.id = this.idGenerator.generate()

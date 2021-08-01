@@ -7,7 +7,6 @@ export interface GetPlaylistByIdRepository {
   ) => Promise<GetPlaylistByIdRepository.Result>
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace GetPlaylistByIdRepository {
   export type Config = {
     includeEstablishment?: boolean

@@ -5,10 +5,12 @@ import { left, right } from '@/shared/either'
 import { EstablishmentNotFoundError } from '@/domain/errors'
 
 export class DBGetAllEstablishmentMusics
-implements GetAllEstablishmentMusicsUseCase {
+  implements GetAllEstablishmentMusicsUseCase
+{
   private readonly getEstablishmentByIdRepo: GetEstablishmentByIdRepository
   private readonly getAllEstablishmentMusicsRepo: GetAllEstablishmentMusicsRepository
-  constructor (
+
+  constructor(
     getEstablishmentByIdRepo: GetEstablishmentByIdRepository,
     getAllEstablishmentMusicsRepo: GetAllEstablishmentMusicsRepository
   ) {
@@ -16,7 +18,7 @@ implements GetAllEstablishmentMusicsUseCase {
     this.getAllEstablishmentMusicsRepo = getAllEstablishmentMusicsRepo
   }
 
-  async getAllEstablishmentMusics (
+  async getAllEstablishmentMusics(
     establishmentId: string
   ): Promise<GetAllEstablishmentMusicsUseCase.Result> {
     const establishmentRepo = await this.getEstablishmentByIdRepo.getById(

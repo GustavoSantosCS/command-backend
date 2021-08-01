@@ -6,7 +6,6 @@ export interface CreateRequestProductRepository {
   ) => Promise<CreateRequestProductRepository.Return>
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace CreateRequestProductRepository {
   export type Param = RequestProductEntity
   export type Return = RequestProductEntity

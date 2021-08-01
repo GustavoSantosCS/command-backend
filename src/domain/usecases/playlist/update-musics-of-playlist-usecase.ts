@@ -8,7 +8,6 @@ export interface UpdateMusicsOfPlaylistUseCase {
   ) => Promise<UpdateMusicsOfPlaylistUseCase.Response>
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace UpdateMusicsOfPlaylistUseCase {
   export type Param = {
     userId: string

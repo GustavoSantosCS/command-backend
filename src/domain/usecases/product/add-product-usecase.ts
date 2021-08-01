@@ -7,7 +7,6 @@ export interface AddProductUseCase {
   save: (newProduct: AddProductUseCase.Params) => AddProductUseCase.Result
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace AddProductUseCase {
   export type Params = {
     userId: string

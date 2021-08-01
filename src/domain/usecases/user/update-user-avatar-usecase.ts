@@ -7,7 +7,6 @@ export interface UpdateUserAvatarUseCase {
   ) => Promise<UpdateUserAvatarUseCase.Response>
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace UpdateUserAvatarUseCase {
   export type Params = {
     userId: string

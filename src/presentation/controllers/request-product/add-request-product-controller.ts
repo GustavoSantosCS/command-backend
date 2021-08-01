@@ -1,18 +1,14 @@
 import { RequestProductEntity } from '@/data/entities'
 import { CreateRequestProductUseCase } from '@/domain/usecases'
-import {
-  Controller,
-  HttpRequest,
-  HttpResponse
-} from '@/presentation/protocols'
-import { badRequest, ok, serverError } from '@/utils/http'
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/presentation/helpers/http'
 import { Validator } from '@/validation/protocols'
 
 export class AddRequestProductController implements Controller {
   private readonly validator: Validator
   private readonly createRequestProduct: CreateRequestProductUseCase
 
-  constructor (
+  constructor(
     validator: Validator,
     createRequestProductUseCase: CreateRequestProductUseCase
   ) {
@@ -20,10 +16,10 @@ export class AddRequestProductController implements Controller {
     this.createRequestProduct = createRequestProductUseCase
   }
 
-  async handle (
+  async handle(
     httpRequest: HttpRequest<
-    AddRequestProductController.DTO,
-    AddRequestProductController.Param
+      AddRequestProductController.DTO,
+      AddRequestProductController.Param
     >
   ): Promise<HttpResponse<AddRequestProductController.Response>> {
     try {
@@ -69,14 +65,12 @@ export class AddRequestProductController implements Controller {
 
       return ok(newRequestProduct)
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(error)
       return serverError()
     }
   }
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace AddRequestProductController {
   export type DTO = {
     authenticated: {

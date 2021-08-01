@@ -2,7 +2,7 @@ import { MigrationInterface, QueryRunner, Table } from 'typeorm'
 
 export class createVoteTable1627521715029 implements MigrationInterface {
   tableName = 'votes'
-  public async up (queryRunner: QueryRunner): Promise<void> {
+  public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
         name: this.tableName,
@@ -33,24 +33,25 @@ export class createVoteTable1627521715029 implements MigrationInterface {
             name: 'votes_user_fk'
           }
         ]
-      })
+      }),
+      false
     )
   }
 
-  public async down (queryRunner: QueryRunner): Promise<void> {
+  public async down(queryRunner: QueryRunner): Promise<void> {
     const table = await queryRunner.getTable(this.tableName)
 
     // Remove Chave Estrangeria 1
-    const foreignKey1 = table.foreignKeys.find(
-      fk => fk.columnNames.includes('votes_survey_fk')
+    const foreignKey1 = table.foreignKeys.find(fk =>
+      fk.columnNames.includes('votes_survey_fk')
     )
     // Remove Chave Estrangeria 2
-    const foreignKey2 = table.foreignKeys.find(
-      fk => fk.columnNames.includes('votes_music_fk')
+    const foreignKey2 = table.foreignKeys.find(fk =>
+      fk.columnNames.includes('votes_music_fk')
     )
     // Remove Chave Estrangeria 3
-    const foreignKey3 = table.foreignKeys.find(
-      fk => fk.columnNames.includes('votes_user_fk')
+    const foreignKey3 = table.foreignKeys.find(fk =>
+      fk.columnNames.includes('votes_user_fk')
     )
 
     await queryRunner.dropForeignKeys(this.tableName, [

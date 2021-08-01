@@ -7,7 +7,6 @@ export interface AddEstablishmentUseCase {
   ) => Promise<AddEstablishmentUseCase.Response>
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace AddEstablishmentUseCase {
   export type Params = {
     userId: string
@@ -20,14 +19,14 @@ export namespace AddEstablishmentUseCase {
   }
 
   export type Return = Omit<
-  EstablishmentEntity,
-  | 'manager'
-  | 'products'
-  | 'playlists'
-  | 'accounts'
-  | 'surveys'
-  | 'musics'
-  | 'deletedAt'
+    EstablishmentEntity,
+    | 'manager'
+    | 'products'
+    | 'playlists'
+    | 'accounts'
+    | 'surveys'
+    | 'musics'
+    | 'deletedAt'
   >
 
   export type Response = Return

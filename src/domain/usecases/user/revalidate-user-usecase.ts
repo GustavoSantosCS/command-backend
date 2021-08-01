@@ -8,11 +8,10 @@ export interface GetAuthenticatedUserUseCase {
   ) => Promise<GetAuthenticatedUserUseCase.Result>
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace GetAuthenticatedUserUseCase {
   export type Return = Omit<
-  UserEntity,
-  'establishments' | 'accounts' | 'password' | 'pollVotes' | 'deletedAt'
+    UserEntity,
+    'establishments' | 'accounts' | 'password' | 'pollVotes' | 'deletedAt'
   >
   export type Result = Either<UserNotFoundError, Return>
 }

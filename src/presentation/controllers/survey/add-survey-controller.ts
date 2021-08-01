@@ -1,11 +1,7 @@
 import { SurveyEntity } from '@/data/entities'
 import { AddSurveyUseCase } from '@/domain/usecases/survey'
-import {
-  Controller,
-  HttpRequest,
-  HttpResponse
-} from '@/presentation/protocols'
-import { badRequest, ok, serverError } from '@/utils/http'
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/presentation/helpers/http'
 import { Validator } from '@/validation/protocols'
 
 // create a class for the add survey controller
@@ -13,12 +9,12 @@ export class AddSurveyController implements Controller {
   private readonly validator: Validator
   private readonly addSurvey: AddSurveyUseCase
 
-  constructor (validator: Validator, addSurvey: AddSurveyUseCase) {
+  constructor(validator: Validator, addSurvey: AddSurveyUseCase) {
     this.validator = validator
     this.addSurvey = addSurvey
   }
 
-  async handle (
+  async handle(
     httpRequest: HttpRequest<AddSurveyController.DTO, null>
   ): Promise<HttpResponse<AddSurveyController.Response>> {
     try {
@@ -44,14 +40,12 @@ export class AddSurveyController implements Controller {
 
       return ok(survey.value)
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(error)
       return serverError()
     }
   }
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace AddSurveyController {
   export type DTO = {
     authenticated: {

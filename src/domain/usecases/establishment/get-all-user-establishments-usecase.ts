@@ -6,16 +6,17 @@ export interface GetAllUserEstablishmentsUseCase {
   ) => Promise<GetAllUserEstablishmentsUseCase.Response>
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace GetAllUserEstablishmentsUseCase {
-  export type Response = Array<Omit<
-  EstablishmentEntity,
-  | 'manager'
-  | 'products'
-  | 'playlists'
-  | 'accounts'
-  | 'surveys'
-  | 'musics'
-  | 'deletedAt'
-  >>
+  export type Response = Array<
+    Omit<
+      EstablishmentEntity,
+      | 'manager'
+      | 'products'
+      | 'playlists'
+      | 'accounts'
+      | 'surveys'
+      | 'musics'
+      | 'deletedAt'
+    >
+  >
 }

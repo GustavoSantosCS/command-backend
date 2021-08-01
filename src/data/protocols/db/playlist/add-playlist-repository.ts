@@ -7,7 +7,6 @@ export interface AddPlayListRepository {
   ) => Promise<AddPlayListRepository.Result>
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace AddPlayListRepository {
   export type Result = Omit<PlaylistEntity, 'establishment' | 'musics'>
 }

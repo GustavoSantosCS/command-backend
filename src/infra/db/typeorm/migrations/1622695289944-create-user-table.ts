@@ -2,7 +2,7 @@ import { MigrationInterface, QueryRunner, Table } from 'typeorm'
 
 export class CreateUserTable1622695289944 implements MigrationInterface {
   tableName = 'users'
-  public async up (queryRunner: QueryRunner): Promise<void> {
+  public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
         name: this.tableName,
@@ -16,11 +16,11 @@ export class CreateUserTable1622695289944 implements MigrationInterface {
           { name: 'deleted_at', type: 'timestamp', isNullable: true }
         ]
       }),
-      true
+      false
     )
   }
 
-  public async down (queryRunner: QueryRunner): Promise<void> {
+  public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropTable(this.tableName)
   }
 }

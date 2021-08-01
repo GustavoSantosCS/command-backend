@@ -1,23 +1,19 @@
 import { RequestProductEntity } from '@/data/entities'
 import { GetAllAccountRequestProductUseCase } from '@/domain/usecases'
-import {
-  Controller,
-  HttpRequest,
-  HttpResponse
-} from '@/presentation/protocols'
-import { badRequest, ok, serverError } from '@/utils/http'
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/presentation/helpers/http'
 
 export class GetAllAccountRequestProductController implements Controller {
   private readonly getAllAccountRsP: GetAllAccountRequestProductUseCase
 
-  constructor (getAllAccountRequestProduct: GetAllAccountRequestProductUseCase) {
+  constructor(getAllAccountRequestProduct: GetAllAccountRequestProductUseCase) {
     this.getAllAccountRsP = getAllAccountRequestProduct
   }
 
-  async handle (
+  async handle(
     httpRequest: HttpRequest<
-    GetAllAccountRequestProductController.DTO,
-    GetAllAccountRequestProductController.Param
+      GetAllAccountRequestProductController.DTO,
+      GetAllAccountRequestProductController.Param
     >
   ): Promise<HttpResponse<GetAllAccountRequestProductController.Result>> {
     try {
@@ -46,14 +42,12 @@ export class GetAllAccountRequestProductController implements Controller {
 
       return ok(data)
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(error)
       return serverError()
     }
   }
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace GetAllAccountRequestProductController {
   export type DTO = {
     authenticated: {

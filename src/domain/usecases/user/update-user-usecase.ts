@@ -8,19 +8,18 @@ export interface UpdateUserUseCase {
   ) => Promise<UpdateUserUseCase.Response>
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace UpdateUserUseCase {
   export type Params = Omit<UserEntity, 'createdAt' | 'updatedAt'>
   export type Response = Either<
-  IncorrectPasswordError,
-  Omit<
-  UserEntity,
-  | 'password'
-  | 'establishments'
-  | 'accounts'
-  | 'password'
-  | 'pollVotes'
-  | 'deletedAt'
-  >
+    IncorrectPasswordError,
+    Omit<
+      UserEntity,
+      | 'password'
+      | 'establishments'
+      | 'accounts'
+      | 'password'
+      | 'pollVotes'
+      | 'deletedAt'
+    >
   >
 }

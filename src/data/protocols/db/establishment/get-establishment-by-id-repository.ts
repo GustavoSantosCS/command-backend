@@ -7,7 +7,6 @@ export interface GetEstablishmentByIdRepository {
   ) => Promise<GetEstablishmentByIdRepository.Result>
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace GetEstablishmentByIdRepository {
   export type Result = EstablishmentEntity
   export type Config = {

@@ -1,23 +1,19 @@
 import { UserEntity } from '@/data/entities'
 import { CreateSessionUseCase } from '@/domain/usecases'
-import {
-  Controller,
-  HttpRequest,
-  HttpResponse
-} from '@/presentation/protocols'
-import { badRequest, ok, serverError } from '@/utils/http'
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/presentation/helpers/http'
 import { Validator } from '@/validation/protocols'
 
 export class CreateSessionController implements Controller {
   private readonly validator: Validator
   private readonly createSession: CreateSessionUseCase
 
-  constructor (validator: Validator, createSession: CreateSessionUseCase) {
+  constructor(validator: Validator, createSession: CreateSessionUseCase) {
     this.validator = validator
     this.createSession = createSession
   }
 
-  async handle (
+  async handle(
     httpRequest: HttpRequest<CreateSessionController.DTO>
   ): Promise<HttpResponse<CreateSessionController.Response>> {
     try {
@@ -44,7 +40,6 @@ export class CreateSessionController implements Controller {
   }
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace CreateSessionController {
   export type DTO = {
     email: string
@@ -54,8 +49,8 @@ export namespace CreateSessionController {
   export type Response = {
     token: string
     user: Omit<
-    UserEntity,
-    'password' | 'establishments' | 'accounts' | 'pollVotes'
+      UserEntity,
+      'password' | 'establishments' | 'accounts' | 'pollVotes'
     >
   }
 }

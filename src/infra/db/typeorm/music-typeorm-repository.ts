@@ -7,16 +7,19 @@ import {
 import { TypeORMHelpers } from './typeorm-helper'
 
 export class MusicTypeOrmRepository
-implements
+  implements
     AddMusicRepository,
     GetAllEstablishmentMusicsRepository,
-    GetMusicByIdRepository {
-  async save (newMusic: MusicEntity): Promise<MusicEntity> {
+    GetMusicByIdRepository
+{
+  async save(newMusic: MusicEntity): Promise<MusicEntity> {
     const queryRunner = await TypeORMHelpers.createQueryRunner()
 
     await queryRunner.startTransaction()
 
     try {
+      const imageRepo = await queryRunner.manager.save(newMusic.image)
+      newMusic.image = imageRepo
       const musicRepo = await queryRunner.manager.save(newMusic)
       await queryRunner.commitTransaction()
       delete musicRepo.establishment
@@ -29,13 +32,14 @@ implements
     }
   }
 
-  async getAllEstablishmentMusics (
+  async getAllEstablishmentMusics(
     establishmentId: string
   ): Promise<MusicEntity[]> {
     const productRepo = await TypeORMHelpers.getRepository(MusicEntity)
 
     const productsEntity = await productRepo
       .createQueryBuilder('musics')
+      .innerJoinAndSelect('musics.image', 'music_image')
       .innerJoin('musics.establishment', 'establishments')
       .where('establishments.id = :id', { id: establishmentId })
       .orderBy('musics.name', 'ASC')
@@ -44,10 +48,11 @@ implements
     return productsEntity
   }
 
-  async getById (musicId: string): Promise<MusicEntity> {
+  async getById(musicId: string): Promise<MusicEntity> {
     const musicRepo = await TypeORMHelpers.getRepository(MusicEntity)
     const musicEntity = await musicRepo
       .createQueryBuilder('musics')
+      .innerJoinAndSelect('musics.image', 'music_image')
       .innerJoinAndSelect('musics.establishment', 'establishments')
       .innerJoinAndSelect('establishments.manager', 'users')
       .where('musics.id = :musicId', { musicId })

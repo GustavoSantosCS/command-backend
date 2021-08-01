@@ -1,26 +1,22 @@
 import { PlaylistEntity } from '@/data/entities'
 import { UpdatePlaylistUseCase } from '@/domain/usecases'
-import {
-  Controller,
-  HttpRequest,
-  HttpResponse
-} from '@/presentation/protocols'
-import { badRequest, ok, serverError } from '@/utils/http'
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/presentation/helpers/http'
 import { Validator } from '@/validation/protocols'
 
 export class UpdatePlaylistController implements Controller {
   private readonly validate: Validator
   private readonly updatePlayList: UpdatePlaylistUseCase
 
-  constructor (validate: Validator, updatePlayList: UpdatePlaylistUseCase) {
+  constructor(validate: Validator, updatePlayList: UpdatePlaylistUseCase) {
     this.validate = validate
     this.updatePlayList = updatePlayList
   }
 
-  async handle (
+  async handle(
     httpRequest: HttpRequest<
-    UpdatePlaylistController.DTO,
-    UpdatePlaylistController.Param
+      UpdatePlaylistController.DTO,
+      UpdatePlaylistController.Param
     >
   ): Promise<UpdatePlaylistController.Response> {
     try {
@@ -59,14 +55,12 @@ export class UpdatePlaylistController implements Controller {
       }
       return ok(result)
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(error)
       return serverError()
     }
   }
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace UpdatePlaylistController {
   export type DTO = {
     authenticated: {
@@ -81,8 +75,8 @@ export namespace UpdatePlaylistController {
   export type Param = null
 
   export type Return = Omit<
-  PlaylistEntity,
-  'establishment' | 'musics' | 'musicToPlaylist' | 'currentMusic'
+    PlaylistEntity,
+    'establishment' | 'musics' | 'musicToPlaylist' | 'currentMusic'
   >
   export type Response = HttpResponse<Return>
 }

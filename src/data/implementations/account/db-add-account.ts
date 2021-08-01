@@ -2,7 +2,7 @@ import {
   AddAccountRepository,
   GetEstablishmentByIdRepository,
   GetUserByIdRepository,
-  IDGenerator
+  UniqueIdGenerator
 } from '@/data/protocols'
 import { CreateAccountUseCase } from '@/domain/usecases'
 import { left, right } from '@/shared/either'
@@ -10,13 +10,13 @@ import { EstablishmentNotFoundError } from '@/domain/errors'
 import { AccountEntity } from '@/data/entities'
 
 export class DBCreateAccount implements CreateAccountUseCase {
-  private readonly idGenerator: IDGenerator
+  private readonly idGenerator: UniqueIdGenerator
   private readonly getEstablishmentRepo: GetEstablishmentByIdRepository
   private readonly getUserRepo: GetUserByIdRepository
   private readonly addAccountRepo: AddAccountRepository
 
-  constructor (
-    idGenerator: IDGenerator,
+  constructor(
+    idGenerator: UniqueIdGenerator,
     getEstablishmentByIdRepo: GetEstablishmentByIdRepository,
     getUserRepo: GetUserByIdRepository,
     addAccountRepo: AddAccountRepository
@@ -27,7 +27,7 @@ export class DBCreateAccount implements CreateAccountUseCase {
     this.addAccountRepo = addAccountRepo
   }
 
-  async add ({
+  async add({
     establishmentId,
     userId
   }: CreateAccountUseCase.Params): Promise<CreateAccountUseCase.Result> {

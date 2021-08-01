@@ -2,7 +2,6 @@ import { HttpResponse } from '@/presentation/protocols'
 import { AppError } from '@/shared/errors'
 
 export const badRequest = (errors?: AppError[] | AppError): HttpResponse => {
-  // eslint-disable-next-line no-param-reassign
   if (!Array.isArray(errors)) errors = [errors]
   return {
     statusCode: 400,
@@ -29,7 +28,6 @@ export const serverError = (errors?: AppError[] | AppError): HttpResponse => {
     }
   }
 
-  // eslint-disable-next-line no-param-reassign
   if (!Array.isArray(errors)) errors = [errors]
   return {
     statusCode: 500,

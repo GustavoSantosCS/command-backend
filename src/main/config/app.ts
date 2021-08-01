@@ -9,12 +9,13 @@ middleware(app)
 routes(app)
 
 if (env.storage.type === 'local') {
-  app.use('/files/avatar', express.static(env.storage.local.avatar))
+  app.use('/files/avatar', express.static(env.storage.local.avatar, {}))
   app.use(
     '/files/establishment',
     express.static(env.storage.local.establishment)
   )
   app.use('/files/product', express.static(env.storage.local.product))
+  app.use('/files/music', express.static(env.storage.local.music))
 }
 
 app.get('/', (_, response) => response.send('Hello World'))

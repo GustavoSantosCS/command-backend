@@ -6,7 +6,6 @@ export interface UpdateUserRepository {
   ) => Promise<UpdateUserRepository.Result>
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace UpdateUserRepository {
   export type Params = UserEntity
   export type Result = UserEntity

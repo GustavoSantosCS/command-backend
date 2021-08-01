@@ -8,10 +8,12 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryColumn,
   UpdateDateColumn
 } from 'typeorm'
 import { EstablishmentEntity } from './establishment-entity'
+import { MusicImageEntity } from './music-image-entity'
 import { MusicPlaylistEntity } from './music-playlist-entity'
 import { PlaylistEntity } from './playlist-entity'
 import { SurveyEntity } from './survey-entity'
@@ -35,6 +37,10 @@ export class MusicEntity {
   @JoinColumn({ name: 'establishment_id' })
   establishment: EstablishmentEntity
 
+  @OneToOne(() => MusicImageEntity)
+  @JoinColumn({ name: 'image' })
+  image: MusicImageEntity
+
   @ManyToMany(() => PlaylistEntity, playlists => playlists.musics)
   @JoinTable({
     name: 'playlist_music',
@@ -52,10 +58,10 @@ export class MusicEntity {
   surveys?: SurveyEntity[]
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt?: Date
+  createdAt: Date
 
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt?: Date
+  updatedAt: Date
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt?: Date

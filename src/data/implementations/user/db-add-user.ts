@@ -1,6 +1,6 @@
 import { UserEntity } from '@/data/entities'
 import {
-  IDGenerator,
+  UniqueIdGenerator,
   AddUserRepository,
   SearchUserByEmailRepository,
   Hasher
@@ -10,13 +10,13 @@ import { AddUserUseCase } from '@/domain/usecases'
 import { left, right } from '@/shared/either'
 
 export class DBAddUser implements AddUserUseCase {
-  private readonly idGenerator: IDGenerator
+  private readonly idGenerator: UniqueIdGenerator
   private readonly hasher: Hasher
   private readonly searchByEmailRepo: SearchUserByEmailRepository
   private readonly addUserRepo: AddUserRepository
 
-  constructor (
-    idGenerator: IDGenerator,
+  constructor(
+    idGenerator: UniqueIdGenerator,
     hasher: Hasher,
     searchByEmailRepository: SearchUserByEmailRepository,
     addUserRepository: AddUserRepository
@@ -27,7 +27,7 @@ export class DBAddUser implements AddUserUseCase {
     this.addUserRepo = addUserRepository
   }
 
-  async save ({
+  async save({
     name,
     email,
     password

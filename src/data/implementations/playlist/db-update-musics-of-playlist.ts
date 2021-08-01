@@ -2,7 +2,7 @@ import { MusicPlaylistEntity } from '@/data/entities'
 import {
   GetMusicByIdRepository,
   GetPlaylistByIdRepository,
-  IDGenerator,
+  UniqueIdGenerator,
   UpdatePlaylistAndMusicsRepository
 } from '@/data/protocols'
 import { MusicNotFoundError, PlaylistNotFoundError } from '@/domain/errors'
@@ -13,13 +13,13 @@ export class DBUpdateMusicsOfPlaylist implements UpdateMusicsOfPlaylistUseCase {
   private readonly getPlaylistRepo: GetPlaylistByIdRepository
   private readonly updateMusicsRepo: UpdatePlaylistAndMusicsRepository
   private readonly getMusicByIdRepo: GetMusicByIdRepository
-  private readonly idGenerator: IDGenerator
+  private readonly idGenerator: UniqueIdGenerator
 
-  constructor (
+  constructor(
     getPlaylistRepo: GetPlaylistByIdRepository,
     updateMusicsRepo: UpdatePlaylistAndMusicsRepository,
     getMusicByIdRepo: GetMusicByIdRepository,
-    idGenerator: IDGenerator
+    idGenerator: UniqueIdGenerator
   ) {
     this.getPlaylistRepo = getPlaylistRepo
     this.updateMusicsRepo = updateMusicsRepo
@@ -27,7 +27,7 @@ export class DBUpdateMusicsOfPlaylist implements UpdateMusicsOfPlaylistUseCase {
     this.getMusicByIdRepo = getMusicByIdRepo
   }
 
-  async updateMusicsOfPlaylist ({
+  async updateMusicsOfPlaylist({
     musics,
     playlistId,
     userId,
@@ -48,7 +48,12 @@ export class DBUpdateMusicsOfPlaylist implements UpdateMusicsOfPlaylistUseCase {
     const musicsTrack = await Promise.all(
       musics.map(async musicId => {
         const trackedMusic = await this.getMusicByIdRepo.getById(musicId)
-        if (!trackedMusic || trackedMusic?.establishment.id !== establishmentId) { return null }
+        if (
+          !trackedMusic ||
+          trackedMusic?.establishment.id !== establishmentId
+        ) {
+          return null
+        }
 
         return trackedMusic
       })

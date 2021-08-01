@@ -1,23 +1,19 @@
 import { UserEntity } from '@/data/entities'
 import { UpdateUserUseCase } from '@/domain/usecases'
-import {
-  Controller,
-  HttpRequest,
-  HttpResponse
-} from '@/presentation/protocols'
-import { badRequest, ok, serverError } from '@/utils/http'
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/presentation/helpers/http'
 import { Validator } from '@/validation/protocols'
 
 export class UpdateUserController implements Controller {
   private readonly validator: Validator
   private readonly updateUser: UpdateUserUseCase
 
-  constructor (validator: Validator, updateUserUsecase: UpdateUserUseCase) {
+  constructor(validator: Validator, updateUserUsecase: UpdateUserUseCase) {
     this.validator = validator
     this.updateUser = updateUserUsecase
   }
 
-  async handle (
+  async handle(
     httpRequest: HttpRequest<UpdateUserController.DTO>
   ): Promise<HttpResponse<UpdateUserController.Response>> {
     try {
@@ -52,14 +48,12 @@ export class UpdateUserController implements Controller {
       }
       return ok(updateUser)
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(error)
       return serverError()
     }
   }
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace UpdateUserController {
   export type DTO = {
     authenticated: {

@@ -1,7 +1,7 @@
-import { IDGenerator } from '@/data/protocols'
+import { UniqueIdGenerator } from '@/data/protocols'
 import { UUIDAdapter } from '@/infra/uuid-adapter'
 
-let sut: IDGenerator
+let sut: UniqueIdGenerator
 
 describe('Test unit UUIDAdapter', () => {
   beforeEach(() => {

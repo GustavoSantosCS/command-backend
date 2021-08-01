@@ -8,7 +8,6 @@ export interface CreateRequestProductUseCase {
   ) => Promise<CreateRequestProductUseCase.Result>
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace CreateRequestProductUseCase {
   export type Params = {
     userId: string
@@ -22,7 +21,7 @@ export namespace CreateRequestProductUseCase {
   export type Return = Omit<RequestProductEntity, 'account' | 'closedAt'>
 
   export type Result = Either<
-  ProductNotFoundError | AccountNotFoundError,
-  Return
+    ProductNotFoundError | AccountNotFoundError,
+    Return
   >
 }

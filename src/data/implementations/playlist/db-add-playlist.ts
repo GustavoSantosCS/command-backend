@@ -1,25 +1,22 @@
 import {
   GetEstablishmentByIdRepository,
-  IDGenerator,
+  UniqueIdGenerator,
   AddPlayListRepository,
   GetMusicByIdRepository
 } from '@/data/protocols'
 import { AddPlayListUseCase } from '@/domain/usecases'
 import { left, right } from '@/shared/either'
-import {
-  EstablishmentNotFoundError,
-  MusicNotFoundError
-} from '@/domain/errors'
+import { EstablishmentNotFoundError, MusicNotFoundError } from '@/domain/errors'
 import { MusicPlaylistEntity, PlaylistEntity } from '@/data/entities'
 
 export class DBAddPlayList implements AddPlayListUseCase {
-  private readonly idGenerator: IDGenerator
+  private readonly idGenerator: UniqueIdGenerator
   private readonly getEstablishmentByIdRepo: GetEstablishmentByIdRepository
   private readonly addPlayListRepo: AddPlayListRepository
   private readonly getMusicByIdRepo: GetMusicByIdRepository
 
-  constructor (
-    idGenerator: IDGenerator,
+  constructor(
+    idGenerator: UniqueIdGenerator,
     getEstablishmentByIdRepo: GetEstablishmentByIdRepository,
     addPlayListRepo: AddPlayListRepository,
     getMusicByIdRepo: GetMusicByIdRepository
@@ -30,7 +27,7 @@ export class DBAddPlayList implements AddPlayListUseCase {
     this.addPlayListRepo = addPlayListRepo
   }
 
-  async add ({
+  async add({
     establishmentId,
     userId,
     name,

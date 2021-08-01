@@ -7,11 +7,12 @@ import {
 import { TypeORMHelpers } from './typeorm-helper'
 
 export class ProductTypeOrmRepository
-implements
+  implements
     AddProductRepository,
     GetProductByIdRepository,
-    GetAllEstablishmentProductsRepository {
-  async save (product: ProductEntity): Promise<ProductEntity> {
+    GetAllEstablishmentProductsRepository
+{
+  async save(product: ProductEntity): Promise<ProductEntity> {
     const connection = await TypeORMHelpers.getConnection()
     const queryRunner = connection.createQueryRunner()
 
@@ -29,7 +30,6 @@ implements
       await queryRunner.commitTransaction()
       return productRepo
     } catch (err) {
-      // eslint-disable-next-line no-console
       console.error(err)
       await queryRunner.rollbackTransaction()
       throw err
@@ -38,7 +38,7 @@ implements
     }
   }
 
-  async getById (
+  async getById(
     id: string,
     config?: GetProductByIdRepository.Config
   ): Promise<ProductEntity> {
@@ -62,7 +62,7 @@ implements
     return productEntity
   }
 
-  async getAllEstablishmentProducts (
+  async getAllEstablishmentProducts(
     establishmentId: string
   ): Promise<ProductEntity[]> {
     const productRepo = await TypeORMHelpers.getRepository(ProductEntity)

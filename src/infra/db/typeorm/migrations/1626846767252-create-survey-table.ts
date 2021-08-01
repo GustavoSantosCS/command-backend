@@ -2,8 +2,8 @@ import { MigrationInterface, QueryRunner, Table } from 'typeorm'
 
 export class CreateSurveyTable1626846767252 implements MigrationInterface {
   tableName = 'surveys'
-
-  public async up (queryRunner: QueryRunner): Promise<void> {
+  fatherTableName = 'establishments'
+  public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
         name: this.tableName,
@@ -19,19 +19,19 @@ export class CreateSurveyTable1626846767252 implements MigrationInterface {
           {
             columnNames: ['establishment_id'],
             referencedColumnNames: ['id'],
-            referencedTableName: 'establishments',
-            name: 'establishment_survey_fk'
+            referencedTableName: this.fatherTableName,
+            name: 'survey_establishment_fk'
           }
         ]
-      })
+      }),
+      false
     )
   }
 
-  public async down (queryRunner: QueryRunner): Promise<void> {
+  public async down(queryRunner: QueryRunner): Promise<void> {
     const table = await queryRunner.getTable(this.tableName)
-    // Remove Chave Estrangeria 1
-    const foreignKey1 = table.foreignKeys.find(
-      fk => fk.columnNames.includes('establishment_survey_fk')
+    const foreignKey1 = table.foreignKeys.find(fk =>
+      fk.columnNames.includes('survey_establishment_fk')
     )
     await queryRunner.dropForeignKey(this.tableName, foreignKey1)
     await queryRunner.dropTable(this.tableName)

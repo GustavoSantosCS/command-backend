@@ -2,7 +2,7 @@ import { MigrationInterface, QueryRunner, Table } from 'typeorm'
 
 export class CreateProductTable1625019009005 implements MigrationInterface {
   tableName = 'products'
-  public async up (queryRunner: QueryRunner): Promise<void> {
+  public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
         name: this.tableName,
@@ -22,17 +22,18 @@ export class CreateProductTable1625019009005 implements MigrationInterface {
             columnNames: ['establishment_id'], // Coluna pai da Tabela pai
             referencedTableName: 'establishments', // Tabela referenciada
             referencedColumnNames: ['id'], // Coluna referenciada
-            name: 'establishment_product_fk' // Nome da ForeignKey
+            name: 'product_establishment_fk' // Nome da ForeignKey
           }
         ]
-      })
+      }),
+      false
     )
   }
 
-  public async down (queryRunner: QueryRunner): Promise<void> {
+  public async down(queryRunner: QueryRunner): Promise<void> {
     const table = await queryRunner.getTable(this.tableName)
-    const foreignKey = table.foreignKeys.find(
-      fk => fk.columnNames.includes('establishment_id')
+    const foreignKey = table.foreignKeys.find(fk =>
+      fk.columnNames.includes('product_establishment_fk')
     )
     await queryRunner.dropForeignKey(this.tableName, foreignKey)
     await queryRunner.dropTable(this.tableName)

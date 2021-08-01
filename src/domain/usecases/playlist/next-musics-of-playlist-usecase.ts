@@ -11,7 +11,6 @@ export interface NextPlaylistMusicUseCase {
   ) => Promise<NextPlaylistMusicUseCase.Result>
 }
 
-// eslint-disable-next-line no-redeclare
 export namespace NextPlaylistMusicUseCase {
   export type Param = {
     playlistId: string
@@ -21,7 +20,7 @@ export namespace NextPlaylistMusicUseCase {
 
   export type Return = MusicPlaylistEntity | null
   export type Result = Either<
-  PlaylistNotFoundError | PlaylistIsNotActiveError,
-  Return
+    PlaylistNotFoundError | PlaylistIsNotActiveError,
+    Return
   >
 }
