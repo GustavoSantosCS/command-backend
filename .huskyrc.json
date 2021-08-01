@@ -1,6 +1,6 @@
 {
   "hooks": {
     "pre-commit": "lint-staged",
-    "pre-push": "npm run test --maxWorkers=50%"
+    "pre-push": "eslint './src/**' './tests/**'"
   }
 }

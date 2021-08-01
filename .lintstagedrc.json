@@ -1,3 +1,7 @@
 {
-  "*.ts": ["eslint . --fix", "npx jest --clearCache", "npm run -- test:staged"]
+  "*.ts": [
+    "eslint './src/**' './tests/**'",
+    "npx jest --clearCache",
+    "npm run -- test:staged"
+  ]
 }
