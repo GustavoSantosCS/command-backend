@@ -1,6 +1,5 @@
 node_modules
 dist
-.vscode
 coverage
 tmp
 package-lock.json

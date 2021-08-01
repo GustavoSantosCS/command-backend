@@ -1,0 +1,29 @@
+{
+  "files.exclude": {
+    "**/node_modules": false,
+    "**/tsconfig*": false,
+    "**/README.md": false,
+    "**/.git*": false,
+    "**/yarn.lock": false,
+    "**/ormconfig.*": false,
+    "**/.editorconfig": false,
+    "**/.eslint*": false,
+    "**/.prettier*": false,
+    "**/.huskyrc.json": false,
+    "**/.lintstagedrc.json": false,
+    "**/jest*": false,
+    "**/.travis.yml": false,
+    ".expo": false,
+    "babel.config.js": false,
+    "docker*": false,
+    "**/tests": false,
+    "**/dist": false,
+    "**/exemple.env": false,
+    "**/coverage": false,
+    "**/tmp": false,
+    "Procfile": false,
+  },
+  "cSpell.words": [
+    "Nyctibius"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Attach to Docker Node Process",
+      "type": "node",
+      "protocol": "inspector",
+      "skipFiles": [
+        "<node_internals>/**",
+        "./coverage/**",
+        "./tests/**",
+      ],
+      "request": "attach",
+      "stopOnEntry": false,
+      "port": 9222,
+      "localRoot": "${workspaceFolder}/dist",
+      "remoteRoot": "/usr/command/dist",
+      "sourceMaps": true
+    }
+  ]
+}
