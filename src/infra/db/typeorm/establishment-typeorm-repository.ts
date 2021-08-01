@@ -59,38 +59,32 @@ export class EstablishmentTypeOrmRepository
     establishmentId: string,
     config?: GetEstablishmentByIdRepository.Config
   ): Promise<GetEstablishmentByIdRepository.Result> {
-    try {
-      const establishmentRepository = await TypeORMHelpers.getRepository(
-        EstablishmentEntity
+    const establishmentRepository = await TypeORMHelpers.getRepository(
+      EstablishmentEntity
+    )
+    let queryBuilder =
+      establishmentRepository.createQueryBuilder('establishments')
+
+    if (config?.withImage) {
+      queryBuilder = queryBuilder.innerJoinAndSelect(
+        'establishments.image',
+        'establishment_image'
       )
-      let queryBuilder =
-        establishmentRepository.createQueryBuilder('establishments')
-
-      if (config?.withImage) {
-        queryBuilder = queryBuilder.innerJoinAndSelect(
-          'establishments.image',
-          'establishment_image'
-        )
-      }
-
-      if (config?.withManager) {
-        queryBuilder = queryBuilder.innerJoinAndSelect(
-          'establishments.manager',
-          'users'
-        )
-      }
-
-      queryBuilder = queryBuilder.where(
-        'establishments.id = :establishmentId',
-        { establishmentId }
-      )
-
-      const establishmentsUser = await queryBuilder.getOne()
-      return establishmentsUser
-    } catch (error) {
-      console.error(error)
-      throw error
     }
+
+    if (config?.withManager) {
+      queryBuilder = queryBuilder.innerJoinAndSelect(
+        'establishments.manager',
+        'users'
+      )
+    }
+
+    queryBuilder = queryBuilder.where('establishments.id = :establishmentId', {
+      establishmentId
+    })
+
+    const establishmentsUser = await queryBuilder.getOne()
+    return establishmentsUser
   }
 
   async getAll(): Promise<EstablishmentEntity[]> {
