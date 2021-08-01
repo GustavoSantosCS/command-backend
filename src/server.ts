@@ -21,7 +21,11 @@ TypeORMHelpers.connect()
       )
     })
   })
-  .catch(error => {
+  .catch(async error => {
     console.error('Can not connect into database')
+    const { env } = await import('@/shared/config')
+    console.log(
+      `App Config ==> Storage: ${env.storage.type} - Database: ${env.db.database}`
+    )
     console.error(error)
   })

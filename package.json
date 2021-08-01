@@ -1,6 +1,8 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
+  "name": "command-backend",
+  "author": "Gustavo C Santos",
+  "description": "NodeJs Rest API using Clean Architecture and Typescript",
+  "version": "1.2.0",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
