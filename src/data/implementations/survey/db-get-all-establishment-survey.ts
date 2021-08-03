@@ -36,17 +36,17 @@ export class DBGetAllEstablishmentSurvey
     )
 
     surveys = surveys.map((survey: SurveyEntity) => {
-      const voteMap = new Map<string, MusicEntity & { votes: number }>()
+      const voteMap = new Map<string, MusicEntity & { numberOfVotes: number }>()
       for (const vote of survey.pollVotes) {
         if (!voteMap.has(vote.chosenMusic.id)) {
           voteMap.set(vote.chosenMusic.id, {
             ...vote.chosenMusic,
-            votes: 0
+            numberOfVotes: 0
           })
         }
 
         const voteTrack = voteMap.get(vote.chosenMusic.id)
-        voteTrack.votes += 1
+        voteTrack.numberOfVotes += 1
         voteMap.set(vote.chosenMusic.id, voteTrack)
       }
 
@@ -55,9 +55,11 @@ export class DBGetAllEstablishmentSurvey
         votes.push(value)
       }
 
+      delete survey.pollVotes
+
       return {
         ...survey,
-        pollVotes: votes
+        votes
       }
     })
 
