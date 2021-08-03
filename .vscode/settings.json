@@ -5,7 +5,7 @@
     "**/README.md": true,
     "**/.git*": true,
     "**/yarn.lock": true,
-    "**/ormconfig.*": true,
+    "**/ormconfig.*": false,
     "**/.editorconfig": true,
     "**/.eslint*": true,
     "**/.prettier*": true,

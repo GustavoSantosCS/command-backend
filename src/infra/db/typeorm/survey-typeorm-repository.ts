@@ -54,7 +54,9 @@ export class SurveyTypeOrmRepository
 
       const surveys = await repository
         .createQueryBuilder('survey')
-        .leftJoin(
+        .addSelect('survey.updatedAt')
+        .addSelect('survey.closedAt')
+        .innerJoin(
           'survey.establishment',
           'establishments',
           'establishments.id = :establishmentId',
@@ -62,6 +64,7 @@ export class SurveyTypeOrmRepository
         )
         .innerJoinAndSelect('survey.surveyToMusic', 'survey_music')
         .innerJoinAndSelect('survey_music.music', 'musics')
+        .withDeleted()
         .orderBy('survey.createdAt', 'ASC')
         .getMany()
 
