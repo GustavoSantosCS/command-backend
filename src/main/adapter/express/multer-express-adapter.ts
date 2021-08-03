@@ -33,9 +33,7 @@ export const adapterMulter =
 
     const config: ConfigProps = {
       local: multer.diskStorage({
-        destination: (req, file, cb) => {
-          cb(null, configPersister.destination)
-        },
+        destination: configPersister.destination,
         filename(_, file, callback) {
           const fileName = nameHandler(file.originalname)
           const rootFolder = `${env.app.protocol}://${env.app.host}:${env.app.port}/files/${configPersister.target}`
@@ -60,11 +58,8 @@ export const adapterMulter =
     const update = multer({
       dest: configPersister.destination,
       storage: config[env.storage.type],
-      limits: {
-        fileSize: 5 * 1024 * 1024
-      },
       fileFilter: (_, file, cb) => {
-        const allowedMimes = [
+        const allowedTypes = [
           'image/jpeg',
           'image/png',
           'image/jpg',
@@ -72,7 +67,7 @@ export const adapterMulter =
           'image/png'
         ]
 
-        if (allowedMimes.includes(file.mimetype)) {
+        if (allowedTypes.includes(file.mimetype)) {
           cb(null, true)
         } else {
           cb(new Error('Image informada é tem formato invalido'))

@@ -10,10 +10,15 @@ TypeORMHelpers.connect()
     app.listen(env.app.port, () => {
       console.clear()
       console.log('\nBackend Online')
-      env.app.env !== 'production' &&
+      if (env.app.env !== 'production') {
         console.log(
-          `Click para acessar: ${env.app.protocol}://${env.app.host}:${env.app.port}\n`
+          `Click para acessar: ${env.app.protocol}://${env.app.host}:${env.app.port}`
         )
+
+        console.log(
+          `Data Base: ${env.db.database} - Storage: ${env.storage.type}`
+        )
+      }
     })
   })
   .catch(async error => {

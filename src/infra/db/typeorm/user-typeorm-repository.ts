@@ -17,13 +17,22 @@ export class UserTypeOrmRepository
     UpdateUserRepository
 {
   async searchByEmail(
-    email: SearchUserByEmailRepository.Params
+    email: SearchUserByEmailRepository.Params,
+    config?: SearchUserByEmailRepository.Config
   ): Promise<SearchUserByEmailRepository.Result> {
     const userRepo = await TypeORMHelpers.getRepository(UserEntity)
 
-    const findUser = await userRepo
-      .createQueryBuilder('users')
-      .addSelect('users.password')
+    let queryBuilder = userRepo.createQueryBuilder('users')
+
+    if (config?.withPassword) {
+      queryBuilder = queryBuilder.addSelect('users.password')
+    }
+
+    if (config?.withAvatar) {
+      queryBuilder = queryBuilder.leftJoinAndSelect('users.avatar', 'avatars')
+    }
+
+    const findUser = await queryBuilder
       .where('users.email = :email', { email })
       .getOne()
 

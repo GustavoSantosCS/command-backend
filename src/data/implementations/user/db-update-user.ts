@@ -49,7 +49,8 @@ export class DBUpdateUser implements UpdateUserUseCase {
 
     if (userRepo.email !== updateUserData.email) {
       const foundUser = await this.searchByEmailRepo.searchByEmail(
-        updateUserData.email
+        updateUserData.email,
+        { withAvatar: true, withPassword: true }
       )
 
       if (foundUser) {

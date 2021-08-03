@@ -51,8 +51,8 @@ export class TypeORMHelpers {
   static async disconnect(): Promise<void> {
     if (!TypeORMHelpers.connection?.isConnected) {
       await TypeORMHelpers.connection.close()
-      TypeORMHelpers.connection = null
     }
+    TypeORMHelpers.connection = null
   }
 
   static async clearDataBase(): Promise<void> {

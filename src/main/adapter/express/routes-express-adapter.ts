@@ -11,5 +11,9 @@ export const adapterRoute =
     }
 
     const httpResponse = await controller.handle(httpRequest)
+    if (process.env.NODE_ENV === 'development') {
+      // eslint-disable-next-line promise/param-names
+      await new Promise(_ => setTimeout(_, 2500))
+    }
     return res.status(httpResponse.statusCode).json(httpResponse.body)
   }

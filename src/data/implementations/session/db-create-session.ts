@@ -27,7 +27,10 @@ export class DBCreateSession implements CreateSessionUseCase {
     email,
     password
   }: CreateSessionUseCase.Params): Promise<CreateSessionUseCase.Result> {
-    const user = await this.searchUserByEmailRepo.searchByEmail(email)
+    const user = await this.searchUserByEmailRepo.searchByEmail(email, {
+      withAvatar: true,
+      withPassword: true
+    })
 
     if (!user) return left(new FailedLoginError({ password, email }))
 

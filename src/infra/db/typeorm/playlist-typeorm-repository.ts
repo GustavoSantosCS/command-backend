@@ -94,13 +94,13 @@ export class PlaylistTypeOrmRepository
       queryBuilder = queryBuilder
         .innerJoinAndSelect('playlists.musicToPlaylist', 'playlist_music')
         .innerJoinAndSelect('playlist_music.music', 'musics')
+        .innerJoinAndSelect('musics.image', 'music_image')
     }
 
     if (strategy.withMusics) {
-      queryBuilder = queryBuilder.innerJoinAndSelect(
-        'playlists.musics',
-        'musics'
-      )
+      queryBuilder = queryBuilder
+        .innerJoinAndSelect('playlists.musics', 'musics')
+        .innerJoinAndSelect('musics.image', 'music_image')
     }
 
     if (strategy.withEstablishment || strategy.withEstablishmentAndManager) {
@@ -126,6 +126,7 @@ export class PlaylistTypeOrmRepository
         .createQueryBuilder('playlists')
         .innerJoinAndSelect('playlists.currentMusic', 'playlist_music')
         .innerJoinAndSelect('playlist_music.music', 'musics')
+        .innerJoinAndSelect('musics.image', 'music_image')
         .where('playlists.id = :playlistId', { playlistId })
         .getOne()
       playlist = Object.assign(playlist, { currentMusic })
