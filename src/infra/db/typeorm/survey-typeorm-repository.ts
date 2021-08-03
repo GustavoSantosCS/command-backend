@@ -63,12 +63,26 @@ export class SurveyTypeOrmRepository
           { establishmentId }
         )
         .innerJoinAndSelect('survey.surveyToMusic', 'survey_music')
+        .leftJoinAndSelect('survey.pollVotes', 'votes')
         .innerJoinAndSelect('survey_music.music', 'musics')
         .withDeleted()
         .orderBy('survey.createdAt', 'ASC')
         .getMany()
 
-      return surveys
+      const surveyWithVote = []
+      for await (const survey of surveys) {
+        let result = await repository
+          .createQueryBuilder('surveys')
+          .leftJoinAndSelect('surveys.pollVotes', 'votes')
+          .innerJoinAndSelect('votes.chosenMusic', 'musics')
+          .where('surveys.id = :id', { id: survey.id })
+          .withDeleted()
+          .getOne()
+
+        result = Object.assign(survey, result)
+        surveyWithVote.push(result)
+      }
+      return surveyWithVote
     } catch (error) {
       console.error(error)
       return []

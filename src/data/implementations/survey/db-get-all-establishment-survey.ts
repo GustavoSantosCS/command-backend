@@ -1,3 +1,4 @@
+import { MusicEntity, SurveyEntity } from '@/data/entities'
 import {
   GetAllEstablishmentSurveyRepository,
   GetEstablishmentByIdRepository
@@ -7,11 +8,12 @@ import { GetAllEstablishmentSurveyUseCase } from '@/domain/usecases'
 import { left, right } from '@/shared/either'
 
 export class DBGetAllEstablishmentSurvey
-implements GetAllEstablishmentSurveyUseCase {
+  implements GetAllEstablishmentSurveyUseCase
+{
   private readonly repository: GetAllEstablishmentSurveyRepository
   private readonly getAllEstablishmentById: GetEstablishmentByIdRepository
 
-  constructor (
+  constructor(
     getAllEstablishmentById: GetEstablishmentByIdRepository,
     repository: GetAllEstablishmentSurveyRepository
   ) {
@@ -19,7 +21,7 @@ implements GetAllEstablishmentSurveyUseCase {
     this.getAllEstablishmentById = getAllEstablishmentById
   }
 
-  async getAll (
+  async getAll(
     establishmentId: string
   ): Promise<GetAllEstablishmentSurveyUseCase.Response> {
     const establishmentRepo = await this.getAllEstablishmentById.getById(
@@ -29,9 +31,35 @@ implements GetAllEstablishmentSurveyUseCase {
       return left(new EstablishmentNotFoundError())
     }
 
-    const surveys = await this.repository.getAllEstablishmentSurvey(
+    let surveys: any = await this.repository.getAllEstablishmentSurvey(
       establishmentId
     )
+
+    surveys = surveys.map((survey: SurveyEntity) => {
+      const voteMap = new Map<string, MusicEntity & { votes: number }>()
+      for (const vote of survey.pollVotes) {
+        if (!voteMap.has(vote.chosenMusic.id)) {
+          voteMap.set(vote.chosenMusic.id, {
+            ...vote.chosenMusic,
+            votes: 0
+          })
+        }
+
+        const voteTrack = voteMap.get(vote.chosenMusic.id)
+        voteTrack.votes += 1
+        voteMap.set(vote.chosenMusic.id, voteTrack)
+      }
+
+      const votes = []
+      for (const [, value] of voteMap) {
+        votes.push(value)
+      }
+
+      return {
+        ...survey,
+        pollVotes: votes
+      }
+    })
 
     return right(surveys)
   }
