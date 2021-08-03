@@ -50,6 +50,6 @@ export class PlaylistEntity {
   @CreateDateColumn({ name: 'created_at', select: false })
   createdAt: Date
 
-  @UpdateDateColumn({ name: 'updated_at', select: false })
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date
 }
