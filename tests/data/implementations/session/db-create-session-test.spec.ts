@@ -6,10 +6,13 @@ import { throwError } from '@tests/shared'
 import { SearchUserByEmailRepositorySpy } from '@tests/infra/mock/db/user'
 import { FailedLoginError } from '@/domain/errors'
 import { makeMockUser } from '@tests/domain/mock/models'
-// Sub
+
 class HashComparerSub implements HashComparer {
-  async compare(plaitext: string, hash: string): Promise<boolean> {
-    return true
+  return = true
+  parameters: any
+  async compare(plainText: string, hash: string): Promise<boolean> {
+    this.parameters = { plainText, hash }
+    return this.return
   }
 }
 
@@ -18,7 +21,7 @@ class EncrypterSub implements Encrypter {
   parameters
   async encrypt(payloadBody: any): Promise<string> {
     this.parameters = payloadBody
-    return 'encrypt'
+    return this.return
   }
 }
 
@@ -44,11 +47,11 @@ describe('Test Unit: DBCreateSession', () => {
   })
 
   it('should call SearchUserByEmailRepository with the correct values', async () => {
-    const spy = jest.spyOn(repository, 'searchByEmail')
+    const spy = repository
 
     await sut.createSession(request)
 
-    expect(spy).toBeCalledWith(request.email)
+    expect(spy.parameters).toEqual(request.email)
   })
 
   it('should throws if SearchUserByEmailRepository throws', async () => {
