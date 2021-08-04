@@ -22,7 +22,8 @@ export class DBGetAllEstablishmentSurvey
   }
 
   async getAll(
-    establishmentId: string
+    establishmentId: string,
+    userId: string
   ): Promise<GetAllEstablishmentSurveyUseCase.Response> {
     const establishmentRepo = await this.getAllEstablishmentById.getById(
       establishmentId
@@ -31,12 +32,16 @@ export class DBGetAllEstablishmentSurvey
       return left(new EstablishmentNotFoundError())
     }
 
-    let surveys: any = await this.repository.getAllEstablishmentSurvey(
+    let surveys = await this.repository.getAllEstablishmentSurvey(
       establishmentId
     )
 
     surveys = surveys.map((survey: SurveyEntity) => {
       const voteMap = new Map<string, MusicEntity & { numberOfVotes: number }>()
+      const customSurvey = Object.assign(
+        survey,
+        this.createMyVote(survey, userId)
+      )
       for (const vote of survey.pollVotes) {
         if (!voteMap.has(vote.chosenMusic.id)) {
           voteMap.set(vote.chosenMusic.id, {
@@ -58,11 +63,34 @@ export class DBGetAllEstablishmentSurvey
       delete survey.pollVotes
 
       return {
-        ...survey,
+        ...customSurvey,
         votes
       }
     })
 
     return right(surveys)
+  }
+
+  private createMyVote(
+    survey: SurveyEntity,
+    userId: string
+  ): SurveyEntity & { myVote?: any } {
+    const myVote = survey.pollVotes.find(v => v.client.id === userId)
+
+    if (!myVote) {
+      return {
+        ...survey,
+        myVote: null
+      }
+    }
+
+    return {
+      ...survey,
+      myVote: {
+        id: myVote.id,
+        chosenMusic: myVote.chosenMusic,
+        createdAt: myVote.createdAt
+      }
+    }
   }
 }

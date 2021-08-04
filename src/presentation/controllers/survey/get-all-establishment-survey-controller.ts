@@ -18,7 +18,10 @@ export class GetAllEstablishmentSurveyController implements Controller {
   ): Promise<HttpResponse<GetAllEstablishmentSurveyController.Response>> {
     try {
       const { establishmentId } = httpRequest.params
-      const establishments = await this.usecase.getAll(establishmentId)
+      const establishments = await this.usecase.getAll(
+        establishmentId,
+        httpRequest.body.authenticated.id
+      )
       return ok(establishments.value)
     } catch (error) {
       console.error(error)

@@ -76,12 +76,14 @@ export class SurveyTypeOrmRepository
           .createQueryBuilder('surveys')
           .leftJoinAndSelect('surveys.pollVotes', 'votes')
           .innerJoinAndSelect('votes.chosenMusic', 'musics')
+          .innerJoinAndSelect('votes.client', 'users')
           .innerJoinAndSelect('musics.image', 'music_image')
           .where('surveys.id = :id', { id: survey.id })
           .withDeleted()
           .getOne()
 
         result = Object.assign(survey, result)
+
         surveyWithVote.push(result)
       }
       return surveyWithVote
